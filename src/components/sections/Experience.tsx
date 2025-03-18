@@ -1,7 +1,10 @@
 
 import React from 'react';
-import ScrollReveal from '../ui/ScrollReveal';
 import { Calendar, Map, Star, ArrowRight } from 'lucide-react';
+import SectionHeader from '../ui/SectionHeader';
+import FeatureCard from '../ui/FeatureCard';
+import ScrollReveal from '../ui/ScrollReveal';
+import { motion } from 'framer-motion';
 
 type ExperienceType = {
   id: number;
@@ -19,7 +22,7 @@ const Experience: React.FC = () => {
       id: 1,
       title: "Rajasthan Heritage Tour",
       description: "Explore royal palaces, majestic forts, and vibrant markets in the land of kings.",
-      imageSrc: "https://images.unsplash.com/photo-1466442929976-97f336a657be",
+      imageSrc: "https://images.unsplash.com/photo-1599661046289-e31897d36a68?q=80&w=2070",
       duration: "9 Days",
       location: "Jaipur, Udaipur, Jodhpur",
       rating: 4.9,
@@ -28,7 +31,7 @@ const Experience: React.FC = () => {
       id: 2,
       title: "Kerala Backwater Expedition",
       description: "Glide through serene backwaters and experience the tranquil village life of God's Own Country.",
-      imageSrc: "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
+      imageSrc: "https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?q=80&w=2070",
       duration: "7 Days",
       location: "Kochi, Alleppey, Kumarakom",
       rating: 4.8,
@@ -37,7 +40,7 @@ const Experience: React.FC = () => {
       id: 3,
       title: "Himalayan Adventure",
       description: "Trek through breathtaking mountain trails and discover remote villages in the mighty Himalayas.",
-      imageSrc: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05",
+      imageSrc: "https://images.unsplash.com/photo-1502310942044-dc746b92eebc?q=80&w=1943",
       duration: "12 Days",
       location: "Rishikesh, Manali, Dharamshala",
       rating: 4.7,
@@ -45,72 +48,70 @@ const Experience: React.FC = () => {
   ];
 
   return (
-    <section id="experience" className="py-24 px-6">
+    <section id="experience" className="py-24 px-6 bg-gradient-to-b from-white via-white to-mystic-50">
       <div className="container mx-auto">
         {/* Section Header */}
-        <ScrollReveal>
-          <div className="text-center mb-16">
-            <p className="subtitle mb-3">Curated Experiences</p>
-            <h2 className="section-title after:left-1/2 after:-translate-x-1/2">
-              Our Signature Journeys
-            </h2>
-            <p className="mt-8 max-w-2xl mx-auto text-foreground/70">
-              Immerse yourself in handcrafted experiences that blend cultural immersion, 
-              natural wonders, and authentic encounters with local communities.
-            </p>
-          </div>
-        </ScrollReveal>
+        <SectionHeader
+          subtitle="Curated Experiences"
+          title="Our Signature Journeys"
+          description="Immerse yourself in handcrafted experiences that blend cultural immersion, natural wonders, and authentic encounters with local communities."
+        />
 
         {/* Experiences Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
           {experiences.map((exp, index) => (
-            <ScrollReveal key={exp.id} delay={index * 100}>
-              <div className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow border border-mystic-100">
-                <div className="h-56 relative overflow-hidden">
-                  <img 
-                    src={exp.imageSrc} 
-                    alt={exp.title} 
-                    className="w-full h-full object-cover transition-transform duration-700 hover:scale-110"
-                  />
-                  <div className="absolute top-4 right-4 bg-white/80 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-medium flex items-center">
-                    <Star size={14} className="text-spice-500 mr-1" fill="#ff7e11" />
-                    {exp.rating}
-                  </div>
+            <FeatureCard
+              key={exp.id}
+              title={exp.title}
+              description={exp.description}
+              imageSrc={exp.imageSrc}
+              imageAlt={exp.title}
+              delay={index * 2}
+              icon={<div className="bg-white/80 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-medium flex items-center">
+                <Star size={14} className="text-spice-500 mr-1" fill="#ff7e11" />
+                {exp.rating}
+              </div>}
+            >
+              <div className="flex flex-wrap gap-4 mb-4 text-sm">
+                <div className="flex items-center text-foreground/70">
+                  <Calendar size={16} className="mr-1" />
+                  {exp.duration}
                 </div>
-                
-                <div className="p-6">
-                  <div className="flex flex-wrap gap-4 mb-4 text-sm">
-                    <div className="flex items-center text-foreground/70">
-                      <Calendar size={16} className="mr-1" />
-                      {exp.duration}
-                    </div>
-                    <div className="flex items-center text-foreground/70">
-                      <Map size={16} className="mr-1" />
-                      {exp.location}
-                    </div>
-                  </div>
-                  
-                  <h3 className="text-xl font-serif font-medium mb-2">{exp.title}</h3>
-                  <p className="text-foreground/70 mb-6">{exp.description}</p>
-                  
-                  <a 
-                    href="#" 
-                    className="inline-flex items-center text-spice-500 font-medium hover:text-spice-600 transition-colors"
-                  >
-                    View Details <ArrowRight size={16} className="ml-1" />
-                  </a>
+                <div className="flex items-center text-foreground/70">
+                  <Map size={16} className="mr-1" />
+                  {exp.location}
                 </div>
               </div>
-            </ScrollReveal>
+              
+              <motion.a 
+                href="#" 
+                className="inline-flex items-center text-spice-500 font-medium hover:text-spice-600 transition-colors"
+                whileHover={{ x: 5 }}
+                transition={{ type: "spring", stiffness: 400, damping: 10 }}
+              >
+                View Details <ArrowRight size={16} className="ml-1" />
+              </motion.a>
+            </FeatureCard>
           ))}
         </div>
 
         {/* CTA */}
         <ScrollReveal className="mt-16">
           <div className="text-center">
-            <a href="#contact" className="btn-primary inline-flex items-center">
-              Plan Your Journey <ArrowRight size={16} className="ml-2" />
-            </a>
+            <motion.a 
+              href="#contact" 
+              className="btn-primary inline-flex items-center"
+              whileHover={{ y: -5, transition: { duration: 0.2 } }}
+              whileTap={{ y: 0 }}
+            >
+              Plan Your Journey 
+              <motion.span
+                animate={{ x: [0, 5, 0] }}
+                transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
+              >
+                <ArrowRight size={16} className="ml-2" />
+              </motion.span>
+            </motion.a>
           </div>
         </ScrollReveal>
       </div>

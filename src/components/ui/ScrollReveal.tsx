@@ -2,13 +2,14 @@
 import React, { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import { fadeIn, slideIn, scaleIn } from '@/lib/animations';
 
 interface ScrollRevealProps {
   children: React.ReactNode;
   className?: string;
   threshold?: number;
   delay?: number;
-  animation?: 'fade-in' | 'fade-in-right' | 'fade-in-left';
+  animation?: 'fade-in' | 'fade-in-right' | 'fade-in-left' | 'slide-up' | 'scale-in';
 }
 
 const ScrollReveal: React.FC<ScrollRevealProps> = ({
@@ -24,20 +25,15 @@ const ScrollReveal: React.FC<ScrollRevealProps> = ({
   const getVariants = () => {
     switch (animation) {
       case 'fade-in-right':
-        return {
-          hidden: { opacity: 0, x: 50 },
-          visible: { opacity: 1, x: 0 }
-        };
+        return fadeIn('right', delay * 0.1);
       case 'fade-in-left':
-        return {
-          hidden: { opacity: 0, x: -50 },
-          visible: { opacity: 1, x: 0 }
-        };
+        return fadeIn('left', delay * 0.1);
+      case 'slide-up':
+        return slideIn('up', delay * 0.1);
+      case 'scale-in':
+        return scaleIn(delay * 0.1);
       default:
-        return {
-          hidden: { opacity: 0, y: 20 },
-          visible: { opacity: 1, y: 0 }
-        };
+        return fadeIn('up', delay * 0.1);
     }
   };
 
@@ -47,7 +43,6 @@ const ScrollReveal: React.FC<ScrollRevealProps> = ({
       initial="hidden"
       animate={isInView ? "visible" : "hidden"}
       variants={getVariants()}
-      transition={{ duration: 0.7, ease: "easeOut", delay: delay * 0.1 }}
       className={cn(className)}
       style={{ willChange: 'opacity, transform' }}
     >

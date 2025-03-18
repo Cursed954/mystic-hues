@@ -116,6 +116,24 @@
     @apply scale-110;
   }
 
+  /* Enhanced Animation Classes */
+  .hover-lift {
+    @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-lg;
+  }
+
+  .hover-expand {
+    @apply transition-all duration-300 hover:scale-105;
+  }
+
+  .text-gradient {
+    @apply bg-gradient-to-r from-spice-500 to-indigo-500 bg-clip-text text-transparent;
+  }
+
+  .bg-pattern {
+    @apply bg-repeat opacity-10 pointer-events-none;
+    background-image: url("https://www.transparenttextures.com/patterns/oriental-tiles.png");
+  }
+
   .animate-delay-100 {
     animation-delay: 100ms;
   }
