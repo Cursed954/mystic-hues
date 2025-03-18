@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import ScrollReveal from '../ui/ScrollReveal';
-import { ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { ChevronLeft, ChevronRight, X, Download } from 'lucide-react';
 
 type ImageType = {
   id: number;
@@ -16,39 +16,39 @@ const Gallery: React.FC = () => {
   const images: ImageType[] = [
     {
       id: 1,
-      url: "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
-      alt: "Serene landscape with mountains and river",
-      location: "Himalayas",
+      url: "https://images.unsplash.com/photo-1524413840807-0c3cb6fa808d",
+      alt: "Ancient Indian temple with intricate carvings",
+      location: "Karnataka",
     },
     {
       id: 2,
-      url: "https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07",
-      alt: "Vibrant orange marigold flowers",
-      location: "Rajasthan",
+      url: "https://images.unsplash.com/photo-1564507592333-c60657eea523",
+      alt: "Colorful Holi festival celebration",
+      location: "Uttar Pradesh",
     },
     {
       id: 3,
-      url: "https://images.unsplash.com/photo-1482938289607-e9573fc25ebb",
-      alt: "Mountain river landscape",
-      location: "Kashmir",
+      url: "https://images.unsplash.com/photo-1566552881560-0be862a7c445",
+      alt: "Traditional Kathakali dancer with elaborate makeup",
+      location: "Kerala",
     },
     {
       id: 4,
-      url: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05",
-      alt: "Misty mountain peaks",
-      location: "Uttarakhand",
+      url: "https://images.unsplash.com/photo-1561361398-a8cb5b48162e",
+      alt: "Majestic Taj Mahal at sunrise",
+      location: "Agra",
     },
     {
       id: 5,
-      url: "https://images.unsplash.com/photo-1466442929976-97f336a657be",
-      alt: "Ancient temple architecture",
-      location: "Tamil Nadu",
+      url: "https://images.unsplash.com/photo-1582510144528-add4a68470d5",
+      alt: "Traditional Indian wedding ceremony",
+      location: "Rajasthan",
     },
     {
       id: 6,
-      url: "https://images.unsplash.com/photo-1472396961693-142e6e269027",
-      alt: "Wildlife in natural habitat",
-      location: "National Park",
+      url: "https://images.unsplash.com/photo-1567591414240-e9c1adcd3049",
+      alt: "Boat riding through Kerala's backwaters",
+      location: "Kerala",
     },
   ];
 
@@ -77,9 +77,22 @@ const Gallery: React.FC = () => {
     setSelectedImage(images[newIndex]);
   };
 
+  const downloadImage = (url: string, filename: string) => {
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `mystic-india-${filename.toLowerCase().replace(/\s+/g, '-')}.jpg`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
-    <section id="gallery" className="py-24 px-6 bg-mystic-50">
-      <div className="container mx-auto">
+    <section id="gallery" className="py-24 px-6 bg-mystic-50 relative overflow-hidden">
+      {/* Abstract backgrounds */}
+      <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-spice-100 filter blur-3xl opacity-30 z-0"></div>
+      <div className="absolute bottom-0 left-0 w-96 h-96 rounded-full bg-indigo-100 filter blur-3xl opacity-30 z-0"></div>
+      
+      <div className="container mx-auto relative z-10">
         {/* Section Header */}
         <ScrollReveal>
           <div className="text-center mb-16">
@@ -93,7 +106,7 @@ const Gallery: React.FC = () => {
           {images.map((image, index) => (
             <ScrollReveal key={image.id} delay={(index % 3) * 100} className="h-full">
               <div 
-                className="image-card h-full bg-white shadow-sm rounded-lg overflow-hidden cursor-pointer"
+                className="image-card h-full bg-white shadow-sm rounded-lg overflow-hidden cursor-pointer transition-transform hover:-translate-y-1 hover:shadow-md"
                 onClick={() => openLightbox(image)}
               >
                 <div className="relative h-64 overflow-hidden">
@@ -102,6 +115,9 @@ const Gallery: React.FC = () => {
                     alt={image.alt} 
                     className="w-full h-full object-cover"
                   />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 hover:opacity-100 transition-opacity flex items-end p-4">
+                    <span className="text-white font-medium">{image.location}</span>
+                  </div>
                 </div>
                 <div className="p-4">
                   <span className="text-xs uppercase tracking-wider text-spice-500 font-medium">
@@ -137,9 +153,18 @@ const Gallery: React.FC = () => {
                 alt={selectedImage.alt} 
                 className="max-w-full max-h-[80vh] object-contain"
               />
-              <div className="mt-4 text-white text-center">
-                <h3 className="text-xl font-medium">{selectedImage.alt}</h3>
-                <p className="text-white/70 mt-1">{selectedImage.location}</p>
+              <div className="mt-4 text-white text-center flex justify-between items-center">
+                <div className="text-left">
+                  <h3 className="text-xl font-medium">{selectedImage.alt}</h3>
+                  <p className="text-white/70 mt-1">{selectedImage.location}</p>
+                </div>
+                <button 
+                  className="bg-spice-500 hover:bg-spice-600 text-white px-4 py-2 rounded-md flex items-center transition-colors"
+                  onClick={() => downloadImage(selectedImage.url, selectedImage.alt)}
+                >
+                  <Download size={16} className="mr-2" />
+                  Download
+                </button>
               </div>
             </div>
             

@@ -9,16 +9,21 @@ const Hero: React.FC = () => {
     <section id="home" className="relative min-h-screen flex items-center overflow-hidden">
       {/* Background Image with Parallax */}
       <ParallaxSection speed={0.15} className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-background z-10"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-background z-10"></div>
         <img
-          src="https://images.unsplash.com/photo-1506744038136-46273834b3fb"
-          alt="Serene Indian landscape"
+          src="https://images.unsplash.com/photo-1524413840807-0c3cb6fa808d?q=80&w=2070"
+          alt="Majestic Indian temple with ornate architecture at sunset"
           className="w-full h-full object-cover"
         />
       </ParallaxSection>
 
+      {/* Abstract Pattern Overlay */}
+      <div className="absolute inset-0 bg-repeat opacity-10 z-[1]" 
+           style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/cubes.png")' }}>
+      </div>
+
       {/* Content */}
-      <div className="container mx-auto px-6 z-10 mt-16">
+      <div className="container mx-auto px-6 z-10 mt-16 relative">
         <div className="max-w-3xl">
           <motion.p 
             className="subtitle mb-3"
@@ -26,7 +31,7 @@ const Hero: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
           >
-            Experience the colors of India
+            Experience the timeless spirit of India
           </motion.p>
           
           <motion.h1 
@@ -35,7 +40,7 @@ const Hero: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            Embark on a <span className="text-spice-500">Mystic</span> Journey Through India's Vibrant Heritage
+            Journey Through India's <span className="text-spice-500">Rich</span> Cultural Heritage
           </motion.h1>
           
           <motion.p 
@@ -44,7 +49,7 @@ const Hero: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
           >
-            Discover majestic landscapes, ancient traditions, and culinary wonders through carefully crafted journeys that reveal the true spirit of India.
+            Explore the vibrant tapestry of traditions, art forms, and cuisines that make up India's diverse cultural landscape, from ancient temples to living traditions passed down through generations.
           </motion.p>
           
           <motion.div 
@@ -53,8 +58,8 @@ const Hero: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
           >
-            <a href="#experience" className="btn-primary flex items-center">
-              Explore Journeys <ArrowRight size={16} className="ml-2" />
+            <a href="#states" className="btn-primary flex items-center">
+              Explore States <ArrowRight size={16} className="ml-2" />
             </a>
             <a href="#about" className="btn-outline">
               Learn More
@@ -69,20 +74,20 @@ const Hero: React.FC = () => {
             transition={{ duration: 0.6, delay: 0.5 }}
           >
             <div className="glass-panel p-4 rounded-lg">
-              <h3 className="text-3xl font-medium text-spice-500 mb-1">15+</h3>
-              <p className="text-sm text-foreground/70">Destinations</p>
+              <h3 className="text-3xl font-medium text-spice-500 mb-1">28+</h3>
+              <p className="text-sm text-foreground/70">States</p>
             </div>
             <div className="glass-panel p-4 rounded-lg">
-              <h3 className="text-3xl font-medium text-spice-500 mb-1">1200+</h3>
-              <p className="text-sm text-foreground/70">Happy Travelers</p>
+              <h3 className="text-3xl font-medium text-spice-500 mb-1">1000+</h3>
+              <p className="text-sm text-foreground/70">Cultural Traditions</p>
             </div>
             <div className="glass-panel p-4 rounded-lg">
-              <h3 className="text-3xl font-medium text-spice-500 mb-1">9.8</h3>
-              <p className="text-sm text-foreground/70">User Ratings</p>
+              <h3 className="text-3xl font-medium text-spice-500 mb-1">22+</h3>
+              <p className="text-sm text-foreground/70">Official Languages</p>
             </div>
             <div className="glass-panel p-4 rounded-lg">
-              <h3 className="text-3xl font-medium text-spice-500 mb-1">7+</h3>
-              <p className="text-sm text-foreground/70">Years Experience</p>
+              <h3 className="text-3xl font-medium text-spice-500 mb-1">5000+</h3>
+              <p className="text-sm text-foreground/70">Years of History</p>
             </div>
           </motion.div>
         </div>
