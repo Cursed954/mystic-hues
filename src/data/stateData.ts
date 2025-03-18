@@ -14,7 +14,7 @@ export const stateData = [
     bannerImage: 'https://images.unsplash.com/photo-1599661046289-e31897d36a68?q=80&w=2070',
     famousFor: ['Jaipur Pink City', 'Udaipur Lake Palace', 'Jaisalmer Fort', 'Pushkar Camel Fair', 'Desert Safaris'],
     culture: {
-      description: 'The culture of Rajasthan is a rich blend of traditions, customs, and arts that have been preserved over centuries. The state's vibrant folk music, colorful attire, and intricate handicrafts reflect its royal heritage and desert lifestyle. Rajasthan's cultural identity is deeply influenced by its history of Rajput warriors and their code of honor.',
+      description: 'The culture of Rajasthan is a rich blend of traditions, customs, and arts that have been preserved over centuries. The state\'s vibrant folk music, colorful attire, and intricate handicrafts reflect its royal heritage and desert lifestyle. Rajasthan\'s cultural identity is deeply influenced by its history of Rajput warriors and their code of honor.',
       traditions: [
         'Ghoomar - A traditional folk dance performed by women on special occasions',
         'Puppetry - The ancient art of Kathputli puppetry telling folkloric tales',
