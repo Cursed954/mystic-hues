@@ -30,9 +30,9 @@ const Index = () => {
         <Hero />
         <About />
         <States />
-        <VirtualTours />
-        <Cuisine />
         <Gallery />
+        <Cuisine />
+        <VirtualTours />
         <Experience />
         <Reviews />
         <Contact />
