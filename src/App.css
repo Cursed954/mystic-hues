@@ -7,7 +7,7 @@
 
 /* Light/Dark mode transition */
 body {
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color 0.5s ease, color 0.3s ease;
 }
 
 /* Enhanced card styles */
@@ -72,7 +72,7 @@ body::-webkit-scrollbar {
 }
 
 .dark body::-webkit-scrollbar-thumb {
-  background-color: #555;
+  background-color: #6E59A5;
   border-radius: 10px;
 }
 
@@ -80,4 +80,41 @@ body::-webkit-scrollbar {
 *:focus-visible {
   outline: 2px solid var(--primary);
   outline-offset: 2px;
+}
+
+/* Dark mode specific styles */
+.dark body {
+  background-color: #1A1F2C;
+  background-image: linear-gradient(135deg, #1A1F2C 0%, #403E43 100%);
+  background-attachment: fixed;
+}
+
+.dark .glass-card {
+  background: rgba(42, 38, 52, 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(111, 89, 165, 0.2);
+}
+
+.dark .card {
+  border-color: rgba(111, 89, 165, 0.3);
+}
+
+.dark .highlight-text {
+  color: #9b87f5;
+}
+
+/* State cards hover effect specific to dark mode */
+.dark .state-card:hover {
+  box-shadow: 0 0 15px rgba(155, 135, 245, 0.3);
+  border-color: rgba(155, 135, 245, 0.5);
+}
+
+/* Purple accent for dark mode buttons */
+.dark .btn-accent {
+  background-color: #7E69AB;
+  color: white;
+}
+
+.dark .btn-accent:hover {
+  background-color: #9b87f5;
 }

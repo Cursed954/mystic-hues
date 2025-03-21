@@ -6,41 +6,85 @@ import ScrollReveal from '@/components/ui/ScrollReveal';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { stateData } from '@/data/stateData';
 import { Card, CardContent } from '@/components/ui/card';
-import { MapPin, Search, Filter, Image } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { MapPin, Search, Filter, Image, X, Clock, History, Info, Globe } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+
+// Define types for our cultural elements
+type ArtForm = {
+  name: string;
+  stateName: string;
+  stateId: string;
+  image: string;
+  information?: string;
+  region?: string;
+  history?: {
+    started?: string;
+    goldenPeriod?: string;
+    currentStatus?: string;
+  };
+  additionalImages?: string[];
+};
+
+type Festival = {
+  name: string;
+  timing: string;
+  description: string;
+  stateName: string;
+  stateId: string;
+  image: string;
+};
+
+type HeritageSite = {
+  name: string;
+  location: string;
+  description: string;
+  stateName: string;
+  stateId: string;
+  image: string;
+};
 
 const Culture = () => {
   const [activeTab, setActiveTab] = useState<string>('artForms');
   const [searchTerm, setSearchTerm] = useState('');
   const [activeStateFilter, setActiveStateFilter] = useState('All');
+  const [selectedArtForm, setSelectedArtForm] = useState<ArtForm | null>(null);
   
-  // Extract all cultural data
-  const artForms = stateData.flatMap(state => 
+  // Extract all cultural data with enhanced art form information
+  const artForms: ArtForm[] = stateData.flatMap(state => 
     state.artForms?.split(', ').map(art => ({
       name: art,
       stateName: state.name,
       stateId: state.id,
-      // Use a default image since artFormImages doesn't exist
-      image: "https://images.unsplash.com/photo-1576487236230-eaa4afe68192?q=80&w=1170"
+      image: "https://images.unsplash.com/photo-1576487236230-eaa4afe68192?q=80&w=1170",
+      information: `${art} is a traditional art form from ${state.name}, representing the rich cultural heritage of the region.`,
+      region: state.region,
+      history: {
+        started: "Ancient times",
+        goldenPeriod: "17th to 19th century",
+        currentStatus: "Practiced by dedicated artists and being preserved through cultural programs"
+      },
+      additionalImages: [
+        "https://images.unsplash.com/photo-1594026112334-d8040bd05749?q=80&w=1170",
+        "https://images.unsplash.com/photo-1540122995631-7c74c46c0b8f?q=80&w=1170",
+        "https://images.unsplash.com/photo-1584806749948-697891c67821?q=80&w=1170"
+      ]
     })) || []
   );
   
-  const festivals = stateData.flatMap(state => 
+  const festivals: Festival[] = stateData.flatMap(state => 
     state.festivals?.list?.map(festival => ({
       ...festival,
       stateName: state.name,
       stateId: state.id,
-      // Adding image property with a default value
       image: "https://images.unsplash.com/photo-1594815101424-0c644c8c63c6?q=80&w=1170"
     })) || []
   );
   
-  const heritageSites = stateData.flatMap(state => 
+  const heritageSites: HeritageSite[] = stateData.flatMap(state => 
     state.heritage?.sites?.map(site => ({
       ...site,
       stateName: state.name,
       stateId: state.id,
-      // Use site.image if it exists, otherwise use default
       image: site.image || "https://images.unsplash.com/photo-1599661046289-e31897d36a68?q=80&w=1170"
     })) || []
   );
@@ -107,7 +151,7 @@ const Culture = () => {
         </section>
 
         {/* Search and Filter Section */}
-        <section className="py-8 px-6 bg-secondary dark:bg-secondary">
+        <section className="py-8 px-6 bg-secondary dark:bg-secondary/20">
           <div className="container mx-auto">
             <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
               <div className="relative w-full md:w-80">
@@ -177,7 +221,10 @@ const Culture = () => {
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: index * 0.05 }}
                         >
-                          <Card className="overflow-hidden hover:shadow-lg transition-shadow h-full">
+                          <Card 
+                            className="overflow-hidden hover:shadow-lg transition-shadow h-full cursor-pointer"
+                            onClick={() => setSelectedArtForm(art)}
+                          >
                             <div className="h-48 overflow-hidden">
                               <img 
                                 src={art.image} 
@@ -288,6 +335,105 @@ const Culture = () => {
           </div>
         </section>
       </main>
+
+      {/* Art Form Detail Modal */}
+      <AnimatePresence>
+        {selectedArtForm && (
+          <motion.div 
+            className="fixed inset-0 bg-black/70 dark:bg-black/80 z-50 flex items-center justify-center p-4 overflow-auto"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setSelectedArtForm(null)}
+          >
+            <motion.div 
+              className="bg-background rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto"
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 20 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="relative h-72 sm:h-80 md:h-96 overflow-hidden">
+                <img 
+                  src={selectedArtForm.image || "https://images.unsplash.com/photo-1576487236230-eaa4afe68192?q=80&w=1170"}
+                  alt={selectedArtForm.name}
+                  className="w-full h-full object-cover"
+                />
+                <button 
+                  className="absolute top-4 right-4 bg-black/50 rounded-full p-2 text-white"
+                  onClick={() => setSelectedArtForm(null)}
+                >
+                  <X size={20} />
+                </button>
+                <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent">
+                  <h2 className="text-3xl font-serif text-white">{selectedArtForm.name}</h2>
+                  <p className="text-white/80 flex items-center">
+                    <MapPin size={16} className="mr-1" />
+                    {selectedArtForm.stateName}
+                  </p>
+                </div>
+              </div>
+              
+              <div className="p-6 md:p-8">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                  <div className="bg-secondary/50 p-4 rounded-lg flex flex-col items-center justify-center">
+                    <Globe className="text-spice-500 mb-2" size={24} />
+                    <h3 className="text-lg font-medium">Region</h3>
+                    <p className="text-center">{selectedArtForm.region}</p>
+                  </div>
+                  
+                  <div className="bg-secondary/50 p-4 rounded-lg flex flex-col items-center justify-center">
+                    <Clock className="text-spice-500 mb-2" size={24} />
+                    <h3 className="text-lg font-medium">Started</h3>
+                    <p className="text-center">{selectedArtForm.history?.started || "Ancient times"}</p>
+                  </div>
+                  
+                  <div className="bg-secondary/50 p-4 rounded-lg flex flex-col items-center justify-center">
+                    <History className="text-spice-500 mb-2" size={24} />
+                    <h3 className="text-lg font-medium">Golden Period</h3>
+                    <p className="text-center">{selectedArtForm.history?.goldenPeriod || "17th-19th century"}</p>
+                  </div>
+                </div>
+                
+                <div className="mb-8">
+                  <h3 className="text-xl font-medium mb-4 flex items-center">
+                    <Info className="mr-2 text-spice-500" size={20} />
+                    Information
+                  </h3>
+                  <p className="text-foreground/80 leading-relaxed">
+                    {selectedArtForm.information || `${selectedArtForm.name} is a traditional art form from ${selectedArtForm.stateName}, representing the rich cultural heritage of the region.`}
+                  </p>
+                </div>
+                
+                <div className="mb-8">
+                  <h3 className="text-xl font-medium mb-4">Current Status</h3>
+                  <p className="text-foreground/80 leading-relaxed bg-secondary/30 p-4 rounded-lg">
+                    {selectedArtForm.history?.currentStatus || "Being preserved through cultural programs and practiced by dedicated artists."}
+                  </p>
+                </div>
+                
+                {selectedArtForm.additionalImages && selectedArtForm.additionalImages.length > 0 && (
+                  <div>
+                    <h3 className="text-xl font-medium mb-4">Gallery</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      {selectedArtForm.additionalImages.map((img, idx) => (
+                        <div key={idx} className="rounded-lg overflow-hidden h-48">
+                          <img 
+                            src={img} 
+                            alt={`${selectedArtForm.name} - image ${idx + 1}`} 
+                            className="w-full h-full object-cover hover:scale-105 transition-transform"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <Footer />
     </div>
   );
