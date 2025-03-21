@@ -8,7 +8,6 @@ import Gallery from '@/components/sections/Gallery';
 import Experience from '@/components/sections/Experience';
 import Contact from '@/components/sections/Contact';
 import States from '@/components/sections/States';
-import VirtualTours from '@/components/sections/VirtualTours';
 import Cuisine from '@/components/sections/Cuisine';
 import Reviews from '@/components/sections/Reviews';
 
@@ -48,7 +47,6 @@ const Index = () => {
         <States />
         <Gallery />
         <Cuisine />
-        <VirtualTours />
         <Experience />
         <Reviews />
         <Contact />

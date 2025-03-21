@@ -39,22 +39,22 @@
   }
 
   .dark {
-    --background: 30 10% 8%;
+    --background: 30 15% 8%;
     --foreground: 40 38% 95%;
 
-    --card: 30 10% 12%;
+    --card: 30 15% 12%;
     --card-foreground: 40 38% 95%;
 
-    --popover: 30 10% 12%;
+    --popover: 30 15% 12%;
     --popover-foreground: 40 38% 95%;
 
     --primary: 24 90% 55%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 30 10% 16%;
+    --secondary: 30 15% 16%;
     --secondary-foreground: 40 38% 95%;
 
-    --muted: 30 10% 16%;
+    --muted: 30 15% 16%;
     --muted-foreground: 40 38% 70%;
 
     --accent: 199 50% 24%;
@@ -63,8 +63,8 @@
     --destructive: 0 74% 42%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 30 15% 25%;
-    --input: 30 15% 25%;
+    --border: 30 20% 25%;
+    --input: 30 20% 25%;
     --ring: 24 90% 55%;
   }
 
@@ -179,6 +179,34 @@
   .bg-pattern {
     @apply bg-repeat opacity-10 pointer-events-none;
     background-image: url("https://www.transparenttextures.com/patterns/oriental-tiles.png");
+  }
+
+  .dark .search-box {
+    @apply bg-mystic-800 border-mystic-700 text-foreground placeholder:text-foreground/50;
+  }
+
+  .search-box {
+    @apply bg-white border border-mystic-200 px-4 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-spice-400 transition-all;
+  }
+
+  .filter-container {
+    @apply flex flex-wrap gap-2 mb-6;
+  }
+
+  .filter-tag {
+    @apply px-3 py-1 text-sm rounded-full border border-mystic-200 hover:bg-spice-50 hover:border-spice-300 cursor-pointer transition-colors;
+  }
+
+  .dark .filter-tag {
+    @apply border-mystic-700 hover:bg-spice-900 hover:border-spice-700;
+  }
+
+  .filter-tag.active {
+    @apply bg-spice-500 border-spice-500 text-white hover:bg-spice-600;
+  }
+
+  .dark .filter-tag.active {
+    @apply bg-spice-600 border-spice-600;
   }
 
   .animate-delay-100 {

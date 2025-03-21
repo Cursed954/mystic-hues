@@ -8,7 +8,6 @@ import useMobile from '@/hooks/use-mobile';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const navItems = [
-  { name: 'Home', path: '/' },
   { name: 'States', path: '/states' },
   { name: 'Cuisine', path: '/cuisine' },
   { name: 'Culture', path: '/culture' },
