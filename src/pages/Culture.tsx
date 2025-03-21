@@ -20,7 +20,8 @@ const Culture = () => {
       name: art,
       stateName: state.name,
       stateId: state.id,
-      image: state.artFormImages?.[art] || "https://images.unsplash.com/photo-1576487236230-eaa4afe68192?q=80&w=1170"
+      // Use a default image since artFormImages doesn't exist
+      image: "https://images.unsplash.com/photo-1576487236230-eaa4afe68192?q=80&w=1170"
     })) || []
   );
   
@@ -29,7 +30,8 @@ const Culture = () => {
       ...festival,
       stateName: state.name,
       stateId: state.id,
-      image: festival.image || "https://images.unsplash.com/photo-1594815101424-0c644c8c63c6?q=80&w=1170"
+      // Adding image property with a default value
+      image: "https://images.unsplash.com/photo-1594815101424-0c644c8c63c6?q=80&w=1170"
     })) || []
   );
   
@@ -38,6 +40,7 @@ const Culture = () => {
       ...site,
       stateName: state.name,
       stateId: state.id,
+      // Use site.image if it exists, otherwise use default
       image: site.image || "https://images.unsplash.com/photo-1599661046289-e31897d36a68?q=80&w=1170"
     })) || []
   );
