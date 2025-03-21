@@ -1,33 +1,33 @@
 
-import React, { useEffect, useState } from 'react';
-import { cn } from '@/lib/utils';
+import React, { useState, useEffect } from 'react';
+import { useLocation, Link } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
-import { AnimatePresence, motion } from 'framer-motion';
-import { Link, useLocation } from 'react-router-dom';
+import { Logo } from '../ui/Logo';
+import { ThemeToggle } from '../theme/ThemeToggle';
+import useMobile from '@/hooks/use-mobile';
+import { motion, AnimatePresence } from 'framer-motion';
+
+const navItems = [
+  { name: 'Home', path: '/' },
+  { name: 'About', path: '/#about' },
+  { name: 'States', path: '/#states' },
+  { name: 'Gallery', path: '/#gallery' },
+  { name: 'Cuisine', path: '/#cuisine' },
+  { name: 'Virtual Tours', path: '/#virtual-tours' },
+  { name: 'Experience', path: '/#experience' },
+  { name: 'Contact', path: '/#contact' },
+];
 
 const Navbar: React.FC = () => {
-  const [scrolled, setScrolled] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
-  const isHomePage = location.pathname === '/';
-
-  const navItems = [
-    { name: 'Home', href: isHomePage ? '#home' : '/' },
-    { name: 'About', href: isHomePage ? '#about' : '/#about' },
-    { name: 'States', href: isHomePage ? '#states' : '/#states' },
-    { name: 'Gallery', href: isHomePage ? '#gallery' : '/#gallery' },
-    { name: 'Experience', href: isHomePage ? '#experience' : '/#experience' },
-    { name: 'Contact', href: isHomePage ? '#contact' : '/#contact' },
-  ];
+  const isMobile = useMobile();
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const isHome = location.pathname === '/';
 
   useEffect(() => {
     const handleScroll = () => {
-      const offset = window.scrollY;
-      if (offset > 50) {
-        setScrolled(true);
-      } else {
-        setScrolled(false);
-      }
+      setIsScrolled(window.scrollY > 20);
     };
 
     window.addEventListener('scroll', handleScroll);
@@ -40,116 +40,79 @@ const Navbar: React.FC = () => {
 
   return (
     <header
-      className={cn(
-        'fixed top-0 left-0 w-full z-50 transition-all duration-300 py-4 px-6 lg:px-12',
-        scrolled 
-          ? 'bg-white/95 backdrop-blur-md shadow-sm py-3' 
-          : isHomePage ? 'bg-transparent' : 'bg-white/95 backdrop-blur-md'
-      )}
+      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
+        isScrolled || !isHome
+          ? 'py-3 bg-background/90 backdrop-blur-md shadow-sm'
+          : 'py-5 bg-transparent'
+      }`}
     >
-      <div className="container mx-auto">
-        <div className="flex items-center justify-between">
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <Link to="/" className="font-serif text-2xl font-medium text-mystic-950 flex items-center">
-              Mystic<span className="text-spice-500">India</span>
-              <motion.div 
-                className="w-2 h-2 bg-spice-500 rounded-full ml-1"
-                animate={{ scale: [1, 1.5, 1] }}
-                transition={{ duration: 1.5, repeat: Infinity }}
-              />
-            </Link>
-          </motion.div>
+      <nav className="container mx-auto px-6 flex justify-between items-center">
+        <Link to="/" className="z-10">
+          <Logo className="h-10 w-auto" />
+        </Link>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-1">
-            {navItems.map((item, index) => (
-              <motion.div
+        {/* Desktop Navigation */}
+        {!isMobile && (
+          <div className="flex items-center space-x-1">
+            {navItems.map((item) => (
+              <a
                 key={item.name}
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: 0.1 + index * 0.05 }}
+                href={item.path}
+                className="nav-item"
               >
-                <a 
-                  href={item.href} 
-                  className={cn(
-                    "nav-item",
-                    !isHomePage && !scrolled && "text-foreground"
-                  )}
-                >
-                  {item.name}
-                </a>
-              </motion.div>
+                {item.name}
+              </a>
             ))}
-            
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.3, delay: 0.5 }}
+
+            <div className="ml-4">
+              <ThemeToggle />
+            </div>
+          </div>
+        )}
+
+        {/* Mobile Navigation */}
+        {isMobile && (
+          <div className="flex items-center">
+            <ThemeToggle />
+            <button
+              className="ml-2 p-2 text-foreground"
+              onClick={toggleMobileMenu}
+              aria-label="Toggle mobile menu"
             >
-              <Link 
-                to="/admin" 
-                className="ml-4 px-4 py-2 bg-spice-500 text-white rounded-md hover:bg-spice-600 transition-colors"
-              >
-                Admin
-              </Link>
-            </motion.div>
-          </nav>
+              {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
+        )}
+      </nav>
 
-          {/* Mobile Menu Button */}
-          <motion.button
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="md:hidden p-2 text-mystic-900 hover:text-spice-500 transition-colors"
-            onClick={toggleMobileMenu}
-            aria-label="Toggle menu"
-          >
-            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </motion.button>
-        </div>
-      </div>
-
-      {/* Mobile Navigation */}
+      {/* Mobile Menu */}
       <AnimatePresence>
-        {mobileMenuOpen && (
+        {isMobile && mobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3 }}
-            className="md:hidden absolute top-full left-0 w-full glass-panel"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 top-16 z-50 bg-background/95 backdrop-blur-md"
           >
-            <nav className="flex flex-col py-4 px-6">
+            <div className="container mx-auto px-6 py-8 flex flex-col items-center">
               {navItems.map((item, index) => (
                 <motion.a
                   key={item.name}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.05 }}
-                  href={item.href}
-                  className="py-3 text-mystic-900 hover:text-spice-500 transition-colors"
-                  onClick={() => setMobileMenuOpen(false)}
+                  href={item.path}
+                  className="py-3 text-lg font-medium text-foreground hover:text-spice-500 transition-colors"
+                  onClick={toggleMobileMenu}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ 
+                    opacity: 1, 
+                    y: 0,
+                    transition: { delay: index * 0.05 + 0.1 } 
+                  }}
                 >
                   {item.name}
                 </motion.a>
               ))}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.3 }}
-              >
-                <Link 
-                  to="/admin" 
-                  className="mt-4 inline-block px-4 py-2 bg-spice-500 text-white rounded-md hover:bg-spice-600 transition-colors"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Admin
-                </Link>
-              </motion.div>
-            </nav>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

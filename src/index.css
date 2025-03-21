@@ -38,6 +38,36 @@
     --radius: 0.5rem;
   }
 
+  .dark {
+    --background: 30 10% 8%;
+    --foreground: 40 38% 95%;
+
+    --card: 30 10% 12%;
+    --card-foreground: 40 38% 95%;
+
+    --popover: 30 10% 12%;
+    --popover-foreground: 40 38% 95%;
+
+    --primary: 24 90% 55%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 30 10% 16%;
+    --secondary-foreground: 40 38% 95%;
+
+    --muted: 30 10% 16%;
+    --muted-foreground: 40 38% 70%;
+
+    --accent: 199 50% 24%;
+    --accent-foreground: 199 80% 90%;
+
+    --destructive: 0 74% 42%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 30 15% 25%;
+    --input: 30 15% 25%;
+    --ring: 24 90% 55%;
+  }
+
   * {
     @apply border-border;
   }
@@ -47,8 +77,17 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans bg-texture-light;
+    @apply bg-background text-foreground font-sans;
     overflow-x: hidden;
+  }
+
+  .light body {
+    @apply bg-texture-light;
+  }
+
+  .dark body {
+    background-image: url("https://www.transparenttextures.com/patterns/dark-wood.png");
+    @apply bg-background;
   }
 
   h1, h2, h3, h4, h5 {
@@ -77,6 +116,10 @@
     @apply bg-white/70 backdrop-blur-md border border-white/20 shadow-sm;
   }
 
+  .dark .glass-panel {
+    @apply bg-black/40 backdrop-blur-md border border-white/10 shadow-md;
+  }
+
   .section-title {
     @apply text-3xl md:text-4xl lg:text-5xl font-serif font-medium relative inline-block;
   }
@@ -97,6 +140,10 @@
   .btn-outline {
     @apply px-6 py-3 border border-mystic-300 rounded-md font-medium transition-all
            hover:bg-mystic-50 hover:border-mystic-400 hover:shadow-sm;
+  }
+
+  .dark .btn-outline {
+    @apply border-mystic-700 hover:bg-mystic-800;
   }
 
   .nav-item {
