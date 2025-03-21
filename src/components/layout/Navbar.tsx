@@ -9,13 +9,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const navItems = [
   { name: 'Home', path: '/' },
-  { name: 'About', path: '/#about' },
-  { name: 'States', path: '/#states' },
-  { name: 'Gallery', path: '/#gallery' },
-  { name: 'Cuisine', path: '/#cuisine' },
-  { name: 'Virtual Tours', path: '/#virtual-tours' },
-  { name: 'Experience', path: '/#experience' },
-  { name: 'Contact', path: '/#contact' },
+  { name: 'States', path: '/states' },
+  { name: 'Cuisine', path: '/cuisine' },
+  { name: 'Culture', path: '/culture' },
+  { name: 'Login', path: '/login' },
 ];
 
 const Navbar: React.FC = () => {
@@ -55,13 +52,15 @@ const Navbar: React.FC = () => {
         {!isMobile && (
           <div className="flex items-center space-x-1">
             {navItems.map((item) => (
-              <a
+              <Link
                 key={item.name}
-                href={item.path}
-                className="nav-item"
+                to={item.path}
+                className={`nav-item ${
+                  location.pathname === item.path ? 'text-spice-500' : ''
+                }`}
               >
                 {item.name}
-              </a>
+              </Link>
             ))}
 
             <div className="ml-4">
@@ -97,11 +96,8 @@ const Navbar: React.FC = () => {
           >
             <div className="container mx-auto px-6 py-8 flex flex-col items-center">
               {navItems.map((item, index) => (
-                <motion.a
+                <motion.div
                   key={item.name}
-                  href={item.path}
-                  className="py-3 text-lg font-medium text-foreground hover:text-spice-500 transition-colors"
-                  onClick={toggleMobileMenu}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ 
                     opacity: 1, 
@@ -109,8 +105,16 @@ const Navbar: React.FC = () => {
                     transition: { delay: index * 0.05 + 0.1 } 
                   }}
                 >
-                  {item.name}
-                </motion.a>
+                  <Link
+                    to={item.path}
+                    className={`py-3 text-lg font-medium hover:text-spice-500 transition-colors block ${
+                      location.pathname === item.path ? 'text-spice-500' : 'text-foreground'
+                    }`}
+                    onClick={toggleMobileMenu}
+                  >
+                    {item.name}
+                  </Link>
+                </motion.div>
               ))}
             </div>
           </motion.div>

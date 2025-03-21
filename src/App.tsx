@@ -8,6 +8,10 @@ import Index from "./pages/Index";
 import StateDetail from "./pages/StateDetail";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
+import AllStates from "./pages/AllStates";
+import Cuisine from "./pages/Cuisine";
+import Culture from "./pages/Culture";
+import Login from "./pages/Login";
 import { useEffect } from "react";
 import { ThemeProvider } from "./components/theme/ThemeProvider";
 
@@ -28,7 +32,11 @@ const App = () => {
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Index />} />
+              <Route path="/states" element={<AllStates />} />
               <Route path="/state/:stateId" element={<StateDetail />} />
+              <Route path="/cuisine" element={<Cuisine />} />
+              <Route path="/culture" element={<Culture />} />
+              <Route path="/login" element={<Login />} />
               <Route path="/admin" element={<Admin />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
