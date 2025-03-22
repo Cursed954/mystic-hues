@@ -18,16 +18,23 @@ const Hero: React.FC = () => {
 
   return (
     <section id="home" ref={targetRef} className="relative min-h-screen flex items-center overflow-hidden">
-      {/* Background Image with Parallax */}
-      <ParallaxSection speed={0.2} className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-background z-10"></div>
-        <motion.img
-          style={{ scale: useTransform(scrollYProgress, [0, 1], [1.1, 1]) }}
-          src="https://images.unsplash.com/photo-1524413840807-0c3cb6fa808d?q=80&w=2070"
-          alt="Majestic Indian temple with ornate architecture at sunset"
+      {/* Video Background with Overlay */}
+      <div className="absolute inset-0 z-0 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-background z-10"></div>
+        <video
           className="w-full h-full object-cover"
-        />
-      </ParallaxSection>
+          autoPlay
+          muted
+          loop
+          playsInline
+        >
+          <source 
+            src="https://player.vimeo.com/progressive_redirect/playback/921376317/rendition/720p/file.mp4?loc=external&oauth2_token_id=1747418641&signature=81fe3100ce7a792e4a2487a6a6a26a72df29adc0cfe19bf09dcae05be11dce97" 
+            type="video/mp4" 
+          />
+          Your browser does not support the video tag.
+        </video>
+      </div>
 
       {/* Abstract Pattern Overlay */}
       <div className="absolute inset-0 bg-repeat opacity-15 z-[1] mix-blend-soft-light" 

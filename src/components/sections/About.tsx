@@ -1,9 +1,19 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { MapPin, Users, Compass, Clock } from 'lucide-react';
 import ScrollReveal from '../ui/ScrollReveal';
 import SectionHeader from '../ui/SectionHeader';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+
+// Cultural images from the Culture page
+const culturalImages = [
+  "https://images.unsplash.com/photo-1576487236230-eaa4afe68192?q=80&w=1170",
+  "https://images.unsplash.com/photo-1594026112334-d8040bd05749?q=80&w=1170",
+  "https://images.unsplash.com/photo-1540122995631-7c74c46c0b8f?q=80&w=1170",
+  "https://images.unsplash.com/photo-1584806749948-697891c67821?q=80&w=1170",
+  "https://images.unsplash.com/photo-1594815101424-0c644c8c63c6?q=80&w=1170",
+  "https://images.unsplash.com/photo-1599661046289-e31897d36a68?q=80&w=1170"
+];
 
 const FeatureItem: React.FC<{
   icon: React.ReactNode;
@@ -29,6 +39,19 @@ const FeatureItem: React.FC<{
 );
 
 const About: React.FC = () => {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  useEffect(() => {
+    // Change image every 5 seconds
+    const interval = setInterval(() => {
+      setCurrentImageIndex(prevIndex => 
+        prevIndex === culturalImages.length - 1 ? 0 : prevIndex + 1
+      );
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <section id="about" className="py-24 px-6">
       <div className="container mx-auto">
@@ -40,19 +63,22 @@ const About: React.FC = () => {
 
         {/* Main Content */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          {/* Left Column - Image */}
+          {/* Left Column - Image Carousel */}
           <ScrollReveal animation="fade-in-right">
             <div className="relative">
-              <motion.div 
-                className="relative z-10 overflow-hidden rounded-lg shadow-xl"
-                whileHover={{ scale: 1.02 }}
-                transition={{ duration: 0.3 }}
-              >
-                <img 
-                  src="https://images.unsplash.com/photo-1524413840807-0c3cb6fa808d" 
-                  alt="Mystical temple landscape in India" 
-                  className="w-full h-[500px] object-cover"
-                />
+              <div className="relative z-10 overflow-hidden rounded-lg shadow-xl h-[500px]">
+                <AnimatePresence mode="wait">
+                  <motion.img 
+                    key={currentImageIndex}
+                    src={culturalImages[currentImageIndex]} 
+                    alt="Cultural heritage of India" 
+                    className="w-full h-full object-cover"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.5 }}
+                  />
+                </AnimatePresence>
                 
                 <motion.div 
                   className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"
@@ -67,7 +93,7 @@ const About: React.FC = () => {
                     </p>
                   </div>
                 </motion.div>
-              </motion.div>
+              </div>
               
               <motion.div 
                 className="absolute top-10 -right-6 w-24 h-24 bg-spice-500/20 rounded-full backdrop-blur-sm z-0"

@@ -40,12 +40,24 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
         document.body.style.backgroundImage = "url('/lovable-uploads/4b4279e6-d26c-4c95-98fc-8b4b73073286.png')";
         document.body.style.backgroundSize = 'cover';
         document.body.style.backgroundBlendMode = 'soft-light';
+        
+        // Make sure video elements have proper overlay for dark mode
+        const videoOverlays = document.querySelectorAll('.video-overlay');
+        videoOverlays.forEach(overlay => {
+          (overlay as HTMLElement).style.backgroundColor = 'rgba(10, 9, 32, 0.5)';
+        });
       } else {
         document.body.style.background = '';
         document.body.style.backgroundAttachment = '';
         document.body.style.backgroundImage = '';
         document.body.style.backgroundSize = '';
         document.body.style.backgroundBlendMode = '';
+        
+        // Reset video overlays for light mode
+        const videoOverlays = document.querySelectorAll('.video-overlay');
+        videoOverlays.forEach(overlay => {
+          (overlay as HTMLElement).style.backgroundColor = 'rgba(0, 0, 0, 0.3)';
+        });
       }
     }
   }, [theme]);
