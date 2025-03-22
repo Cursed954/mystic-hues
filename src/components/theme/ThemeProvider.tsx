@@ -35,7 +35,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       
       // Add custom background for dark mode
       if (theme === 'dark') {
-        document.body.style.background = 'linear-gradient(135deg, #1A1F2C 0%, #403E43 100%)';
+        document.body.style.background = 'linear-gradient(135deg, #1A1F2C 0%, #2a2644 100%)';
         document.body.style.backgroundAttachment = 'fixed';
       } else {
         document.body.style.background = '';

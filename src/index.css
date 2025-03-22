@@ -1,4 +1,3 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
 
 @tailwind base;
@@ -39,33 +38,33 @@
   }
 
   .dark {
-    --background: 30 15% 8%;
-    --foreground: 40 38% 95%;
+    --background: 260 20% 11%;
+    --foreground: 270 20% 90%;
 
-    --card: 30 15% 12%;
-    --card-foreground: 40 38% 95%;
+    --card: 260 20% 15%;
+    --card-foreground: 270 20% 90%;
 
-    --popover: 30 15% 12%;
-    --popover-foreground: 40 38% 95%;
+    --popover: 260 20% 15%;
+    --popover-foreground: 270 20% 90%;
 
-    --primary: 24 90% 55%;
+    --primary: 267 75% 80%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 30 15% 16%;
-    --secondary-foreground: 40 38% 95%;
+    --secondary: 260 20% 20%;
+    --secondary-foreground: 270 20% 90%;
 
-    --muted: 30 15% 16%;
-    --muted-foreground: 40 38% 70%;
+    --muted: 260 20% 20%;
+    --muted-foreground: 270 20% 70%;
 
-    --accent: 199 50% 24%;
-    --accent-foreground: 199 80% 90%;
+    --accent: 267 40% 30%;
+    --accent-foreground: 267 80% 90%;
 
     --destructive: 0 74% 42%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 30 20% 25%;
-    --input: 30 20% 25%;
-    --ring: 24 90% 55%;
+    --border: 260 20% 30%;
+    --input: 260 20% 30%;
+    --ring: 267 75% 80%;
   }
 
   * {
@@ -103,11 +102,11 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-mystic-300 rounded-full transition-colors;
+    @apply bg-mystic-300 rounded-full transition-colors dark:bg-primary;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-mystic-400;
+    @apply bg-mystic-400 dark:bg-primary/90;
   }
 }
 
