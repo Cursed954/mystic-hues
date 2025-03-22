@@ -35,11 +35,17 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       
       // Add custom background for dark mode
       if (theme === 'dark') {
-        document.body.style.background = 'linear-gradient(135deg, #1A1F2C 0%, #2a2644 100%)';
+        document.body.style.background = 'linear-gradient(135deg, #0a0920 0%, #2b0e3e 50%, #1a1258 100%)';
         document.body.style.backgroundAttachment = 'fixed';
+        document.body.style.backgroundImage = "url('/lovable-uploads/4b4279e6-d26c-4c95-98fc-8b4b73073286.png')";
+        document.body.style.backgroundSize = 'cover';
+        document.body.style.backgroundBlendMode = 'soft-light';
       } else {
         document.body.style.background = '';
         document.body.style.backgroundAttachment = '';
+        document.body.style.backgroundImage = '';
+        document.body.style.backgroundSize = '';
+        document.body.style.backgroundBlendMode = '';
       }
     }
   }, [theme]);

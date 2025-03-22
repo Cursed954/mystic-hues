@@ -5,6 +5,7 @@ import SectionHeader from '../ui/SectionHeader';
 import FeatureCard from '../ui/FeatureCard';
 import ScrollReveal from '../ui/ScrollReveal';
 import { motion } from 'framer-motion';
+import { useTheme } from '../theme/ThemeProvider';
 
 type ExperienceType = {
   id: number;
@@ -17,6 +18,8 @@ type ExperienceType = {
 };
 
 const Experience: React.FC = () => {
+  const { theme } = useTheme();
+  
   const experiences: ExperienceType[] = [
     {
       id: 1,
@@ -47,8 +50,11 @@ const Experience: React.FC = () => {
     },
   ];
 
+  const starColor = theme === 'dark' ? "#e94cff" : "#ff7e11";
+  const textAccentColor = theme === 'dark' ? "#53a6ff" : "#ff7e11";
+
   return (
-    <section id="experience" className="py-24 px-6 bg-gradient-to-b from-white via-white to-mystic-50">
+    <section id="experience" className={`py-24 px-6 section-experience`}>
       <div className="container mx-auto">
         {/* Section Header */}
         <SectionHeader
@@ -60,38 +66,54 @@ const Experience: React.FC = () => {
         {/* Experiences Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
           {experiences.map((exp, index) => (
-            <FeatureCard
-              key={exp.id}
-              title={exp.title}
-              description={exp.description}
-              imageSrc={exp.imageSrc}
-              imageAlt={exp.title}
-              delay={index * 2}
-              icon={<div className="bg-white/80 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-medium flex items-center">
-                <Star size={14} className="text-spice-500 mr-1" fill="#ff7e11" />
-                {exp.rating}
-              </div>}
-            >
-              <div className="flex flex-wrap gap-4 mb-4 text-sm">
-                <div className="flex items-center text-foreground/70">
-                  <Calendar size={16} className="mr-1" />
-                  {exp.duration}
-                </div>
-                <div className="flex items-center text-foreground/70">
-                  <Map size={16} className="mr-1" />
-                  {exp.location}
-                </div>
-              </div>
-              
-              <motion.a 
-                href="#" 
-                className="inline-flex items-center text-spice-500 font-medium hover:text-spice-600 transition-colors"
-                whileHover={{ x: 5 }}
+            <ScrollReveal key={exp.id} delay={index * 0.1}>
+              <motion.div 
+                className={`rounded-xl overflow-hidden shadow-lg ${theme === 'dark' ? 'experience-card' : 'bg-white'} h-full flex flex-col card-hover`}
+                whileHover={{ y: -5 }}
                 transition={{ type: "spring", stiffness: 400, damping: 10 }}
               >
-                View Details <ArrowRight size={16} className="ml-1" />
-              </motion.a>
-            </FeatureCard>
+                <div className="relative h-52 overflow-hidden">
+                  <img 
+                    src={exp.imageSrc} 
+                    alt={exp.title} 
+                    className="w-full h-full object-cover transition-transform duration-700 ease-in-out hover:scale-110"
+                  />
+                  <div className="absolute top-4 right-4">
+                    <div className="bg-white/80 dark:bg-black/60 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-medium flex items-center">
+                      <Star size={14} className={`mr-1`} fill={starColor} stroke={starColor} />
+                      {exp.rating}
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="p-6 flex flex-col flex-grow">
+                  <h3 className="text-xl font-serif font-semibold mb-3">{exp.title}</h3>
+                  
+                  <p className="text-foreground/80 mb-4">{exp.description}</p>
+                  
+                  <div className="flex flex-wrap gap-4 mb-4 text-sm mt-auto">
+                    <div className="flex items-center text-foreground/70">
+                      <Calendar size={16} className="mr-1" />
+                      {exp.duration}
+                    </div>
+                    <div className="flex items-center text-foreground/70">
+                      <Map size={16} className="mr-1" />
+                      {exp.location}
+                    </div>
+                  </div>
+                  
+                  <motion.a 
+                    href="#" 
+                    className={`inline-flex items-center font-medium transition-colors mt-2`}
+                    style={{ color: textAccentColor }}
+                    whileHover={{ x: 5 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                  >
+                    View Details <ArrowRight size={16} className="ml-1" />
+                  </motion.a>
+                </div>
+              </motion.div>
+            </ScrollReveal>
           ))}
         </div>
 
@@ -100,7 +122,7 @@ const Experience: React.FC = () => {
           <div className="text-center">
             <motion.a 
               href="#contact" 
-              className="btn-primary inline-flex items-center"
+              className="btn-primary inline-flex items-center px-6 py-3 rounded-md font-medium"
               whileHover={{ y: -5, transition: { duration: 0.2 } }}
               whileTap={{ y: 0 }}
             >
