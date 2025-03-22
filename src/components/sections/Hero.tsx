@@ -1,5 +1,5 @@
 
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { ArrowRight } from 'lucide-react';
 import ParallaxSection from '../ui/ParallaxSection';
 import { motion, useScroll, useTransform } from 'framer-motion';
@@ -7,6 +7,8 @@ import { textVariant, fadeIn, staggerContainer } from '@/lib/animations';
 
 const Hero: React.FC = () => {
   const targetRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  
   const { scrollYProgress } = useScroll({
     target: targetRef,
     offset: ["start start", "end start"]
@@ -16,12 +18,31 @@ const Hero: React.FC = () => {
   const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.8]);
   const y = useTransform(scrollYProgress, [0, 0.5], [0, 100]);
 
+  // Ensure video autoplay works properly
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.defaultMuted = true;
+      videoRef.current.muted = true;
+      videoRef.current.autoplay = true;
+      videoRef.current.loop = true;
+      videoRef.current.playsInline = true;
+      videoRef.current.play().catch(e => {
+        console.error("Video autoplay failed:", e);
+        // Try again after user interaction
+        document.body.addEventListener('click', () => {
+          videoRef.current?.play().catch(e => console.error("Video play failed after click:", e));
+        }, { once: true });
+      });
+    }
+  }, []);
+
   return (
     <section id="home" ref={targetRef} className="relative min-h-screen flex items-center overflow-hidden">
       {/* Video Background with Overlay */}
       <div className="absolute inset-0 z-0 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-background z-10"></div>
         <video
+          ref={videoRef}
           className="w-full h-full object-cover"
           autoPlay
           muted

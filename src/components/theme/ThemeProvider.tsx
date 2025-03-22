@@ -37,7 +37,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       if (theme === 'dark') {
         document.body.style.background = 'linear-gradient(135deg, #0a0920 0%, #2b0e3e 50%, #1a1258 100%)';
         document.body.style.backgroundAttachment = 'fixed';
-        document.body.style.backgroundImage = "url('/lovable-uploads/4b4279e6-d26c-4c95-98fc-8b4b73073286.png')";
+        document.body.style.backgroundImage = "url('https://img.freepik.com/free-photo/magical-mystical-landscape-wallpaper-purple-tones_23-2150293331.jpg?w=2000')";
         document.body.style.backgroundSize = 'cover';
         document.body.style.backgroundBlendMode = 'soft-light';
         
@@ -45,6 +45,16 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
         const videoOverlays = document.querySelectorAll('.video-overlay');
         videoOverlays.forEach(overlay => {
           (overlay as HTMLElement).style.backgroundColor = 'rgba(10, 9, 32, 0.5)';
+        });
+
+        // Ensure videos autoplay with appropriate quality
+        const videos = document.querySelectorAll('video');
+        videos.forEach(video => {
+          video.autoplay = true;
+          video.muted = true;
+          video.loop = true;
+          video.playsInline = true;
+          video.play().catch(e => console.error("Video autoplay failed:", e));
         });
       } else {
         document.body.style.background = '';
