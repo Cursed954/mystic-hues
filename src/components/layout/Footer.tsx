@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Heart, Mail, MapPin, Phone } from 'lucide-react';
 
@@ -9,7 +8,7 @@ const Footer: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           <div>
             <h3 className="text-2xl font-serif mb-4">
-              Mystic<span className="text-spice-500">Hues</span>
+              Mystic<span className="text-spice-500">India</span>
             </h3>
             <p className="text-mystic-100/80 mb-6 leading-relaxed">
               Discover the colors, textures, and stories of India through our immersive journey experiences.
@@ -54,15 +53,19 @@ const Footer: React.FC = () => {
             <ul className="space-y-3">
               <li className="flex items-start">
                 <MapPin size={18} className="mt-1 mr-2 text-spice-500" />
-                <span className="text-mystic-100/80">123 Journey Street, Mystic City, India</span>
+                <span className="text-mystic-100/80">Bennett University, Greater Noida India</span>
               </li>
               <li className="flex items-center">
                 <Phone size={18} className="mr-2 text-spice-500" />
-                <span className="text-mystic-100/80">+91 98765 43210</span>
+                <span className="text-mystic-100/80">+91 95488 64851</span>
+              </li>
+              <li className="flex items-center">
+                <Phone size={18} className="mr-2 text-spice-500" />
+                <span className="text-mystic-100/80">+91 63961 44121</span>
               </li>
               <li className="flex items-center">
                 <Mail size={18} className="mr-2 text-spice-500" />
-                <span className="text-mystic-100/80">hello@mystichues.com</span>
+                <span className="text-mystic-100/80">deepanshu95488@gmail.com</span>
               </li>
             </ul>
           </div>
@@ -70,7 +73,7 @@ const Footer: React.FC = () => {
         
         <div className="border-t border-white/10 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-mystic-100/60 text-sm">
-            © {new Date().getFullYear()} MysticHues. All rights reserved.
+            © {new Date().getFullYear()} Mystic India. All rights reserved.
           </p>
           <p className="text-mystic-100/60 text-sm flex items-center mt-4 md:mt-0">
             Made with <Heart size={14} className="mx-1 text-spice-500" /> in India
