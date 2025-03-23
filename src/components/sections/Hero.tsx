@@ -1,3 +1,4 @@
+// Home: Experience the timeless spirit of India
 
 import React, { useRef, useEffect } from 'react';
 import { ArrowRight } from 'lucide-react';
@@ -50,7 +51,7 @@ const Hero: React.FC = () => {
           playsInline
         >
           <source 
-            src="https://player.vimeo.com/progressive_redirect/playback/921376317/rendition/720p/file.mp4?loc=external&oauth2_token_id=1747418641&signature=81fe3100ce7a792e4a2487a6a6a26a72df29adc0cfe19bf09dcae05be11dce97" 
+            src="https://player.vimeo.com/progressive_redirect/playback/921376317/rendition/1080p/file.mp4?loc=external&oauth2_token_id=1747418641&signature=81fe3100ce7a792e4a2487a6a6a26a72df29adc0cfe19bf09dcae05be11dce97" 
             type="video/mp4" 
           />
           Your browser does not support the video tag.
@@ -95,7 +96,7 @@ const Hero: React.FC = () => {
           </motion.p>
           
           <motion.div 
-            variants={fadeIn("up", 0.4)}
+            variants={fadeIn("up", 0.3)}
             className="flex flex-wrap gap-4"
           >
             <a href="#states" className="btn-primary flex items-center group">
