@@ -1,4 +1,4 @@
-
+// Discover Indian States
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import ScrollReveal from '../ui/ScrollReveal';
@@ -89,7 +89,7 @@ const States: React.FC = () => {
                             {state.famousFor.map((item, index) => (
                               <span 
                                 key={index} 
-                                className="px-3 py-1 bg-mystic-100 text-foreground/70 rounded-full text-sm"
+                                className="px-3 py-1 bg-mystic-100 text-foreground/70 rounded-full text-sm text-black"
                               >
                                 {item}
                               </span>
@@ -101,7 +101,7 @@ const States: React.FC = () => {
                     
                     <Link 
                       to={`/state/${state.id}`} 
-                      className="btn-primary w-full justify-center inline-flex items-center"
+                      className="btn-primary w-full justify-center inline-flex items-center "
                     >
                       Explore {state.name} <ArrowRight size={16} className="ml-2" />
                     </Link>
