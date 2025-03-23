@@ -1,3 +1,4 @@
+// User Experiences
 
 import React from 'react';
 import ScrollReveal from '../ui/ScrollReveal';
@@ -30,8 +31,8 @@ const Reviews: React.FC = () => {
     },
     {
       id: 2,
-      name: "James Wilson",
-      location: "London, UK",
+      name: "Shivesh Sharma",
+      location: "Greater Noida",
       avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1974",
       rating: 5,
       text: "As someone planning their first trip to India, the state guides provided invaluable insights. The cuisine section helped me prepare my taste buds for the journey ahead. Excellent resource!",
