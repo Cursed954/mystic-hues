@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
@@ -8,16 +7,18 @@ import { stateData } from '@/data/stateData';
 import { Card, CardContent } from '@/components/ui/card';
 import { MapPin, Search, Filter, Image, X, Clock, History, Info, Globe } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { artForms, regions, getArtFormsByRegion } from '@/data/cultural';
 
-// Define types for our cultural elements
 type ArtForm = {
+  id: string;
   name: string;
-  stateName: string;
   stateId: string;
+  stateName: string;
+  regionId: string;
+  regionName: string;
   image: string;
-  information?: string;
-  region?: string;
-  history?: {
+  description: string;
+  history: {
     started?: string;
     goldenPeriod?: string;
     currentStatus?: string;
@@ -43,33 +44,14 @@ type HeritageSite = {
   image: string;
 };
 
+type RegionFilter = 'all' | string;
+
 const Culture = () => {
   const [activeTab, setActiveTab] = useState<string>('artForms');
   const [searchTerm, setSearchTerm] = useState('');
   const [activeStateFilter, setActiveStateFilter] = useState('All');
+  const [activeRegionFilter, setActiveRegionFilter] = useState<RegionFilter>('all');
   const [selectedArtForm, setSelectedArtForm] = useState<ArtForm | null>(null);
-  
-  // Extract all cultural data with enhanced art form information
-  const artForms: ArtForm[] = stateData.flatMap(state => 
-    state.artForms?.split(', ').map(art => ({
-      name: art,
-      stateName: state.name,
-      stateId: state.id,
-      image: "https://images.unsplash.com/photo-1576487236230-eaa4afe68192?q=80&w=1170",
-      information: `${art} is a traditional art form from ${state.name}, representing the rich cultural heritage of the region.`,
-      region: state.region,
-      history: {
-        started: "Ancient times",
-        goldenPeriod: "17th to 19th century",
-        currentStatus: "Practiced by dedicated artists and being preserved through cultural programs"
-      },
-      additionalImages: [
-        "https://images.unsplash.com/photo-1594026112334-d8040bd05749?q=80&w=1170",
-        "https://images.unsplash.com/photo-1540122995631-7c74c46c0b8f?q=80&w=1170",
-        "https://images.unsplash.com/photo-1584806749948-697891c67821?q=80&w=1170"
-      ]
-    })) || []
-  );
   
   const festivals: Festival[] = stateData.flatMap(state => 
     state.festivals?.list?.map(festival => ({
@@ -89,17 +71,18 @@ const Culture = () => {
     })) || []
   );
 
-  // Get unique states from the data
   const states = ['All', ...new Set(stateData.map(state => state.name))];
 
-  // Filtered data based on search term and active state filter
-  const [filteredArtForms, setFilteredArtForms] = useState(artForms);
+  const [filteredArtForms, setFilteredArtForms] = useState<ArtForm[]>([]);
   const [filteredFestivals, setFilteredFestivals] = useState(festivals);
   const [filteredHeritageSites, setFilteredHeritageSites] = useState(heritageSites);
 
   useEffect(() => {
-    // Filter art forms
-    const filteredArts = artForms.filter(art => {
+    let regionFilteredArts = activeRegionFilter === 'all' 
+      ? artForms 
+      : getArtFormsByRegion(activeRegionFilter);
+    
+    const filteredArts = regionFilteredArts.filter(art => {
       const matchesSearch = art.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
                            art.stateName.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesState = activeStateFilter === 'All' || art.stateName === activeStateFilter;
@@ -107,7 +90,6 @@ const Culture = () => {
     });
     setFilteredArtForms(filteredArts);
 
-    // Filter festivals
     const filteredFests = festivals.filter(festival => {
       const matchesSearch = festival.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
                            festival.stateName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -117,7 +99,6 @@ const Culture = () => {
     });
     setFilteredFestivals(filteredFests);
 
-    // Filter heritage sites
     const filteredSites = heritageSites.filter(site => {
       const matchesSearch = site.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
                           site.stateName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -126,13 +107,12 @@ const Culture = () => {
       return matchesSearch && matchesState;
     });
     setFilteredHeritageSites(filteredSites);
-  }, [searchTerm, activeStateFilter, activeTab]);
+  }, [searchTerm, activeStateFilter, activeRegionFilter, activeTab]);
 
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
       <main className="flex-grow pt-20">
-        {/* Hero Section */}
         <section className="relative h-[40vh] flex items-center">
           <div 
             className="absolute inset-0 bg-center bg-cover"
@@ -150,42 +130,70 @@ const Culture = () => {
           </div>
         </section>
 
-        {/* Search and Filter Section */}
         <section className="py-8 px-6 bg-secondary dark:bg-secondary/20">
           <div className="container mx-auto">
-            <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
-              <div className="relative w-full md:w-80">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-foreground/60" />
-                <input
-                  type="text"
-                  placeholder="Search cultural elements..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="search-box pl-10"
-                />
+            <div className="flex flex-col gap-6">
+              <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
+                <div className="relative w-full md:w-80">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-foreground/60" />
+                  <input
+                    type="text"
+                    placeholder="Search cultural elements..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="search-box pl-10"
+                  />
+                </div>
+                
+                <div className="flex items-center gap-2">
+                  <Filter className="h-4 w-4 text-foreground/70" />
+                  <span className="text-sm font-medium text-foreground/70">Filter by state:</span>
+                </div>
+                
+                <div className="filter-container">
+                  {states.map(state => (
+                    <button
+                      key={state}
+                      className={`filter-tag ${activeStateFilter === state ? 'active' : ''}`}
+                      onClick={() => setActiveStateFilter(state)}
+                    >
+                      {state}
+                    </button>
+                  ))}
+                </div>
               </div>
               
-              <div className="flex items-center gap-2">
-                <Filter className="h-4 w-4 text-foreground/70" />
-                <span className="text-sm font-medium text-foreground/70">Filter by state:</span>
-              </div>
-              
-              <div className="filter-container">
-                {states.map(state => (
+              <div className="bg-background dark:bg-background/50 p-4 rounded-lg">
+                <div className="flex items-center gap-2 mb-3">
+                  <Globe className="h-4 w-4 text-spice-500" />
+                  <span className="text-sm font-medium">Filter by Region:</span>
+                </div>
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-2">
                   <button
-                    key={state}
-                    className={`filter-tag ${activeStateFilter === state ? 'active' : ''}`}
-                    onClick={() => setActiveStateFilter(state)}
+                    className={`p-2 rounded-md text-sm font-medium transition-colors ${activeRegionFilter === 'all' 
+                      ? 'bg-spice-500 text-white' 
+                      : 'bg-secondary/50 hover:bg-secondary'}`}
+                    onClick={() => setActiveRegionFilter('all')}
                   >
-                    {state}
+                    All Regions
                   </button>
-                ))}
+                  {regions.map(region => (
+                    <button
+                      key={region.id}
+                      className={`p-2 rounded-md text-sm font-medium transition-colors ${activeRegionFilter === region.id 
+                        ? 'bg-spice-500 text-white' 
+                        : 'bg-secondary/50 hover:bg-secondary'}`}
+                      onClick={() => setActiveRegionFilter(region.id)}
+                    >
+                      {region.name}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Culture Tabs */}
         <section className="py-16 px-6">
           <div className="container mx-auto">
             <ScrollReveal>
@@ -216,7 +224,7 @@ const Culture = () => {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                       {filteredArtForms.map((art, index) => (
                         <motion.div
-                          key={index}
+                          key={art.id}
                           initial={{ opacity: 0, y: 10 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: index * 0.05 }}
@@ -238,6 +246,12 @@ const Culture = () => {
                                 <MapPin size={16} className="mr-1" />
                                 <span>{art.stateName}</span>
                               </div>
+                              {art.regionName && (
+                                <div className="flex items-center text-sm text-muted-foreground mt-1">
+                                  <Globe size={16} className="mr-1" />
+                                  <span>{art.regionName}</span>
+                                </div>
+                              )}
                             </CardContent>
                           </Card>
                         </motion.div>
@@ -336,7 +350,6 @@ const Culture = () => {
         </section>
       </main>
 
-      {/* Art Form Detail Modal */}
       <AnimatePresence>
         {selectedArtForm && (
           <motion.div 
@@ -371,6 +384,12 @@ const Culture = () => {
                     <MapPin size={16} className="mr-1" />
                     {selectedArtForm.stateName}
                   </p>
+                  {selectedArtForm.regionName && (
+                    <p className="text-white/80 flex items-center mt-1">
+                      <Globe size={16} className="mr-1" />
+                      {selectedArtForm.regionName}
+                    </p>
+                  )}
                 </div>
               </div>
               
@@ -379,7 +398,7 @@ const Culture = () => {
                   <div className="bg-secondary/50 p-4 rounded-lg flex flex-col items-center justify-center">
                     <Globe className="text-spice-500 mb-2" size={24} />
                     <h3 className="text-lg font-medium">Region</h3>
-                    <p className="text-center">{selectedArtForm.region}</p>
+                    <p className="text-center">{selectedArtForm.regionName}</p>
                   </div>
                   
                   <div className="bg-secondary/50 p-4 rounded-lg flex flex-col items-center justify-center">
@@ -401,7 +420,7 @@ const Culture = () => {
                     Information
                   </h3>
                   <p className="text-foreground/80 leading-relaxed">
-                    {selectedArtForm.information || `${selectedArtForm.name} is a traditional art form from ${selectedArtForm.stateName}, representing the rich cultural heritage of the region.`}
+                    {selectedArtForm.description}
                   </p>
                 </div>
                 

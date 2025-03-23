@@ -1,3 +1,4 @@
+
 // Discover Indian States
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -5,11 +6,22 @@ import ScrollReveal from '../ui/ScrollReveal';
 import ParallaxSection from '../ui/ParallaxSection';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { MapPin, Users, Calendar, ArrowRight } from 'lucide-react';
+import { MapPin, Users, Calendar, ArrowRight, Globe } from 'lucide-react';
 import { stateData } from '@/data/stateData';
+import { regions } from '@/data/cultural';
 
 const States: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>('rajasthan');
+
+  // Function to get region name for a state
+  const getRegionName = (stateId: string): string => {
+    for (const region of regions) {
+      if (region.states.includes(stateId)) {
+        return region.name;
+      }
+    }
+    return "";
+  };
 
   return (
     <section id="states" className="py-24 px-6">
@@ -68,7 +80,7 @@ const States: React.FC = () => {
                         <CardDescription>Capital: {state.capital}</CardDescription>
                       </CardHeader>
                       <CardContent className="space-y-4">
-                        <div className="flex space-x-4">
+                        <div className="flex flex-wrap gap-4">
                           <div className="flex items-center text-sm text-muted-foreground">
                             <Users size={16} className="mr-1" />
                             {state.population}
@@ -76,6 +88,10 @@ const States: React.FC = () => {
                           <div className="flex items-center text-sm text-muted-foreground">
                             <Calendar size={16} className="mr-1" />
                             {state.language}
+                          </div>
+                          <div className="flex items-center text-sm text-muted-foreground">
+                            <Globe size={16} className="mr-1" />
+                            {state.region || getRegionName(state.id)}
                           </div>
                         </div>
                         
