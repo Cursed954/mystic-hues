@@ -35,7 +35,10 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    <header
+    <motion.header
+      initial={{ y: -100, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
         isScrolled || !isHome
           ? 'py-3 bg-background/90 backdrop-blur-md shadow-sm'
@@ -49,23 +52,39 @@ const Navbar: React.FC = () => {
 
         {/* Desktop Navigation */}
         {!isMobile && (
-          <div className="flex items-center space-x-1">
-            {navItems.map((item) => (
-              <Link
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
+            className="flex items-center space-x-1"
+          >
+            {navItems.map((item, index) => (
+              <motion.div
                 key={item.name}
-                to={item.path}
-                className={`nav-item ${
-                  location.pathname === item.path ? 'text-spice-500' : ''
-                }`}
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 * index + 0.3, duration: 0.5 }}
               >
-                {item.name}
-              </Link>
+                <Link
+                  to={item.path}
+                  className={`nav-item ${
+                    location.pathname === item.path ? 'text-spice-500' : ''
+                  }`}
+                >
+                  {item.name}
+                </Link>
+              </motion.div>
             ))}
 
-            <div className="ml-4">
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.7, duration: 0.3 }}
+              className="ml-4"
+            >
               <ThemeToggle />
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         )}
 
         {/* Mobile Navigation */}
@@ -119,7 +138,7 @@ const Navbar: React.FC = () => {
           </motion.div>
         )}
       </AnimatePresence>
-    </header>
+    </motion.header>
   );
 };
 

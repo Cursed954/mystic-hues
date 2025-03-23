@@ -1,3 +1,4 @@
+
 // Home: Experience the timeless spirit of India
 
 import React, { useRef, useEffect } from 'react';
@@ -27,11 +28,18 @@ const Hero: React.FC = () => {
       videoRef.current.autoplay = true;
       videoRef.current.loop = true;
       videoRef.current.playsInline = true;
+      
+      // Set the starting time to 18 seconds
+      videoRef.current.currentTime = 18;
+      
       videoRef.current.play().catch(e => {
         console.error("Video autoplay failed:", e);
         // Try again after user interaction
         document.body.addEventListener('click', () => {
-          videoRef.current?.play().catch(e => console.error("Video play failed after click:", e));
+          if (videoRef.current) {
+            videoRef.current.currentTime = 18;
+            videoRef.current.play().catch(e => console.error("Video play failed after click:", e));
+          }
         }, { once: true });
       });
     }
