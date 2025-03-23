@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
@@ -5,7 +6,7 @@ import ScrollReveal from '@/components/ui/ScrollReveal';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { stateData } from '@/data/stateData';
 import { Card, CardContent } from '@/components/ui/card';
-import { MapPin, Search, Filter, Image, X, Clock, History, Info, Globe } from 'lucide-react';
+import { MapPin, Search, Image, X, Clock, History, Info, Globe } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { artForms } from '@/data/cultural';
 
@@ -49,13 +50,15 @@ const Culture = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeStateFilter, setActiveStateFilter] = useState('All');
   const [selectedArtForm, setSelectedArtForm] = useState<ArtForm | null>(null);
+  const [selectedFestival, setSelectedFestival] = useState<Festival | null>(null);
+  const [selectedHeritageSite, setSelectedHeritageSite] = useState<HeritageSite | null>(null);
   
   const festivals: Festival[] = stateData.flatMap(state => 
     state.festivals?.list?.map(festival => ({
       ...festival,
       stateName: state.name,
       stateId: state.id,
-      image: "https://images.unsplash.com/photo-1594815101424-0c644c8c63c6?q=80&w=1170"
+      image: festival.image || "https://images.unsplash.com/photo-1594815101424-0c644c8c63c6?q=80&w=1170"
     })) || []
   );
   
@@ -136,11 +139,6 @@ const Culture = () => {
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="search-box pl-10"
                   />
-                </div>
-                
-                <div className="flex items-center gap-2">
-                  <Filter className="h-4 w-4 text-foreground/70" />
-                  <span className="text-sm font-medium text-foreground/70">Filter by state:</span>
                 </div>
                 
                 <div className="filter-container">
@@ -241,7 +239,10 @@ const Culture = () => {
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: index * 0.05 }}
                         >
-                          <Card className="overflow-hidden hover:shadow-lg transition-shadow h-full">
+                          <Card 
+                            className="overflow-hidden hover:shadow-lg transition-shadow h-full cursor-pointer" 
+                            onClick={() => setSelectedFestival(festival)}
+                          >
                             <div className="h-48 overflow-hidden">
                               <img 
                                 src={festival.image} 
@@ -281,7 +282,10 @@ const Culture = () => {
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: index * 0.05 }}
                         >
-                          <Card className="overflow-hidden hover:shadow-lg transition-shadow h-full">
+                          <Card 
+                            className="overflow-hidden hover:shadow-lg transition-shadow h-full cursor-pointer"
+                            onClick={() => setSelectedHeritageSite(site)}
+                          >
                             <div className="h-48 overflow-hidden">
                               <img 
                                 src={site.image} 
@@ -315,6 +319,7 @@ const Culture = () => {
         </section>
       </main>
 
+      {/* Art Forms Modal */}
       <AnimatePresence>
         {selectedArtForm && (
           <motion.div 
@@ -412,6 +417,154 @@ const Culture = () => {
                     </div>
                   </div>
                 )}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Festivals Modal */}
+      <AnimatePresence>
+        {selectedFestival && (
+          <motion.div 
+            className="fixed inset-0 bg-black/70 dark:bg-black/80 z-50 flex items-center justify-center p-4 overflow-auto"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setSelectedFestival(null)}
+          >
+            <motion.div 
+              className="bg-background rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto"
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 20 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="relative h-72 sm:h-80 md:h-96 overflow-hidden">
+                <img 
+                  src={selectedFestival.image}
+                  alt={selectedFestival.name}
+                  className="w-full h-full object-cover"
+                />
+                <button 
+                  className="absolute top-4 right-4 bg-black/50 rounded-full p-2 text-white"
+                  onClick={() => setSelectedFestival(null)}
+                >
+                  <X size={20} />
+                </button>
+                <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent">
+                  <h2 className="text-3xl font-serif text-white">{selectedFestival.name}</h2>
+                  <p className="text-white/80 flex items-center">
+                    <MapPin size={16} className="mr-1" />
+                    {selectedFestival.stateName}
+                  </p>
+                  <p className="text-white/80 flex items-center mt-1">
+                    <Clock size={16} className="mr-1" />
+                    {selectedFestival.timing}
+                  </p>
+                </div>
+              </div>
+              
+              <div className="p-6 md:p-8">
+                <div className="mb-8">
+                  <h3 className="text-xl font-medium mb-4 flex items-center">
+                    <Info className="mr-2 text-spice-500" size={20} />
+                    About the Festival
+                  </h3>
+                  <p className="text-foreground/80 leading-relaxed">
+                    {selectedFestival.description}
+                  </p>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                  <div className="bg-secondary/50 p-6 rounded-lg">
+                    <h3 className="text-lg font-medium mb-3 flex items-center">
+                      <Clock className="mr-2 text-spice-500" size={20} />
+                      When it's Celebrated
+                    </h3>
+                    <p className="text-foreground/80">{selectedFestival.timing}</p>
+                  </div>
+                  
+                  <div className="bg-secondary/50 p-6 rounded-lg">
+                    <h3 className="text-lg font-medium mb-3 flex items-center">
+                      <MapPin className="mr-2 text-spice-500" size={20} />
+                      Where it's Celebrated
+                    </h3>
+                    <p className="text-foreground/80">{selectedFestival.stateName}</p>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Heritage Sites Modal */}
+      <AnimatePresence>
+        {selectedHeritageSite && (
+          <motion.div 
+            className="fixed inset-0 bg-black/70 dark:bg-black/80 z-50 flex items-center justify-center p-4 overflow-auto"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setSelectedHeritageSite(null)}
+          >
+            <motion.div 
+              className="bg-background rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto"
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 20 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="relative h-72 sm:h-80 md:h-96 overflow-hidden">
+                <img 
+                  src={selectedHeritageSite.image}
+                  alt={selectedHeritageSite.name}
+                  className="w-full h-full object-cover"
+                />
+                <button 
+                  className="absolute top-4 right-4 bg-black/50 rounded-full p-2 text-white"
+                  onClick={() => setSelectedHeritageSite(null)}
+                >
+                  <X size={20} />
+                </button>
+                <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent">
+                  <h2 className="text-3xl font-serif text-white">{selectedHeritageSite.name}</h2>
+                  <p className="text-white/80 flex items-center">
+                    <MapPin size={16} className="mr-1" />
+                    {selectedHeritageSite.location}, {selectedHeritageSite.stateName}
+                  </p>
+                </div>
+              </div>
+              
+              <div className="p-6 md:p-8">
+                <div className="mb-8">
+                  <h3 className="text-xl font-medium mb-4 flex items-center">
+                    <Info className="mr-2 text-spice-500" size={20} />
+                    About the Site
+                  </h3>
+                  <p className="text-foreground/80 leading-relaxed">
+                    {selectedHeritageSite.description}
+                  </p>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="bg-secondary/50 p-6 rounded-lg">
+                    <h3 className="text-lg font-medium mb-3 flex items-center">
+                      <MapPin className="mr-2 text-spice-500" size={20} />
+                      Location
+                    </h3>
+                    <p className="text-foreground/80">{selectedHeritageSite.location}</p>
+                  </div>
+                  
+                  <div className="bg-secondary/50 p-6 rounded-lg">
+                    <h3 className="text-lg font-medium mb-3 flex items-center">
+                      <Globe className="mr-2 text-spice-500" size={20} />
+                      State
+                    </h3>
+                    <p className="text-foreground/80">{selectedHeritageSite.stateName}</p>
+                  </div>
+                </div>
               </div>
             </motion.div>
           </motion.div>

@@ -45,7 +45,7 @@ const States: React.FC = () => {
     if (!activeTab || !limitedStates.find(state => state.id === activeTab)) {
       setActiveTab(limitedStates[0]?.id || '');
     }
-  }, [activeRegionFilter, activeTab]);
+  }, [activeRegionFilter]);
 
   return (
     <section id="states" className="py-24 px-6 relative">
