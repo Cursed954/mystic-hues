@@ -1,165 +1,258 @@
+import React, { useEffect, useState } from 'react';
+import { useParams, Link } from 'react-router-dom';
+import Navbar from '@/components/layout/Navbar';
+import Footer from '@/components/layout/Footer';
+import ScrollReveal from '@/components/ui/ScrollReveal';
+import { ArrowLeft, MapPin, Users, Calendar, Bookmark, Utensils, Landmark, Music } from 'lucide-react';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { stateData } from '@/data/stateData';
 
-import React, { useState, useEffect } from 'react';
-import { MapPin, Users, Compass, Clock } from 'lucide-react';
-import ScrollReveal from '../ui/ScrollReveal';
-import SectionHeader from '../ui/SectionHeader';
-import { motion, AnimatePresence } from 'framer-motion';
 
-// Cultural images from the Culture page
-const culturalImages = [
-  "https://images.unsplash.com/photo-1621787084849-ed98731b3071?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGluZGlhbiUyMGN1bHR1cmV8ZW58MHx8MHx8fDA%3D",
-  "https://plus.unsplash.com/premium_photo-1691030925304-ef49180577d2?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjV8fGluZGlhbiUyMGN1bHR1cmV8ZW58MHx8MHx8fDA%3D",
-  "https://images.unsplash.com/photo-1616884950055-861aeb5eb380?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NTJ8fGluZGlhbiUyMGN1bHR1cmV8ZW58MHx8MHx8fDA%3D",
-  "https://images.unsplash.com/photo-1655275719356-579e6b58e13f?q=80&w=3132&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  "https://images.unsplash.com/photo-1566959621395-9200c65ba74b?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8aW5kaWFuJTIwaGVyaXRhZ2V8ZW58MHx8MHx8fDA%3D",
-  "https://plus.unsplash.com/premium_photo-1697730411164-ed2cb32a7e87?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NTd8fGluZGlhbiUyMGhpc3Rvcnl8ZW58MHx8MHx8fDA%3D"
-];
 
-const FeatureItem: React.FC<{
-  icon: React.ReactNode;
-  title: string;
-  description: string;
-  delay?: number;
-}> = ({ icon, title, description, delay = 5 }) => (
-  <ScrollReveal animation="fade-in-left" delay={delay}>
-    <motion.div 
-      className="flex items-start"
-      whileHover={{ x: 5 }}
-      transition={{ type: "spring", stiffness: 400, damping: 10 }}
-    >
-      <div className="w-12 h-12 rounded-full bg-spice-50 flex items-center justify-center mr-4 shrink-0">
-        {icon}
-      </div>
-      <div>
-        <h4 className="font-medium mb-2">{title}</h4>
-        <p className="text-sm text-foreground/70">{description}</p>
-      </div>
-    </motion.div>
-  </ScrollReveal>
-);
-
-const About: React.FC = () => {
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
+const StateDetail = () => {
+  const { stateId } = useParams<{ stateId: string }>();
+  const [state, setState] = useState<any | null>(null);
+  
   useEffect(() => {
-    // Change image every 5 seconds
-    const interval = setInterval(() => {
-      setCurrentImageIndex(prevIndex => 
-        prevIndex === culturalImages.length - 1 ? 0 : prevIndex + 1
-      );
-    }, 4000);
+    window.scrollTo(0, 0);
+    
+    // Find the state data based on stateId
+    const currentState = stateData.find(s => s.id === stateId);
+    setState(currentState || null);
+  }, [stateId]);
 
-    return () => clearInterval(interval);
-  }, []);
-
-  return (
-    <section id="about" className="py-24 px-6">
-      <div className="container mx-auto">
-        {/* Section Header */}
-        <SectionHeader 
-          subtitle="Our Story"
-          title="The Mystic India Journey"
-        />
-
-        {/* Main Content */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          {/* Left Column - Image Carousel */}
-          <ScrollReveal animation="fade-in-right">
-            <div className="relative">
-              <div className="relative z-10 overflow-hidden rounded-lg shadow-xl h-[500px]">
-                <AnimatePresence mode="wait">
-                  <motion.img 
-                    key={currentImageIndex}
-                    src={culturalImages[currentImageIndex]} 
-                    alt="Cultural heritage of India" 
-                    className="w-full h-full object-cover"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.5 }}
-                  />
-                </AnimatePresence>
-                
-                <motion.div 
-                  className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"
-                  initial={{ opacity: 0 }}
-                  whileHover={{ opacity: 2 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <div className="absolute bottom-6 left-6 text-white">
-                    <h3 className="font-serif text-2xl mb-2">Discover India</h3>
-                    <p className="text-white/80 text-sm max-w-xs">
-                      From ancient temples to bustling markets, experience the true essence of India
-                    </p>
-                  </div>
-                </motion.div>
-              </div>
-              
-              <motion.div 
-                className="absolute top-10 -right-6 w-24 h-24 bg-spice-500/20 rounded-full backdrop-blur-sm z-0"
-                animate={{ scale: [1, 1.2, 1] }}
-                transition={{ duration: 3, repeat: Infinity }}
-              />
-              <motion.div 
-                className="absolute -bottom-6 -left-6 w-32 h-32 bg-indigo-500/10 rounded-full backdrop-blur-sm z-0"
-                animate={{ scale: [1, 1.3, 1] }}
-                transition={{ duration: 4, repeat: Infinity, delay: 2 }}
-              />
-            </div>
-          </ScrollReveal>
-
-          {/* Right Column - Text */}
-          <div className="space-y-8">
-            <ScrollReveal animation="fade-in-left">
-              <h3 className="text-2xl font-serif font-medium mb-4">
-                Unveiling India's Rich Tapestry of Cultures and Landscapes
-              </h3>
-              <p className="text-foreground/80 leading-relaxed mb-6">
-                Founded in 2025, Mystic India was born from a passion to share the authentic essence of India with the world. 
-                We believe travel should be transformative, connecting you with the soul of a place through its people, traditions, and natural beauty.
-              </p>
-              <p className="text-foreground/80 leading-relaxed">
-                Our journeys are carefully crafted to balance iconic landmarks with hidden gems, allowing you to experience both the grandeur and intimate charm 
-                of India's diverse regions. From the snow-capped Himalayas to the serene backwaters of Kerala, from bustling Delhi bazaars to tranquil temple towns, 
-                we reveal the many hues that make India an extraordinary destination.
-              </p>
-            </ScrollReveal>
-
-            {/* Features */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-8">
-              <FeatureItem 
-                icon={<MapPin className="text-spice-500" size={22} />}
-                title="Curated Destinations"
-                description="Handpicked locations that showcase India's diversity"
-                delay={10}
-              />
-              
-              <FeatureItem 
-                icon={<Users className="text-spice-500" size={22} />}
-                title="Local Experiences"
-                description="Connect with communities and traditional cultures"
-                delay={20}
-              />
-              
-              <FeatureItem 
-                icon={<Compass className="text-spice-500" size={22} />}
-                title="Expert Guidance"
-                description="Knowledgeable guides who bring stories to life"
-                delay={30}
-              />
-              
-              <FeatureItem 
-                icon={<Clock className="text-spice-500" size={22} />}
-                title="Mindful Travel"
-                description="Sustainable practices that respect people and places"
-                delay={40}
-              />
-            </div>
-          </div>
+  if (!state) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-medium mb-4">State not found</h2>
+          <Link to="/" className="btn-primary">Return Home</Link>
         </div>
       </div>
-    </section>
+    );
+  }
+
+  return (
+    <div className="min-h-screen">
+      <Navbar />
+      <main>
+        {/* Hero Banner */}
+        <section className="relative h-[60vh]">
+          <div 
+            className="absolute inset-0 bg-center bg-cover" 
+            style={{ backgroundImage: `url(${state.bannerImage})` }}
+          >
+            <div className="absolute inset-0 bg-black/40"></div>
+          </div>
+          <div className="container mx-auto h-full relative z-10 flex flex-col justify-end pb-16 px-6">
+            <Link 
+              to="/" 
+              className="absolute top-8 left-6 text-white flex items-center hover:underline"
+            >
+              <ArrowLeft size={18} className="mr-2" /> Back to Home
+            </Link>
+            <ScrollReveal>
+              <h1 className="text-white text-5xl md:text-6xl font-serif mb-4">{state.name}</h1>
+              <div className="flex flex-wrap gap-6 text-white">
+                <div className="flex items-center">
+                  <MapPin size={18} className="mr-2" />
+                  <span>Capital: {state.capital}</span>
+                </div>
+                <div className="flex items-center">
+                  <Users size={18} className="mr-2" />
+                  <span>Population: {state.population}</span>
+                </div>
+                <div className="flex items-center">
+                  <Calendar size={18} className="mr-2" />
+                  <span>Languages: {state.language}</span>
+                </div>
+              </div>
+            </ScrollReveal>
+          </div>
+        </section>
+
+        {/* Overview Section */}
+        <section className="py-16 px-6">
+          <div className="container mx-auto">
+            <ScrollReveal>
+              <div className="max-w-3xl mx-auto border border-white/20 dark:border-white/10 backdrop-blur-md rounded-lg p-6 bg-white/30 dark:bg-white/10">
+                <h2 className="section-title after:left-0 mb-8">Overview</h2>
+                <p className="text-lg leading-relaxed mb-8">
+                  {state.description}
+                </p>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12">
+                  <div className="bg-white/40 dark:bg-white/10 p-4 rounded-lg backdrop-blur-sm">
+                    <Landmark className="text-spice-500 mb-2" size={24} />
+                    <h3 className="font-medium mb-2">Region</h3>
+                    <p className="text-foreground/70">{state.region}</p>
+                  </div>
+                  <div className="bg-white/40 dark:bg-white/10 p-4 rounded-lg backdrop-blur-sm">
+                    <Bookmark className="text-spice-500 mb-2" size={24} />
+                    <h3 className="font-medium mb-2">Established</h3>
+                    <p className="text-foreground/70">{state.established}</p>
+                  </div>
+                  <div className="bg-white/40 dark:bg-white/10 p-4 rounded-lg backdrop-blur-sm">
+                    <Music className="text-spice-500 mb-2" size={24} />
+                    <h3 className="font-medium mb-2">Art Forms</h3>
+                    <p className="text-foreground/70">{state.artForms}</p>
+                  </div>
+                  <div className="bg-white/40 dark:bg-white/10 p-4 rounded-lg backdrop-blur-sm">
+                    <Utensils className="text-spice-500 mb-2" size={24} />
+                    <h3 className="font-medium mb-2">Cuisine</h3>
+                    <p className="text-foreground/70">{state.cuisineType}</p>
+                  </div>
+                </div>
+              </div>
+            </ScrollReveal>
+          </div>
+        </section>
+
+        {/* Tabs Section */}
+        <section className="py-16 px-6 bg-white/40 dark:bg-white/10 backdrop-blur-sm rounded-lg">
+          <div className="container mx-auto">
+            <ScrollReveal>
+              <Tabs defaultValue="culture" className="max-w-4xl mx-auto">
+                <TabsList className="w-full flex mb-8 bg-transparent p-0 space-x-2 overflow-x-auto">
+                  <TabsTrigger 
+                    value="culture"
+                    className="px-6 py-3 data-[state=active]:bg-spice-50 dark:data-[state=active]:bg-gray-700 data-[state=active]:text-spice-600 dark:data-[state=active]:text-spice-400 data-[state=active]:border-b-2 data-[state=active]:border-spice-500 data-[state=active]:shadow-none rounded-full"
+                  >
+                    Culture & Traditions
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="cuisine"
+                    className="px-6 py-3 data-[state=active]:bg-spice-50 dark:data-[state=active]:bg-gray-700 data-[state=active]:text-spice-600 dark:data-[state=active]:text-spice-400 data-[state=active]:border-b-2 data-[state=active]:border-spice-500 data-[state=active]:shadow-none rounded-full"
+                  >
+                    Cuisine
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="festivals"
+                    className="px-6 py-3 data-[state=active]:bg-spice-50 dark:data-[state=active]:bg-gray-700 data-[state=active]:text-spice-600 dark:data-[state=active]:text-spice-400 data-[state=active]:border-b-2 data-[state=active]:border-spice-500 data-[state=active]:shadow-none rounded-full"
+                  >
+                    Festivals & Celebrations
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="heritage"
+                    className="px-6 py-3 data-[state=active]:bg-spice-50 dark:data-[state=active]:bg-gray-700 data-[state=active]:text-spice-600 dark:data-[state=active]:text-spice-400 data-[state=active]:border-b-2 data-[state=active]:border-spice-500 data-[state=active]:shadow-none rounded-full"
+                  >
+                    Heritage Sites
+                  </TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="culture" className="mt-0">
+                  <div className="bg-background dark:bg-gray-800 p-6 rounded-lg shadow-sm">
+                    <h3 className="text-xl font-medium mb-4">Cultural Heritage</h3>
+                    <p className="mb-4">{state.culture?.description || "Information coming soon."}</p>
+                    
+                    {state.culture?.traditions && (
+                      <div className="mt-8">
+                        <h4 className="text-lg font-medium mb-3">Traditional Practices</h4>
+                        <ul className="list-disc pl-5 space-y-2">
+                          {state.culture.traditions.map((tradition: string, index: number) => (
+                            <li key={index}>{tradition}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+                      {state.culture?.images?.map((image: string, index: number) => (
+                        <div key={index} className="rounded-lg overflow-hidden h-64">
+                          <img 
+                            src={image} 
+                            alt={`${state.name} cultural image ${index + 1}`} 
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="cuisine" className="mt-0">
+                  <div className="bg-background dark:bg-gray-800 p-6 rounded-lg shadow-sm">
+                    <h3 className="text-xl font-medium mb-4">Regional Cuisine</h3>
+                    <p className="mb-4">{state.cuisine?.description || "Information coming soon."}</p>
+                    
+                    {state.cuisine?.dishes && (
+                      <div className="mt-8">
+                        <h4 className="text-lg font-medium mb-3">Famous Dishes</h4>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          {state.cuisine.dishes.map((dish: any, index: number) => (
+                            <div key={index} className="flex items-start">
+                              <div className="w-20 h-20 rounded-md overflow-hidden mr-4 shrink-0">
+                                <img 
+                                  src={dish.image || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c"} 
+                                  alt={dish.name} 
+                                  className="w-full h-full object-cover"
+                                />
+                              </div>
+                              <div>
+                                <h5 className="font-medium">{dish.name}</h5>
+                                <p className="text-sm text-foreground/70">{dish.description}</p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="festivals" className="mt-0">
+                  <div className="bg-background dark:bg-gray-800 p-6 rounded-lg shadow-sm">
+                    <h3 className="text-xl font-medium mb-4">Festivals & Celebrations</h3>
+                    <p className="mb-4">{state.festivals?.description || "Information coming soon."}</p>
+                    
+                    {state.festivals?.list && (
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                        {state.festivals.list.map((festival: any, index: number) => (
+                          <div key={index} className="bg-white/40 dark:bg-white/10 p-4 rounded-lg backdrop-blur-sm">
+                            <h4 className="font-medium mb-2">{festival.name}</h4>
+                            <p className="text-sm text-foreground/70 mb-2">{festival.timing}</p>
+                            <p className="text-foreground/80">{festival.description}</p>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="heritage" className="mt-0">
+                  <div className="bg-background dark:bg-gray-800 p-6 rounded-lg shadow-sm">
+                    <h3 className="text-xl font-medium mb-4">Heritage Sites</h3>
+                    <p className="mb-4">{state.heritage?.description || "Information coming soon."}</p>
+                    
+                    {state.heritage?.sites && (
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+                        {state.heritage.sites.map((site: any, index: number) => (
+                          <div key={index} className="overflow-hidden rounded-lg border border-mystic-100">
+                            <div className="h-48">
+                              <img 
+                                src={site.image || "https://images.unsplash.com/photo-1599661046289-e31897d36a68"} 
+                                alt={site.name} 
+                                className="w-full h-full object-cover"
+                              />
+                            </div>
+                            <div className="p-4">
+                              <h4 className="font-medium mb-1">{site.name}</h4>
+                              <p className="text-sm text-foreground/70 mb-2">{site.location}</p>
+                              <p className="text-sm text-foreground/80">{site.description}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </TabsContent>
+              </Tabs>
+            </ScrollReveal>
+          </div>
+        </section>
+      </main>
+      <Footer />
+    </div>
   );
 };
 
-export default About;
+export default StateDetail;
