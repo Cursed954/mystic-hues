@@ -11,7 +11,9 @@ import { stateData } from '@/data/stateData';
 import { regions } from '@/data/cultural';
 
 const States: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<string>('rajasthan');
+  // Limit to only displaying 5 states
+  const limitedStates = stateData.slice(0, 5);
+  const [activeTab, setActiveTab] = useState<string>(limitedStates[0]?.id || 'rajasthan');
 
   // Function to get region name for a state
   const getRegionName = (stateId: string): string => {
@@ -24,8 +26,11 @@ const States: React.FC = () => {
   };
 
   return (
-    <section id="states" className="py-24 px-6">
-      <div className="container mx-auto">
+    <section id="states" className="py-24 px-6 relative">
+      {/* Translucent Background Layer */}
+      <div className="absolute inset-0 bg-white/70 dark:bg-black/50 backdrop-blur-sm"></div>
+      
+      <div className="container mx-auto relative z-10">
         {/* Section Header */}
         <ScrollReveal>
           <div className="text-center mb-16">
@@ -40,11 +45,11 @@ const States: React.FC = () => {
           </div>
         </ScrollReveal>
 
-        {/* State Tabs */}
+        {/* State Tabs - Limited to 5 */}
         <ScrollReveal delay={2}>
-          <Tabs defaultValue="rajasthan" value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <Tabs defaultValue={limitedStates[0]?.id || 'rajasthan'} value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="w-full flex mb-8 bg-transparent p-0 space-x-2 overflow-x-auto">
-              {stateData.map((state) => (
+              {limitedStates.map((state) => (
                 <TabsTrigger 
                   key={state.id} 
                   value={state.id}
@@ -55,7 +60,7 @@ const States: React.FC = () => {
               ))}
             </TabsList>
 
-            {stateData.map((state) => (
+            {limitedStates.map((state) => (
               <TabsContent key={state.id} value={state.id} className="mt-0">
                 <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
                   <div className="lg:col-span-3">
