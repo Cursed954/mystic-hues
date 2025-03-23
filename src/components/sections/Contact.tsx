@@ -1,3 +1,4 @@
+// Start Your Journey
 
 import React, { useState } from 'react';
 import ScrollReveal from '../ui/ScrollReveal';
@@ -77,7 +78,7 @@ const Contact: React.FC = () => {
                   </div>
                   <div>
                     <h4 className="font-medium mb-1">Our Location</h4>
-                    <p className="text-foreground/70">123 Journey Street, Mystic City, India</p>
+                    <p className="text-foreground/70">Bennett University, Greater Noida India</p>
                   </div>
                 </div>
                 
@@ -87,7 +88,7 @@ const Contact: React.FC = () => {
                   </div>
                   <div>
                     <h4 className="font-medium mb-1">Email Us</h4>
-                    <p className="text-foreground/70">hello@mystichues.com</p>
+                    <p className="text-foreground/70">adhirajpundir783@gmail.com</p>
                   </div>
                 </div>
                 
@@ -97,7 +98,7 @@ const Contact: React.FC = () => {
                   </div>
                   <div>
                     <h4 className="font-medium mb-1">Call Us</h4>
-                    <p className="text-foreground/70">+91 98765 43210</p>
+                    <p className="text-foreground/70">+91 63961 44121</p>
                   </div>
                 </div>
               </div>
@@ -130,7 +131,7 @@ const Contact: React.FC = () => {
                       value={formState.name}
                       onChange={handleChange}
                       required
-                      className="w-full px-4 py-3 rounded-md border border-mystic-200 focus:border-spice-400 focus:ring focus:ring-spice-100 transition-colors"
+                      className="w-full px-4 py-3 rounded-md border border-mystic-200 focus:border-spice-400 focus:ring focus:ring-spice-100 transition-colors text-black"
                       placeholder="Enter your name"
                     />
                   </div>
@@ -146,7 +147,7 @@ const Contact: React.FC = () => {
                       value={formState.email}
                       onChange={handleChange}
                       required
-                      className="w-full px-4 py-3 rounded-md border border-mystic-200 focus:border-spice-400 focus:ring focus:ring-spice-100 transition-colors"
+                      className="w-full px-4 py-3 rounded-md border border-mystic-200 focus:border-spice-400 focus:ring focus:ring-spice-100 transition-colors text-black"
                       placeholder="Enter your email"
                     />
                   </div>
@@ -160,7 +161,7 @@ const Contact: React.FC = () => {
                       name="destination"
                       value={formState.destination}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 rounded-md border border-mystic-200 focus:border-spice-400 focus:ring focus:ring-spice-100 transition-colors"
+                      className="w-full px-4 py-3 rounded-md border border-mystic-200 focus:border-spice-400 focus:ring focus:ring-spice-100 transition-colors text-black"
                     >
                       <option value="">Select destination</option>
                       <option value="rajasthan">Rajasthan</option>
@@ -182,7 +183,7 @@ const Contact: React.FC = () => {
                       value={formState.message}
                       onChange={handleChange}
                       rows={4}
-                      className="w-full px-4 py-3 rounded-md border border-mystic-200 focus:border-spice-400 focus:ring focus:ring-spice-100 transition-colors"
+                      className="w-full px-4 py-3 rounded-md border border-mystic-200 focus:border-spice-400 focus:ring focus:ring-spice-100 transition-colors text-black"
                       placeholder="Tell us about your travel preferences"
                     ></textarea>
                   </div>
