@@ -1,3 +1,4 @@
+// Our Signature Journeys
 
 import React from 'react';
 import { Calendar, Map, Star, ArrowRight } from 'lucide-react';
@@ -25,7 +26,7 @@ const Experience: React.FC = () => {
       id: 1,
       title: "Rajasthan Heritage Tour",
       description: "Explore royal palaces, majestic forts, and vibrant markets in the land of kings.",
-      imageSrc: "https://images.unsplash.com/photo-1599661046289-e31897d36a68?q=80&w=2070",
+      imageSrc: "https://s7ap1.scene7.com/is/image/incredibleindia/2-mehrangarh-fort-jodhpur-rajasthan-city-hero?qlt=82&ts=1726660925514",
       duration: "9 Days",
       location: "Jaipur, Udaipur, Jodhpur",
       rating: 4.9,
@@ -43,7 +44,7 @@ const Experience: React.FC = () => {
       id: 3,
       title: "Himalayan Adventure",
       description: "Trek through breathtaking mountain trails and discover remote villages in the mighty Himalayas.",
-      imageSrc: "https://images.unsplash.com/photo-1502310942044-dc746b92eebc?q=80&w=1943",
+      imageSrc: "https://plus.unsplash.com/premium_photo-1661963739151-41947d4d04e6?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OTF8fEhpbWFsYXlhbiUyMEFkdmVudHVyZXxlbnwwfHwwfHx8MQ%3D%3D",
       duration: "12 Days",
       location: "Rishikesh, Manali, Dharamshala",
       rating: 4.7,
