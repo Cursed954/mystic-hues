@@ -7,12 +7,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 // Cultural images from the Culture page
 const culturalImages = [
-  "https://images.unsplash.com/photo-1576487236230-eaa4afe68192?q=80&w=1170",
-  "https://images.unsplash.com/photo-1594026112334-d8040bd05749?q=80&w=1170",
-  "https://images.unsplash.com/photo-1540122995631-7c74c46c0b8f?q=80&w=1170",
-  "https://images.unsplash.com/photo-1584806749948-697891c67821?q=80&w=1170",
-  "https://images.unsplash.com/photo-1594815101424-0c644c8c63c6?q=80&w=1170",
-  "https://images.unsplash.com/photo-1599661046289-e31897d36a68?q=80&w=1170"
+  "https://images.unsplash.com/photo-1621787084849-ed98731b3071?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGluZGlhbiUyMGN1bHR1cmV8ZW58MHx8MHx8fDA%3D",
+  "https://plus.unsplash.com/premium_photo-1691030925304-ef49180577d2?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjV8fGluZGlhbiUyMGN1bHR1cmV8ZW58MHx8MHx8fDA%3D",
+  "https://images.unsplash.com/photo-1616884950055-861aeb5eb380?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NTJ8fGluZGlhbiUyMGN1bHR1cmV8ZW58MHx8MHx8fDA%3D",
+  "https://images.unsplash.com/photo-1655275719356-579e6b58e13f?q=80&w=3132&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  "https://images.unsplash.com/photo-1566959621395-9200c65ba74b?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8aW5kaWFuJTIwaGVyaXRhZ2V8ZW58MHx8MHx8fDA%3D",
+  "https://plus.unsplash.com/premium_photo-1697730411164-ed2cb32a7e87?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NTd8fGluZGlhbiUyMGhpc3Rvcnl8ZW58MHx8MHx8fDA%3D"
 ];
 
 const FeatureItem: React.FC<{
@@ -20,7 +20,7 @@ const FeatureItem: React.FC<{
   title: string;
   description: string;
   delay?: number;
-}> = ({ icon, title, description, delay = 0 }) => (
+}> = ({ icon, title, description, delay = 5 }) => (
   <ScrollReveal animation="fade-in-left" delay={delay}>
     <motion.div 
       className="flex items-start"
@@ -47,7 +47,7 @@ const About: React.FC = () => {
       setCurrentImageIndex(prevIndex => 
         prevIndex === culturalImages.length - 1 ? 0 : prevIndex + 1
       );
-    }, 5000);
+    }, 4000);
 
     return () => clearInterval(interval);
   }, []);
@@ -83,7 +83,7 @@ const About: React.FC = () => {
                 <motion.div 
                   className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"
                   initial={{ opacity: 0 }}
-                  whileHover={{ opacity: 1 }}
+                  whileHover={{ opacity: 2 }}
                   transition={{ duration: 0.3 }}
                 >
                   <div className="absolute bottom-6 left-6 text-white">
@@ -103,19 +103,19 @@ const About: React.FC = () => {
               <motion.div 
                 className="absolute -bottom-6 -left-6 w-32 h-32 bg-indigo-500/10 rounded-full backdrop-blur-sm z-0"
                 animate={{ scale: [1, 1.3, 1] }}
-                transition={{ duration: 4, repeat: Infinity, delay: 1 }}
+                transition={{ duration: 4, repeat: Infinity, delay: 2 }}
               />
             </div>
           </ScrollReveal>
 
           {/* Right Column - Text */}
           <div className="space-y-8">
-            <ScrollReveal animation="fade-in-left" delay={100}>
+            <ScrollReveal animation="fade-in-left">
               <h3 className="text-2xl font-serif font-medium mb-4">
                 Unveiling India's Rich Tapestry of Cultures and Landscapes
               </h3>
               <p className="text-foreground/80 leading-relaxed mb-6">
-                Founded in 2016, Mystic India was born from a passion to share the authentic essence of India with the world. 
+                Founded in 2025, Mystic India was born from a passion to share the authentic essence of India with the world. 
                 We believe travel should be transformative, connecting you with the soul of a place through its people, traditions, and natural beauty.
               </p>
               <p className="text-foreground/80 leading-relaxed">
@@ -131,28 +131,28 @@ const About: React.FC = () => {
                 icon={<MapPin className="text-spice-500" size={22} />}
                 title="Curated Destinations"
                 description="Handpicked locations that showcase India's diversity"
-                delay={200}
+                delay={10}
               />
               
               <FeatureItem 
                 icon={<Users className="text-spice-500" size={22} />}
                 title="Local Experiences"
                 description="Connect with communities and traditional cultures"
-                delay={300}
+                delay={20}
               />
               
               <FeatureItem 
                 icon={<Compass className="text-spice-500" size={22} />}
                 title="Expert Guidance"
                 description="Knowledgeable guides who bring stories to life"
-                delay={400}
+                delay={30}
               />
               
               <FeatureItem 
                 icon={<Clock className="text-spice-500" size={22} />}
                 title="Mindful Travel"
                 description="Sustainable practices that respect people and places"
-                delay={500}
+                delay={40}
               />
             </div>
           </div>
