@@ -1,3 +1,4 @@
+// Culinary Journey
 
 import React, { useState } from 'react';
 import ScrollReveal from '../ui/ScrollReveal';
@@ -36,7 +37,7 @@ const Cuisine: React.FC = () => {
       origin: "South India",
       description: "A popular South Indian breakfast, masala dosa is a thin, crispy crepe made from fermented rice and lentil batter, filled with a spiced potato mixture. It's typically served with coconut chutney and sambar.",
       ingredients: ["Rice", "Urad Dal", "Potatoes", "Onions", "Mustard Seeds", "Curry Leaves"],
-      imageUrl: "https://images.unsplash.com/photo-1630409351217-ec73c6fb9b0d?q=80&w=2070",
+      imageUrl: "https://www.idfreshfood.com/wp-content/uploads/2020/11/svsd.jpg",
       prepTime: "30 mins",
       spiceLevel: 3,
     },
@@ -46,7 +47,7 @@ const Cuisine: React.FC = () => {
       origin: "Kashmir",
       description: "A staple of Kashmiri cuisine, this aromatic lamb curry is known for its vibrant red color and complex flavor profile. Slow-cooked with a blend of signature Kashmiri spices, it's rich without being overly spicy.",
       ingredients: ["Lamb", "Kashmiri Chili", "Fennel Seeds", "Ginger", "Yogurt", "Cardamom"],
-      imageUrl: "https://images.unsplash.com/photo-1617692855027-33b14f061079?q=80&w=2070",
+      imageUrl: "https://www.krumpli.co.uk/wp-content/uploads/2023/10/Lamb-Rogan-Josh-Curry-04-735x735.jpg",
       prepTime: "90 mins",
       spiceLevel: 4,
     },
@@ -66,7 +67,7 @@ const Cuisine: React.FC = () => {
       origin: "Hyderabad",
       description: "Hyderabadi biryani is a fragrant rice dish cooked with meat, vegetables, and aromatic spices. The layers of rice and meat are cooked in the 'dum' style, creating a harmonious blend of flavors and textures.",
       ingredients: ["Basmati Rice", "Meat (Chicken/Mutton)", "Yogurt", "Saffron", "Mint", "Fried Onions"],
-      imageUrl: "https://images.unsplash.com/photo-1633945274405-b6c8069297b8?q=80&w=2070",
+      imageUrl: "https://media-assets.swiggy.com/swiggy/image/upload/f_auto,q_auto,fl_lossy/lslhtclel6j5qxkeejdo",
       prepTime: "60 mins",
       spiceLevel: 3,
     },
@@ -76,7 +77,7 @@ const Cuisine: React.FC = () => {
       origin: "West Bengal",
       description: "A beloved Bengali sweet, rasgulla consists of spongy cheese balls soaked in sugar syrup. These soft, melt-in-your-mouth treats are delicately flavored with cardamom and rose water.",
       ingredients: ["Milk", "Sugar", "Lemon Juice", "Cardamom", "Rose Water"],
-      imageUrl: "https://images.unsplash.com/photo-1601703426660-3e858aba251b?q=80&w=2002",
+      imageUrl: "https://images.hindustantimes.com/rf/image_size_630x354/HT/p2/2017/11/14/Pictures/_ee20d284-c90f-11e7-855e-d08d9ee048bd.jpg",
       prepTime: "45 mins",
       spiceLevel: 0,
     },
