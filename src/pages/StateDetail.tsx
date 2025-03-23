@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Navbar from '@/components/layout/Navbar';
@@ -7,6 +6,8 @@ import ScrollReveal from '@/components/ui/ScrollReveal';
 import { ArrowLeft, MapPin, Users, Calendar, Bookmark, Utensils, Landmark, Music } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { stateData } from '@/data/stateData';
+
+
 
 const StateDetail = () => {
   const { stateId } = useParams<{ stateId: string }>();
@@ -74,28 +75,28 @@ const StateDetail = () => {
         <section className="py-16 px-6">
           <div className="container mx-auto">
             <ScrollReveal>
-              <div className="max-w-3xl mx-auto">
+              <div className="max-w-3xl mx-auto border border-white/20 dark:border-white/10 backdrop-blur-md rounded-lg p-6 bg-white/30 dark:bg-white/10">
                 <h2 className="section-title after:left-0 mb-8">Overview</h2>
                 <p className="text-lg leading-relaxed mb-8">
                   {state.description}
                 </p>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12">
-                  <div className="bg-mystic-50 p-4 rounded-lg">
+                  <div className="bg-white/40 dark:bg-white/10 p-4 rounded-lg backdrop-blur-sm">
                     <Landmark className="text-spice-500 mb-2" size={24} />
                     <h3 className="font-medium mb-2">Region</h3>
                     <p className="text-foreground/70">{state.region}</p>
                   </div>
-                  <div className="bg-mystic-50 p-4 rounded-lg">
+                  <div className="bg-white/40 dark:bg-white/10 p-4 rounded-lg backdrop-blur-sm">
                     <Bookmark className="text-spice-500 mb-2" size={24} />
                     <h3 className="font-medium mb-2">Established</h3>
                     <p className="text-foreground/70">{state.established}</p>
                   </div>
-                  <div className="bg-mystic-50 p-4 rounded-lg">
+                  <div className="bg-white/40 dark:bg-white/10 p-4 rounded-lg backdrop-blur-sm">
                     <Music className="text-spice-500 mb-2" size={24} />
                     <h3 className="font-medium mb-2">Art Forms</h3>
                     <p className="text-foreground/70">{state.artForms}</p>
                   </div>
-                  <div className="bg-mystic-50 p-4 rounded-lg">
+                  <div className="bg-white/40 dark:bg-white/10 p-4 rounded-lg backdrop-blur-sm">
                     <Utensils className="text-spice-500 mb-2" size={24} />
                     <h3 className="font-medium mb-2">Cuisine</h3>
                     <p className="text-foreground/70">{state.cuisineType}</p>
@@ -107,39 +108,39 @@ const StateDetail = () => {
         </section>
 
         {/* Tabs Section */}
-        <section className="py-16 px-6 bg-mystic-50">
+        <section className="py-16 px-6 bg-white/40 dark:bg-white/10 backdrop-blur-sm rounded-lg">
           <div className="container mx-auto">
             <ScrollReveal>
               <Tabs defaultValue="culture" className="max-w-4xl mx-auto">
                 <TabsList className="w-full flex mb-8 bg-transparent p-0 space-x-2 overflow-x-auto">
                   <TabsTrigger 
                     value="culture"
-                    className="px-6 py-3 data-[state=active]:bg-spice-50 data-[state=active]:text-spice-600 data-[state=active]:border-b-2 data-[state=active]:border-spice-500 data-[state=active]:shadow-none rounded-none"
+                    className="px-6 py-3 data-[state=active]:bg-spice-50 dark:data-[state=active]:bg-gray-700 data-[state=active]:text-spice-600 dark:data-[state=active]:text-spice-400 data-[state=active]:border-b-2 data-[state=active]:border-spice-500 data-[state=active]:shadow-none rounded-full"
                   >
                     Culture & Traditions
                   </TabsTrigger>
                   <TabsTrigger 
                     value="cuisine"
-                    className="px-6 py-3 data-[state=active]:bg-spice-50 data-[state=active]:text-spice-600 data-[state=active]:border-b-2 data-[state=active]:border-spice-500 data-[state=active]:shadow-none rounded-none"
+                    className="px-6 py-3 data-[state=active]:bg-spice-50 dark:data-[state=active]:bg-gray-700 data-[state=active]:text-spice-600 dark:data-[state=active]:text-spice-400 data-[state=active]:border-b-2 data-[state=active]:border-spice-500 data-[state=active]:shadow-none rounded-full"
                   >
                     Cuisine
                   </TabsTrigger>
                   <TabsTrigger 
                     value="festivals"
-                    className="px-6 py-3 data-[state=active]:bg-spice-50 data-[state=active]:text-spice-600 data-[state=active]:border-b-2 data-[state=active]:border-spice-500 data-[state=active]:shadow-none rounded-none"
+                    className="px-6 py-3 data-[state=active]:bg-spice-50 dark:data-[state=active]:bg-gray-700 data-[state=active]:text-spice-600 dark:data-[state=active]:text-spice-400 data-[state=active]:border-b-2 data-[state=active]:border-spice-500 data-[state=active]:shadow-none rounded-full"
                   >
                     Festivals & Celebrations
                   </TabsTrigger>
                   <TabsTrigger 
                     value="heritage"
-                    className="px-6 py-3 data-[state=active]:bg-spice-50 data-[state=active]:text-spice-600 data-[state=active]:border-b-2 data-[state=active]:border-spice-500 data-[state=active]:shadow-none rounded-none"
+                    className="px-6 py-3 data-[state=active]:bg-spice-50 dark:data-[state=active]:bg-gray-700 data-[state=active]:text-spice-600 dark:data-[state=active]:text-spice-400 data-[state=active]:border-b-2 data-[state=active]:border-spice-500 data-[state=active]:shadow-none rounded-full"
                   >
                     Heritage Sites
                   </TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="culture" className="mt-0">
-                  <div className="bg-white p-6 rounded-lg shadow-sm">
+                  <div className="bg-background dark:bg-gray-800 p-6 rounded-lg shadow-sm">
                     <h3 className="text-xl font-medium mb-4">Cultural Heritage</h3>
                     <p className="mb-4">{state.culture?.description || "Information coming soon."}</p>
                     
@@ -169,7 +170,7 @@ const StateDetail = () => {
                 </TabsContent>
 
                 <TabsContent value="cuisine" className="mt-0">
-                  <div className="bg-white p-6 rounded-lg shadow-sm">
+                  <div className="bg-background dark:bg-gray-800 p-6 rounded-lg shadow-sm">
                     <h3 className="text-xl font-medium mb-4">Regional Cuisine</h3>
                     <p className="mb-4">{state.cuisine?.description || "Information coming soon."}</p>
                     
@@ -199,14 +200,14 @@ const StateDetail = () => {
                 </TabsContent>
 
                 <TabsContent value="festivals" className="mt-0">
-                  <div className="bg-white p-6 rounded-lg shadow-sm">
+                  <div className="bg-background dark:bg-gray-800 p-6 rounded-lg shadow-sm">
                     <h3 className="text-xl font-medium mb-4">Festivals & Celebrations</h3>
                     <p className="mb-4">{state.festivals?.description || "Information coming soon."}</p>
                     
                     {state.festivals?.list && (
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
                         {state.festivals.list.map((festival: any, index: number) => (
-                          <div key={index} className="bg-mystic-50 p-4 rounded-lg">
+                          <div key={index} className="bg-white/40 dark:bg-white/10 p-4 rounded-lg backdrop-blur-sm">
                             <h4 className="font-medium mb-2">{festival.name}</h4>
                             <p className="text-sm text-foreground/70 mb-2">{festival.timing}</p>
                             <p className="text-foreground/80">{festival.description}</p>
@@ -218,7 +219,7 @@ const StateDetail = () => {
                 </TabsContent>
 
                 <TabsContent value="heritage" className="mt-0">
-                  <div className="bg-white p-6 rounded-lg shadow-sm">
+                  <div className="bg-background dark:bg-gray-800 p-6 rounded-lg shadow-sm">
                     <h3 className="text-xl font-medium mb-4">Heritage Sites</h3>
                     <p className="mb-4">{state.heritage?.description || "Information coming soon."}</p>
                     
