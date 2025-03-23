@@ -7,7 +7,7 @@ import { stateData } from '@/data/stateData';
 import { Card, CardContent } from '@/components/ui/card';
 import { MapPin, Search, Filter, Image, X, Clock, History, Info, Globe } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { artForms, regions, getArtFormsByRegion } from '@/data/cultural';
+import { artForms } from '@/data/cultural';
 
 type ArtForm = {
   id: string;
@@ -44,13 +44,10 @@ type HeritageSite = {
   image: string;
 };
 
-type RegionFilter = 'all' | string;
-
 const Culture = () => {
   const [activeTab, setActiveTab] = useState<string>('artForms');
   const [searchTerm, setSearchTerm] = useState('');
   const [activeStateFilter, setActiveStateFilter] = useState('All');
-  const [activeRegionFilter, setActiveRegionFilter] = useState<RegionFilter>('all');
   const [selectedArtForm, setSelectedArtForm] = useState<ArtForm | null>(null);
   
   const festivals: Festival[] = stateData.flatMap(state => 
@@ -78,11 +75,7 @@ const Culture = () => {
   const [filteredHeritageSites, setFilteredHeritageSites] = useState(heritageSites);
 
   useEffect(() => {
-    let regionFilteredArts = activeRegionFilter === 'all' 
-      ? artForms 
-      : getArtFormsByRegion(activeRegionFilter);
-    
-    const filteredArts = regionFilteredArts.filter(art => {
+    const filteredArts = artForms.filter(art => {
       const matchesSearch = art.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
                            art.stateName.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesState = activeStateFilter === 'All' || art.stateName === activeStateFilter;
@@ -107,7 +100,7 @@ const Culture = () => {
       return matchesSearch && matchesState;
     });
     setFilteredHeritageSites(filteredSites);
-  }, [searchTerm, activeStateFilter, activeRegionFilter, activeTab]);
+  }, [searchTerm, activeStateFilter, activeTab]);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -158,34 +151,6 @@ const Culture = () => {
                       onClick={() => setActiveStateFilter(state)}
                     >
                       {state}
-                    </button>
-                  ))}
-                </div>
-              </div>
-              
-              <div className="bg-background dark:bg-background/50 p-4 rounded-lg">
-                <div className="flex items-center gap-2 mb-3">
-                  <Globe className="h-4 w-4 text-spice-500" />
-                  <span className="text-sm font-medium">Filter by Region:</span>
-                </div>
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-2">
-                  <button
-                    className={`p-2 rounded-md text-sm font-medium transition-colors ${activeRegionFilter === 'all' 
-                      ? 'bg-spice-500 text-white' 
-                      : 'bg-secondary/50 hover:bg-secondary'}`}
-                    onClick={() => setActiveRegionFilter('all')}
-                  >
-                    All Regions
-                  </button>
-                  {regions.map(region => (
-                    <button
-                      key={region.id}
-                      className={`p-2 rounded-md text-sm font-medium transition-colors ${activeRegionFilter === region.id 
-                        ? 'bg-spice-500 text-white' 
-                        : 'bg-secondary/50 hover:bg-secondary'}`}
-                      onClick={() => setActiveRegionFilter(region.id)}
-                    >
-                      {region.name}
                     </button>
                   ))}
                 </div>
