@@ -1,157 +1,216 @@
-// Home: Experience the timeless spirit of India
+// Capturing India's Essence
 
-import React, { useRef, useEffect } from 'react';
-import { ArrowRight } from 'lucide-react';
-import ParallaxSection from '../ui/ParallaxSection';
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { textVariant, fadeIn, staggerContainer } from '@/lib/animations';
+import React, { useState } from 'react';
+import ScrollReveal from '../ui/ScrollReveal';
+import { ChevronLeft, ChevronRight, X, Download } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useTheme } from '../theme/ThemeProvider';
 
-const Hero: React.FC = () => {
-  const targetRef = useRef<HTMLDivElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  
-  const { scrollYProgress } = useScroll({
-    target: targetRef,
-    offset: ["start start", "end start"]
-  });
+type ImageType = {
+  id: number;
+  url: string;
+  alt: string;
+  location: string;
+};
 
-  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
-  const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.8]);
-  const y = useTransform(scrollYProgress, [0, 0.5], [0, 100]);
+const Gallery: React.FC = () => {
+  const [selectedImage, setSelectedImage] = useState<ImageType | null>(null);
+  const { theme } = useTheme();
 
-  // Ensure video autoplay works properly
-  useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.defaultMuted = true;
-      videoRef.current.muted = true;
-      videoRef.current.autoplay = true;
-      videoRef.current.loop = true;
-      videoRef.current.playsInline = true;
-      videoRef.current.play().catch(e => {
-        console.error("Video autoplay failed:", e);
-        // Try again after user interaction
-        document.body.addEventListener('click', () => {
-          videoRef.current?.play().catch(e => console.error("Video play failed after click:", e));
-        }, { once: true });
-      });
+  const images: ImageType[] = [
+    {
+      id: 1,
+      url: "https://previews.123rf.com/images/realityimages/realityimages1801/realityimages180100012/92968704-carvings-on-wall-veeranarayana-temple-chennakeshava-temple-complex-belur-karnataka-india.jpg",
+      alt: "Ancient Indian temple with intricate carvings",
+      location: "Karnataka",
+    },
+    {
+      id: 2,
+      url: "https://plus.unsplash.com/premium_photo-1664304095595-e428558e8161?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8aG9saXxlbnwwfHwwfHx8MQ%3D%3D",
+      alt: "Colorful Holi festival celebration",
+      location: "Uttar Pradesh",
+    },
+    {
+      id: 3,
+      url: "https://serenademagazine.com/content/images/size/w1200/wp-content/uploads/2023/07/dvhb-9-w4aagpxc.webp",
+      alt: "Traditional Kathakali dancer with elaborate makeup",
+      location: "Kerala",
+    },
+    {
+      id: 4,
+      url: "https://www.agoda.com/wp-content/uploads/2024/03/Taj-Mahal-at-sunset-Agra-India.jpg",
+      alt: "Majestic Taj Mahal at sunrise",
+      location: "Agra",
+    },
+    {
+      id: 5,
+      url: "https://www.shaadidukaan.com/vogue/wp-content/uploads/2019/07/rajasthani-wedding.jpg",
+      alt: "Traditional Indian wedding ceremony",
+      location: "Rajasthan",
+    },
+    {
+      id: 6,
+      url: "https://www.skywaytour.com/media/gallery/2023-09-26-09-33-42-keralabackwaters.jpg",
+      alt: "Boat riding through Kerala's backwaters",
+      location: "Kerala",
+    },
+  ];
+
+  const locationColor = theme === 'dark' ? "#53a6ff" : "#ff7e11";
+
+  const openLightbox = (image: ImageType) => {
+    setSelectedImage(image);
+    document.body.style.overflow = 'hidden';
+  };
+
+  const closeLightbox = () => {
+    setSelectedImage(null);
+    document.body.style.overflow = 'auto';
+  };
+
+  const navigateImage = (direction: 'next' | 'prev') => {
+    if (!selectedImage) return;
+    
+    const currentIndex = images.findIndex(img => img.id === selectedImage.id);
+    let newIndex;
+    
+    if (direction === 'next') {
+      newIndex = (currentIndex + 1) % images.length;
+    } else {
+      newIndex = (currentIndex - 1 + images.length) % images.length;
     }
-  }, []);
+    
+    setSelectedImage(images[newIndex]);
+  };
+
+  const downloadImage = (url: string, filename: string) => {
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `mystic-india-${filename.toLowerCase().replace(/\s+/g, '-')}.jpg`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   return (
-    <section id="home" ref={targetRef} className="relative min-h-screen flex items-center overflow-hidden">
-      {/* Video Background with Overlay */}
-      <div className="absolute inset-0 z-0 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-background z-10"></div>
-        <video
-          ref={videoRef}
-          className="w-full h-full object-cover"
-          autoPlay
-          muted
-          loop
-          playsInline
-        >
-          <source 
-            src="https://player.vimeo.com/progressive_redirect/playback/921376317/rendition/1080p/file.mp4?loc=external&oauth2_token_id=1747418641&signature=81fe3100ce7a792e4a2487a6a6a26a72df29adc0cfe19bf09dcae05be11dce97" 
-            type="video/mp4" 
-          />
-          Your browser does not support the video tag.
-        </video>
-      </div>
-
-      {/* Abstract Pattern Overlay */}
-      <div className="absolute inset-0 bg-repeat opacity-15 z-[1] mix-blend-soft-light" 
-           style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/oriental-tiles.png")' }}>
-      </div>
-
-      {/* Content */}
-      <motion.div 
-        style={{ opacity, scale, y }}
-        className="container mx-auto px-6 z-10 mt-16 relative"
-      >
-        <motion.div 
-          variants={staggerContainer}
-          initial="hidden"
-          animate="visible"
-          className="max-w-3xl"
-        >
-          <motion.p 
-            variants={textVariant(0.1)}
-            className="subtitle mb-3 text-white"
-          >
-            Experience the timeless spirit of India
-          </motion.p>
-          
-          <motion.h1 
-            variants={textVariant(0.2)}
-            className="text-4xl md:text-5xl lg:text-7xl font-serif font-medium leading-tight mb-6 text-white"
-          >
-            Journey Through India's <span className="text-spice-400">Rich</span> Cultural Heritage
-          </motion.h1>
-          
-          <motion.p 
-            variants={textVariant(0.3)}
-            className="text-lg text-white/90 mb-8 max-w-2xl"
-          >
-            Explore the vibrant tapestry of traditions, art forms, and cuisines that make up India's diverse cultural landscape, from ancient temples to living traditions passed down through generations.
-          </motion.p>
-          
-          <motion.div 
-            variants={fadeIn("up", 0.3)}
-            className="flex flex-wrap gap-4"
-          >
-            <a href="#states" className="btn-primary flex items-center group">
-              Explore States <ArrowRight size={16} className="ml-2 group-hover:translate-x-1 transition-transform" />
-            </a>
-            <a href="#about" className="btn-outline bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 transition-colors">
-              Learn More
-            </a>
-          </motion.div>
-          
-          {/* Stats */}
-          <motion.div 
-            variants={staggerContainer}
-            initial="hidden"
-            animate="visible"
-            className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6"
-          >
-            {[
-              { number: "28+", label: "States" },
-              { number: "1000+", label: "Cultural Traditions" },
-              { number: "22+", label: "Official Languages" },
-              { number: "5000+", label: "Years of History" }
-            ].map((stat, index) => (
-              <motion.div 
-                key={index}
-                variants={fadeIn("up", 0.5 + index * 0.1)}
-                className="glass-panel p-4 rounded-lg bg-white/10 backdrop-blur-md border border-white/20"
-                whileHover={{ y: -5, transition: { duration: 0.2 } }}
-              >
-                <h3 className="text-3xl font-medium text-spice-400 mb-1">{stat.number}</h3>
-                <p className="text-sm text-white/80">{stat.label}</p>
-              </motion.div>
-            ))}
-          </motion.div>
-        </motion.div>
-      </motion.div>
+    <section id="gallery" className="py-24 px-6 section-gallery relative overflow-hidden">
+      {/* Abstract backgrounds */}
+      {theme === 'light' && (
+        <>
+          <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-spice-100 filter blur-3xl opacity-30 z-0"></div>
+          <div className="absolute bottom-0 left-0 w-96 h-96 rounded-full bg-indigo-100 filter blur-3xl opacity-30 z-0"></div>
+        </>
+      )}
       
-      {/* Scroll Indicator */}
-      <motion.div 
-        className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.6, delay: 1 }}
-      >
-        <div className="w-[30px] h-[50px] rounded-full border-2 border-spice-400 mb-2 flex justify-center">
-          <motion.div 
-            className="w-1.5 h-3 bg-spice-400 rounded-full mt-2"
-            animate={{ y: [0, 15, 0] }}
-            transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
-          ></motion.div>
+      {theme === 'dark' && (
+        <>
+          <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-purple-900/30 filter blur-3xl opacity-30 z-0"></div>
+          <div className="absolute bottom-0 left-0 w-96 h-96 rounded-full bg-blue-900/30 filter blur-3xl opacity-30 z-0"></div>
+        </>
+      )}
+      
+      <div className="container mx-auto relative z-10">
+        {/* Section Header */}
+        <ScrollReveal>
+          <div className="text-center mb-16">
+            <p className="subtitle mb-3">Visual Stories</p>
+            <h2 className="section-title after:left-1/2 after:-translate-x-1/2">Capturing India's Essence</h2>
+          </div>
+        </ScrollReveal>
+
+        {/* Gallery Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
+          {images.map((image, index) => (
+            <ScrollReveal key={image.id} delay={(index % 3) * 0.1} className="h-full">
+              <motion.div 
+                className={`image-card h-full ${theme === 'dark' ? 'gallery-card' : 'bg-white shadow-sm'} rounded-lg overflow-hidden cursor-pointer`}
+                onClick={() => openLightbox(image)}
+                whileHover={{ y: -5, scale: 1.02, transition: { duration: 0.2 } }}
+              >
+                <div className="relative h-64 overflow-hidden">
+                  <img 
+                    src={image.url} 
+                    alt={image.alt} 
+                    className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 hover:opacity-100 transition-opacity flex items-end p-4">
+                    <span className="text-white font-medium">{image.location}</span>
+                  </div>
+                </div>
+                <div className="p-4">
+                  <span className="text-xs uppercase tracking-wider font-medium" style={{ color: locationColor }}>
+                    {image.location}
+                  </span>
+                  <h3 className="text-lg font-medium mt-1">{image.alt}</h3>
+                </div>
+              </motion.div>
+            </ScrollReveal>
+          ))}
         </div>
-        <p className="text-xs uppercase tracking-widest text-white/80 font-light">Scroll Down</p>
-      </motion.div>
+
+        {/* Lightbox */}
+        <AnimatePresence>
+          {selectedImage && (
+            <motion.div 
+              className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              <button 
+                className="absolute top-5 right-5 text-white hover:text-pink-500 transition-colors"
+                onClick={closeLightbox}
+              >
+                <X size={32} />
+              </button>
+              
+              <button 
+                className="absolute left-5 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors text-white"
+                onClick={() => navigateImage('prev')}
+              >
+                <ChevronLeft size={24} />
+              </button>
+              
+              <motion.div 
+                className="max-w-4xl max-h-full"
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ type: "spring", damping: 25 }}
+              >
+                <img 
+                  src={selectedImage.url} 
+                  alt={selectedImage.alt} 
+                  className="max-w-full max-h-[80vh] object-contain"
+                />
+                <div className="mt-4 text-white flex justify-between items-center">
+                  <div className="text-left">
+                    <h3 className="text-xl font-medium">{selectedImage.alt}</h3>
+                    <p className="text-white/70 mt-1">{selectedImage.location}</p>
+                  </div>
+                  <motion.button 
+                    className={`px-4 py-2 rounded-md flex items-center transition-colors ${theme === 'dark' ? 'bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600' : 'bg-spice-500 hover:bg-spice-600'}`}
+                    onClick={() => downloadImage(selectedImage.url, selectedImage.alt)}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <Download size={16} className="mr-2" />
+                    Download
+                  </motion.button>
+                </div>
+              </motion.div>
+              
+              <button 
+                className="absolute right-5 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors text-white"
+                onClick={() => navigateImage('next')}
+              >
+                <ChevronRight size={24} />
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
     </section>
   );
 };
 
-export default Hero;
+export default Gallery;
