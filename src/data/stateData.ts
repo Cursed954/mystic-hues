@@ -11,7 +11,7 @@ export const stateData = [
     artForms: 'Kathputli, Ghoomar, Kalbeliya',
     cuisineType: 'Spicy and rich',
     description: 'Rajasthan, the "Land of Kings," is India\'s largest state by area. Known for its majestic forts, ornate palaces, and vibrant cultural heritage, it offers a glimpse into India\'s royal past. The state\'s colorful festivals, traditional arts, and vast Thar Desert make it a visual feast for travelers.',
-    bannerImage: 'https://images.unsplash.com/photo-1599661046289-e31897d36a68?q=80&w=2070',
+    bannerImage: 'https://plus.unsplash.com/premium_photo-1661936495413-875706d59696?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mjh8fFJhamFzdGhhbnxlbnwwfHwwfHx8MQ%3D%3D',
     famousFor: ['Jaipur Pink City', 'Udaipur Lake Palace', 'Jaisalmer Fort', 'Pushkar Camel Fair', 'Desert Safaris'],
     culture: {
       description: 'The culture of Rajasthan is a rich blend of traditions, customs, and arts that have been preserved over centuries. The state\'s vibrant folk music, colorful attire, and intricate handicrafts reflect its royal heritage and desert lifestyle. Rajasthan\'s cultural identity is deeply influenced by its history of Rajput warriors and their code of honor.',
@@ -21,10 +21,11 @@ export const stateData = [
         'Mehndi - Intricate henna designs applied during celebrations',
         'Tie and dye textiles - The famous Bandhani technique',
         'Turban tying - Different styles representing different communities'
+        
       ],
       images: [
-        'https://images.unsplash.com/photo-1584804532731-421efc1be9c8',
-        'https://images.unsplash.com/photo-1584804391220-02eb2d842408'
+        'https://assets.isu.pub/document-structure/230819035916-60290ca28e98a8546d00c2853acc4222/v1/1c6593aabc3c2ca14136bfcd7e0832ac.jpeg',
+        'https://cdn.shopify.com/s/files/1/0562/8792/0217/t/7/assets/e7f_Navratri-Garba-in-Gujarat1.jpg?v=1655289704'
       ]
     },
     cuisine: {
@@ -33,22 +34,23 @@ export const stateData = [
         {
           name: 'Dal Baati Churma',
           description: 'Baked wheat balls served with lentil curry and sweetened cereal',
-          image: 'https://images.unsplash.com/photo-1669275936312-477a1b0bfd5f'
+          image: 'https://images.unsplash.com/photo-1742281095650-dd3c50c08772?q=80&w=3174&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
         },
         {
           name: 'Laal Maas',
           description: 'Spicy red meat curry made with mathania chilies',
-          image: 'https://images.unsplash.com/photo-1585937421612-70a008356c36'
+          image: 'https://www.whiskaffair.com/wp-content/uploads/2021/04/Laal-Maas-2-3.jpg'
         },
+        
         {
           name: 'Ker Sangri',
           description: 'A vegetable dish made from desert beans and berries',
-          image: 'https://plus.unsplash.com/premium_photo-1675249146341-a5e80c782b1d'
+          image: 'https://images.squarespace-cdn.com/content/v1/578753d7d482e9c3a909de40/1633003521690-VJA2SHVJY7PEA6IRQ862/201111415_1419030101793610_6241614431259767327_n.jpg?format=1500w'
         },
         {
           name: 'Ghevar',
           description: 'Disc-shaped sweet cake made with flour and soaked in sugar syrup',
-          image: 'https://images.unsplash.com/photo-1528975604071-b4dc52a2d18c'
+          image: 'https://www.mygingergarlickitchen.com/wp-content/rich-markup-images/1x1/1x1-how-to-make-ghevar-jaipuri-malai-ghevar-ghewar-video-recipe.jpg'
         }
       ]
     },
@@ -90,7 +92,7 @@ export const stateData = [
           name: 'City Palace',
           location: 'Udaipur',
           description: 'A complex of palaces, courtyards, and gardens overlooking Lake Pichola',
-          image: 'https://images.unsplash.com/photo-1610124688223-947255d4ea5c'
+          image: 'https://assets.architecturaldigest.in/photos/63a848708df6b9fdb924d677/master/pass/Untitled%20design%20(5).png'
         },
         {
           name: 'Jaisalmer Fort',
@@ -102,7 +104,7 @@ export const stateData = [
           name: 'Junagarh Fort',
           location: 'Bikaner',
           description: 'An unassailable fortress that has never been conquered, featuring palaces and temples',
-          image: 'https://images.unsplash.com/photo-1574314205415-5c71feeaff55'
+          image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTaVhZL3xiHESpYkoYUr5lrHujm7ksX5040jw&'
         },
         {
           name: 'Mehrangarh Fort',
@@ -114,7 +116,7 @@ export const stateData = [
           name: 'Jantar Mantar',
           location: 'Jaipur',
           description: 'UNESCO World Heritage site with astronomical instruments built by Maharaja Sawai Jai Singh II',
-          image: 'https://images.unsplash.com/photo-1563266309-28af7ba85f6c'
+          image: 'https://s7ap1.scene7.com/is/image/incredibleindia/jantar-mantar-jaipur-rajasthan-1-attr-hero?qlt=82&ts=1726660194854'
         }
       ]
     }
@@ -152,7 +154,7 @@ export const stateData = [
         {
           name: 'Appam with Stew',
           description: 'Lacy rice pancakes served with vegetable or meat stew',
-          image: 'https://plus.unsplash.com/premium_photo-1668618296700-b0f6f5ac5fb5'
+          image: 'https://images.slurrp.com/prodarticles/ln1j9x0luf.webp'
         },
         {
           name: 'Malabar Biryani',
@@ -162,7 +164,7 @@ export const stateData = [
         {
           name: 'Kerala Fish Curry',
           description: 'Tangy fish curry made with kokum and coconut milk',
-          image: 'https://images.unsplash.com/photo-1626516090103-c5df53406f26'
+          image: 'https://vaya.in/recipes/wp-content/uploads/2018/04/Kerala-Fish-Curry.jpg'
         },
         {
           name: 'Puttu and Kadala Curry',
@@ -249,7 +251,7 @@ export const stateData = [
     artForms: 'Bharatanatyam, Carnatic Music, Tanjore Paintings',
     cuisineType: 'Rice-based, vegetarian',
     description: 'Tamil Nadu, with its ancient Dravidian culture, is home to magnificent temples, classical music, and traditional dance forms. The state\'s rich history dates back thousands of years, reflected in its UNESCO World Heritage temples and vibrant cultural practices. From coastal towns to hills, Tamil Nadu offers diverse experiences.',
-    bannerImage: 'https://images.unsplash.com/photo-1616843413587-9e3a37f7bbd8?q=80&w=2070',
+    bannerImage: 'https://www.oyorooms.com/blog/wp-content/uploads/2019/06/Meenakshi-Amman-Temple-Madurai-10-Best-Temples-of-Tamil-Nadu-1.jpg',
     famousFor: ['Meenakshi Temple', 'Ooty Hill Station', 'Marina Beach', 'Bharatanatyam Dance', 'Chettinad Cuisine'],
     culture: {
       description: 'Tamil Nadu has a cultural heritage dating back over 2,000 years, with Tamil being one of the world\'s oldest living languages. The state\'s culture centers around classical arts, music, dance, and literature, all deeply connected to Dravidian and Tamil traditions.',
@@ -281,12 +283,12 @@ export const stateData = [
         {
           name: 'Chettinad Chicken',
           description: 'A fiery chicken curry with complex spices from the Chettinad region',
-          image: 'https://images.unsplash.com/photo-1626777553635-be344d48f0df'
+          image: 'https://myfoodstory.com/wp-content/uploads/2016/02/spicy-chettinad-pepper-chicken-fryroast-recipe.1024x1024-3.jpg'
         },
         {
           name: 'Pongal',
           description: 'A comfort dish of rice and lentils, prepared in both sweet and savory varieties',
-          image: 'https://images.unsplash.com/photo-1567337711282-7728369113f7'
+          image: 'https://www.indianveggiedelight.com/wp-content/uploads/2021/11/ven-pongal-featured.jpg'
         }
       ]
     },
@@ -368,7 +370,7 @@ export const stateData = [
     artForms: 'Nati Dance, Thangka Paintings, Chamba Rumal',
     cuisineType: 'Mountain cuisine, Tibetan influence',
     description: 'Himachal Pradesh, nestled in the western Himalayas, is renowned for its breathtaking mountain landscapes, adventure opportunities, and peaceful hill stations. The state offers a perfect blend of natural beauty and cultural heritage, with ancient temples and monasteries dotting its valleys and mountains.',
-    bannerImage: 'https://images.unsplash.com/photo-1502310942044-dc746b92eebc?q=80&w=1943',
+    bannerImage: 'https://plus.unsplash.com/premium_photo-1697729733902-f8c92710db07?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fGhpbWFjaGFsJTIwcHJhZGVzaHxlbnwwfHwwfHx8MQ%3D%3D',
     famousFor: ['Shimla Hill Station', 'Manali Adventures', 'Dharamshala & McLeod Ganj', 'Apple Orchards', 'Himalayan Treks'],
     culture: {
       description: 'Himachal\'s culture is deeply influenced by its mountainous geography and mixture of Hindu and Tibetan Buddhist traditions. The state\'s remote valleys have preserved unique customs, dialects, and artistic traditions that vary from region to region.',
