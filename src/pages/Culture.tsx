@@ -136,7 +136,7 @@ const Culture = () => {
         <section className="relative h-[40vh] flex items-center">
           <div 
             className="absolute inset-0 bg-center bg-cover"
-            style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1576487236230-eaa4afe68192?q=80&w=2070)' }}
+            style={{ backgroundImage: 'url(https://kuwaitcarnaticmusicforum.wordpress.com/wp-content/uploads/2017/12/cropped-poster-plain1.jpg)' }}
           >
             <div className="absolute inset-0 bg-black/50"></div>
           </div>
