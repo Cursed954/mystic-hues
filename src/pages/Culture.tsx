@@ -3,39 +3,12 @@ import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import ScrollReveal from '@/components/ui/ScrollReveal';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { stateData } from '@/data/stateData';
 import { Card, CardContent } from '@/components/ui/card';
 import { MapPin, Search, Image, X, Clock, History, Info, Globe } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { artForms, ArtForm, Festival, HeritageSite } from '@/data/cultural/artForms';
-
-// Define a default image for festivals
-const defaultFestivalImage = "https://images.unsplash.com/photo-1594815101424-0c644c8c63c6?q=80&w=1170";
-
-// Transform festivals from state data and ensure each has an image property
-const festivals: Festival[] = stateData.flatMap(state => 
-  state.festivals?.list?.map(festival => ({
-    ...festival,
-    stateName: state.name,
-    stateId: state.id,
-    // Add the image property with a default if it doesn't exist in the source data
-    image: festival.image || defaultFestivalImage
-  })) || []
-);
-
-// Define a default image for heritage sites
-const defaultHeritageSiteImage = "https://images.unsplash.com/photo-1599661046289-e31897d36a68?q=80&w=1170";
-
-// Transform heritage sites from state data and ensure each has an image property
-const heritageSites: HeritageSite[] = stateData.flatMap(state => 
-  state.heritage?.sites?.map(site => ({
-    ...site,
-    stateName: state.name,
-    stateId: state.id,
-    // Add the image property with a default if it doesn't exist in the source data
-    image: site.image || defaultHeritageSiteImage
-  })) || []
-);
+import { artForms, ArtForm } from '@/data/cultural/artForms';
+import { festivals, Festival } from '@/data/cultural/festivals';
+import { heritageSites, HeritageSite } from '@/data/cultural/heritageSites';
 
 const Culture = () => {
   const [activeTab, setActiveTab] = useState<string>('artForms');
@@ -45,7 +18,7 @@ const Culture = () => {
   const [selectedFestival, setSelectedFestival] = useState<Festival | null>(null);
   const [selectedHeritageSite, setSelectedHeritageSite] = useState<HeritageSite | null>(null);
 
-  const states = ['All', ...new Set(stateData.map(state => state.name))];
+  const states = ['All', ...new Set(artForms.map(art => art.stateName))];
 
   const [filteredArtForms, setFilteredArtForms] = useState<ArtForm[]>([]);
   const [filteredFestivals, setFilteredFestivals] = useState(festivals);
@@ -100,7 +73,7 @@ const Culture = () => {
           </div>
         </section>
 
-        <section className="py-8 px-6 bg-secondary dark:bg-secondary/20">
+        <section className="py-8 px-6 bg-secondary/80 backdrop-blur-sm dark:bg-secondary/20">
           <div className="container mx-auto">
             <div className="flex flex-col gap-6">
               <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
@@ -111,15 +84,15 @@ const Culture = () => {
                     placeholder="Search cultural elements..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="search-box pl-10"
+                    className="search-box pl-10 w-full rounded-md border border-input bg-background/70 backdrop-blur-sm px-3 py-2 text-sm ring-offset-background"
                   />
                 </div>
                 
-                <div className="filter-container">
+                <div className="filter-container flex flex-wrap gap-2">
                   {states.map(state => (
                     <button
                       key={state}
-                      className={`filter-tag ${activeStateFilter === state ? 'active' : ''}`}
+                      className={`filter-tag px-3 py-1 text-sm rounded-full ${activeStateFilter === state ? 'bg-spice-500 text-white' : 'bg-background/70 backdrop-blur-sm text-foreground border border-input'}`}
                       onClick={() => setActiveStateFilter(state)}
                     >
                       {state}
@@ -167,7 +140,7 @@ const Culture = () => {
                           transition={{ delay: index * 0.05 }}
                         >
                           <Card 
-                            className="overflow-hidden hover:shadow-lg transition-shadow h-full cursor-pointer"
+                            className="overflow-hidden hover:shadow-lg transition-shadow h-full cursor-pointer bg-card/80 backdrop-blur-sm border-white/10"
                             onClick={() => setSelectedArtForm(art)}
                           >
                             <div className="h-48 overflow-hidden">
@@ -214,7 +187,7 @@ const Culture = () => {
                           transition={{ delay: index * 0.05 }}
                         >
                           <Card 
-                            className="overflow-hidden hover:shadow-lg transition-shadow h-full cursor-pointer" 
+                            className="overflow-hidden hover:shadow-lg transition-shadow h-full cursor-pointer bg-card/80 backdrop-blur-sm border-white/10" 
                             onClick={() => setSelectedFestival(festival)}
                           >
                             <div className="h-48 overflow-hidden">
@@ -257,7 +230,7 @@ const Culture = () => {
                           transition={{ delay: index * 0.05 }}
                         >
                           <Card 
-                            className="overflow-hidden hover:shadow-lg transition-shadow h-full cursor-pointer"
+                            className="overflow-hidden hover:shadow-lg transition-shadow h-full cursor-pointer bg-card/80 backdrop-blur-sm border-white/10"
                             onClick={() => setSelectedHeritageSite(site)}
                           >
                             <div className="h-48 overflow-hidden">
@@ -297,14 +270,14 @@ const Culture = () => {
       <AnimatePresence>
         {selectedArtForm && (
           <motion.div 
-            className="fixed inset-0 bg-black/70 dark:bg-black/80 z-50 flex items-center justify-center p-4 overflow-auto"
+            className="fixed inset-0 bg-black/70 dark:bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-auto"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setSelectedArtForm(null)}
           >
             <motion.div 
-              className="bg-background rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto"
+              className="bg-background/90 backdrop-blur-md rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto border border-white/10"
               initial={{ scale: 0.9, y: 20 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 20 }}
@@ -339,19 +312,19 @@ const Culture = () => {
               
               <div className="p-6 md:p-8">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                  <div className="bg-secondary/50 p-4 rounded-lg flex flex-col items-center justify-center">
+                  <div className="bg-secondary/50 backdrop-blur-sm p-4 rounded-lg flex flex-col items-center justify-center">
                     <Globe className="text-spice-500 mb-2" size={24} />
                     <h3 className="text-lg font-medium">Region</h3>
                     <p className="text-center">{selectedArtForm.regionName}</p>
                   </div>
                   
-                  <div className="bg-secondary/50 p-4 rounded-lg flex flex-col items-center justify-center">
+                  <div className="bg-secondary/50 backdrop-blur-sm p-4 rounded-lg flex flex-col items-center justify-center">
                     <Clock className="text-spice-500 mb-2" size={24} />
                     <h3 className="text-lg font-medium">Started</h3>
                     <p className="text-center">{selectedArtForm.history?.started || "Ancient times"}</p>
                   </div>
                   
-                  <div className="bg-secondary/50 p-4 rounded-lg flex flex-col items-center justify-center">
+                  <div className="bg-secondary/50 backdrop-blur-sm p-4 rounded-lg flex flex-col items-center justify-center">
                     <History className="text-spice-500 mb-2" size={24} />
                     <h3 className="text-lg font-medium">Golden Period</h3>
                     <p className="text-center">{selectedArtForm.history?.goldenPeriod || "17th-19th century"}</p>
@@ -370,7 +343,7 @@ const Culture = () => {
                 
                 <div className="mb-8">
                   <h3 className="text-xl font-medium mb-4">Current Status</h3>
-                  <p className="text-foreground/80 leading-relaxed bg-secondary/30 p-4 rounded-lg">
+                  <p className="text-foreground/80 leading-relaxed bg-secondary/30 backdrop-blur-sm p-4 rounded-lg">
                     {selectedArtForm.history?.currentStatus || "Being preserved through cultural programs and practiced by dedicated artists."}
                   </p>
                 </div>
@@ -401,14 +374,14 @@ const Culture = () => {
       <AnimatePresence>
         {selectedFestival && (
           <motion.div 
-            className="fixed inset-0 bg-black/70 dark:bg-black/80 z-50 flex items-center justify-center p-4 overflow-auto"
+            className="fixed inset-0 bg-black/70 dark:bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-auto"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setSelectedFestival(null)}
           >
             <motion.div 
-              className="bg-background rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto"
+              className="bg-background/90 backdrop-blur-md rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto border border-white/10"
               initial={{ scale: 0.9, y: 20 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 20 }}
@@ -451,7 +424,7 @@ const Culture = () => {
                 </div>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                  <div className="bg-secondary/50 p-6 rounded-lg">
+                  <div className="bg-secondary/50 backdrop-blur-sm p-6 rounded-lg">
                     <h3 className="text-lg font-medium mb-3 flex items-center">
                       <Clock className="mr-2 text-spice-500" size={20} />
                       When it's Celebrated
@@ -459,7 +432,7 @@ const Culture = () => {
                     <p className="text-foreground/80">{selectedFestival.timing}</p>
                   </div>
                   
-                  <div className="bg-secondary/50 p-6 rounded-lg">
+                  <div className="bg-secondary/50 backdrop-blur-sm p-6 rounded-lg">
                     <h3 className="text-lg font-medium mb-3 flex items-center">
                       <MapPin className="mr-2 text-spice-500" size={20} />
                       Where it's Celebrated
@@ -477,14 +450,14 @@ const Culture = () => {
       <AnimatePresence>
         {selectedHeritageSite && (
           <motion.div 
-            className="fixed inset-0 bg-black/70 dark:bg-black/80 z-50 flex items-center justify-center p-4 overflow-auto"
+            className="fixed inset-0 bg-black/70 dark:bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-auto"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setSelectedHeritageSite(null)}
           >
             <motion.div 
-              className="bg-background rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto"
+              className="bg-background/90 backdrop-blur-md rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto border border-white/10"
               initial={{ scale: 0.9, y: 20 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 20 }}
@@ -523,7 +496,7 @@ const Culture = () => {
                 </div>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="bg-secondary/50 p-6 rounded-lg">
+                  <div className="bg-secondary/50 backdrop-blur-sm p-6 rounded-lg">
                     <h3 className="text-lg font-medium mb-3 flex items-center">
                       <MapPin className="mr-2 text-spice-500" size={20} />
                       Location
@@ -531,7 +504,7 @@ const Culture = () => {
                     <p className="text-foreground/80">{selectedHeritageSite.location}</p>
                   </div>
                   
-                  <div className="bg-secondary/50 p-6 rounded-lg">
+                  <div className="bg-secondary/50 backdrop-blur-sm p-6 rounded-lg">
                     <h3 className="text-lg font-medium mb-3 flex items-center">
                       <Globe className="mr-2 text-spice-500" size={20} />
                       State
