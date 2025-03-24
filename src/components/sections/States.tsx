@@ -8,7 +8,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { MapPin, Users, Calendar, ArrowRight, Globe, Filter } from 'lucide-react';
 import { stateData } from '@/data/stateData';
-import { regions } from '@/data/cultural';
+import { regions, getStateRegion } from '@/data/cultural';
 
 const States: React.FC = () => {
   // States data
@@ -18,17 +18,14 @@ const States: React.FC = () => {
 
   // Function to get region name for a state
   const getRegionName = (stateId: string): string => {
-    for (const region of regions) {
-      if (region.states.includes(stateId)) {
-        return region.name;
-      }
-    }
-    return "";
+    const regionId = getStateRegion(stateId);
+    const region = regions.find(r => r.id === regionId);
+    return region ? region.name : "";
   };
 
   // Filter states by region
   useEffect(() => {
-    let filtered = stateData;
+    let filtered = [...stateData];
     
     if (activeRegionFilter !== 'all') {
       const region = regions.find(r => r.id === activeRegionFilter);
@@ -45,7 +42,7 @@ const States: React.FC = () => {
     if (!activeTab || !limitedStates.find(state => state.id === activeTab)) {
       setActiveTab(limitedStates[0]?.id || '');
     }
-  }, [activeRegionFilter]);
+  }, [activeRegionFilter, activeTab]);
 
   return (
     <section id="states" className="py-24 px-6 relative">
@@ -150,7 +147,7 @@ const States: React.FC = () => {
                             </div>
                             <div className="flex items-center text-sm text-muted-foreground">
                               <Globe size={16} className="mr-1" />
-                              {state.region || getRegionName(state.id)}
+                              {getRegionName(state.id)}
                             </div>
                           </div>
                           
