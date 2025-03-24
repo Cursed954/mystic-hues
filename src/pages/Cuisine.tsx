@@ -4,8 +4,9 @@ import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import ScrollReveal from '@/components/ui/ScrollReveal';
 import { Card, CardContent } from '@/components/ui/card';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { stateData } from '@/data/stateData';
-import { MapPin, X, Search, Filter, Flame, Clock, Utensils, Image } from 'lucide-react';
+import { MapPin, X, Search, Filter, Flame, Clock, Utensils, Image, ChevronDown, ChevronUp } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 // Define types
@@ -25,6 +26,9 @@ const Cuisine = () => {
   const [selectedDish, setSelectedDish] = useState<Dish | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [activeStateFilter, setActiveStateFilter] = useState('All');
+  const [isFiltersOpen, setIsFiltersOpen] = useState(false);
+  const [isSpiceLevelFilterOpen, setIsSpiceLevelFilterOpen] = useState(false);
+  const [activeSpiceLevelFilter, setActiveSpiceLevelFilter] = useState('All');
 
   // Extract all dishes from all states with enhanced properties
   const allDishes: Dish[] = stateData.flatMap(state => 
@@ -41,14 +45,18 @@ const Cuisine = () => {
 
   // Get unique states for filtering
   const states = ['All', ...new Set(stateData.map(state => state.name))];
+  
+  // Spice levels for filtering
+  const spiceLevels = ['All', 'Mild', 'Medium', 'Hot', 'Very Hot'];
 
-  // Filter dishes based on search and state filter
+  // Filter dishes based on search, state filter, and spice level
   const filteredDishes = allDishes.filter(dish => {
     const matchesSearch = dish.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                          dish.stateName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          (dish.description && dish.description.toLowerCase().includes(searchTerm.toLowerCase()));
+                        dish.stateName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                        (dish.description && dish.description.toLowerCase().includes(searchTerm.toLowerCase()));
     const matchesState = activeStateFilter === 'All' || dish.stateName === activeStateFilter;
-    return matchesSearch && matchesState;
+    const matchesSpiceLevel = activeSpiceLevelFilter === 'All' || dish.spiceLevel === activeSpiceLevelFilter;
+    return matchesSearch && matchesState && matchesSpiceLevel;
   });
 
   // Helper functions to generate dish details
@@ -185,34 +193,83 @@ const Cuisine = () => {
         {/* Search and Filter Section */}
         <section className="py-8 px-6 bg-secondary dark:bg-secondary/20">
           <div className="container mx-auto">
-            <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
-              <div className="relative w-full md:w-80">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-foreground/60" />
-                <input
-                  type="text"
-                  placeholder="Search dishes..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="search-box pl-10"
-                />
-              </div>
-              
-              <div className="flex items-center gap-2">
-                <Filter className="h-4 w-4 text-foreground/70" />
-                <span className="text-sm font-medium text-foreground/70">Filter by state:</span>
-              </div>
-              
-              <div className="filter-container">
-                {states.map(state => (
-                  <button
-                    key={state}
-                    className={`filter-tag ${activeStateFilter === state ? 'active' : ''}`}
-                    onClick={() => setActiveStateFilter(state)}
-                  >
-                    {state}
-                  </button>
-                ))}
-              </div>
+            <div className="relative w-full md:w-80 mb-6">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-foreground/60" />
+              <input
+                type="text"
+                placeholder="Search dishes..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="search-box pl-10 w-full"
+              />
+            </div>
+            
+            {/* Collapsible State Filter */}
+            <div className="mb-4">
+              <Collapsible 
+                open={isFiltersOpen} 
+                onOpenChange={setIsFiltersOpen}
+                className="border border-border/40 rounded-lg overflow-hidden"
+              >
+                <CollapsibleTrigger className="flex items-center justify-between w-full bg-background/80 backdrop-blur-sm p-4">
+                  <div className="flex items-center gap-2">
+                    <Filter className="h-4 w-4 text-spice-500" />
+                    <span className="font-medium">Filter by State</span>
+                  </div>
+                  {isFiltersOpen ? (
+                    <ChevronUp className="h-4 w-4 text-muted-foreground" />
+                  ) : (
+                    <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                  )}
+                </CollapsibleTrigger>
+                <CollapsibleContent className="p-4 bg-background/70 backdrop-blur-sm">
+                  <div className="flex flex-wrap gap-2">
+                    {states.map(state => (
+                      <button
+                        key={state}
+                        className={`filter-tag ${activeStateFilter === state ? 'active' : ''}`}
+                        onClick={() => setActiveStateFilter(state)}
+                      >
+                        {state}
+                      </button>
+                    ))}
+                  </div>
+                </CollapsibleContent>
+              </Collapsible>
+            </div>
+            
+            {/* Collapsible Spice Level Filter */}
+            <div>
+              <Collapsible 
+                open={isSpiceLevelFilterOpen} 
+                onOpenChange={setIsSpiceLevelFilterOpen}
+                className="border border-border/40 rounded-lg overflow-hidden"
+              >
+                <CollapsibleTrigger className="flex items-center justify-between w-full bg-background/80 backdrop-blur-sm p-4">
+                  <div className="flex items-center gap-2">
+                    <Flame className="h-4 w-4 text-spice-500" />
+                    <span className="font-medium">Filter by Spice Level</span>
+                  </div>
+                  {isSpiceLevelFilterOpen ? (
+                    <ChevronUp className="h-4 w-4 text-muted-foreground" />
+                  ) : (
+                    <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                  )}
+                </CollapsibleTrigger>
+                <CollapsibleContent className="p-4 bg-background/70 backdrop-blur-sm">
+                  <div className="flex flex-wrap gap-2">
+                    {spiceLevels.map(level => (
+                      <button
+                        key={level}
+                        className={`filter-tag ${activeSpiceLevelFilter === level ? 'active' : ''}`}
+                        onClick={() => setActiveSpiceLevelFilter(level)}
+                      >
+                        {level}
+                      </button>
+                    ))}
+                  </div>
+                </CollapsibleContent>
+              </Collapsible>
             </div>
           </div>
         </section>

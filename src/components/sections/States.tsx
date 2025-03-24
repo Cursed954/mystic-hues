@@ -6,15 +6,17 @@ import ScrollReveal from '../ui/ScrollReveal';
 import ParallaxSection from '../ui/ParallaxSection';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { MapPin, Users, Calendar, ArrowRight, Globe, Filter } from 'lucide-react';
+import { MapPin, Users, Calendar, ArrowRight, Globe, Filter, ChevronDown, ChevronUp } from 'lucide-react';
 import { stateData } from '@/data/stateData';
 import { regions, getStateRegion } from '@/data/cultural';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 
 const States: React.FC = () => {
   // States data
   const [activeTab, setActiveTab] = useState<string>('');
   const [activeRegionFilter, setActiveRegionFilter] = useState<string>('all');
   const [filteredStates, setFilteredStates] = useState(stateData.slice(0, 5));
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   // Function to get region name for a state
   const getRegionName = (stateId: string): string => {
@@ -64,35 +66,48 @@ const States: React.FC = () => {
           </div>
         </ScrollReveal>
 
-        {/* Region filter */}
+        {/* Collapsible Region filter */}
         <ScrollReveal delay={1}>
-          <div className="mb-8 bg-background/80 p-4 rounded-lg shadow-sm">
-            <div className="flex items-center gap-2 mb-3">
-              <Filter className="h-4 w-4 text-spice-500" />
-              <span className="text-sm font-medium">Filter by Region:</span>
-            </div>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-2">
-              <button
-                className={`p-2 rounded-md text-sm font-medium transition-colors ${activeRegionFilter === 'all' 
-                  ? 'bg-spice-500 text-white' 
-                  : 'bg-secondary/50 hover:bg-secondary'}`}
-                onClick={() => setActiveRegionFilter('all')}
-              >
-                All Regions
-              </button>
-              {regions.map(region => (
+          <Collapsible 
+            open={isFilterOpen} 
+            onOpenChange={setIsFilterOpen}
+            className="mb-8 bg-background/80 rounded-lg shadow-sm overflow-hidden border border-border/50"
+          >
+            <CollapsibleTrigger className="flex items-center justify-between w-full p-4 text-left">
+              <div className="flex items-center gap-2">
+                <Filter className="h-4 w-4 text-spice-500" />
+                <span className="text-sm font-medium">Filter by Region</span>
+              </div>
+              {isFilterOpen ? (
+                <ChevronUp className="h-4 w-4 text-muted-foreground" />
+              ) : (
+                <ChevronDown className="h-4 w-4 text-muted-foreground" />
+              )}
+            </CollapsibleTrigger>
+            <CollapsibleContent className="p-4 pt-0 border-t border-border/50">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-2 pt-4">
                 <button
-                  key={region.id}
-                  className={`p-2 rounded-md text-sm font-medium transition-colors ${activeRegionFilter === region.id 
+                  className={`p-2 rounded-md text-sm font-medium transition-colors ${activeRegionFilter === 'all' 
                     ? 'bg-spice-500 text-white' 
                     : 'bg-secondary/50 hover:bg-secondary'}`}
-                  onClick={() => setActiveRegionFilter(region.id)}
+                  onClick={() => setActiveRegionFilter('all')}
                 >
-                  {region.name}
+                  All Regions
                 </button>
-              ))}
-            </div>
-          </div>
+                {regions.map(region => (
+                  <button
+                    key={region.id}
+                    className={`p-2 rounded-md text-sm font-medium transition-colors ${activeRegionFilter === region.id 
+                      ? 'bg-spice-500 text-white' 
+                      : 'bg-secondary/50 hover:bg-secondary'}`}
+                    onClick={() => setActiveRegionFilter(region.id)}
+                  >
+                    {region.name}
+                  </button>
+                ))}
+              </div>
+            </CollapsibleContent>
+          </Collapsible>
         </ScrollReveal>
 
         {/* State Tabs - Limited to 5 */}

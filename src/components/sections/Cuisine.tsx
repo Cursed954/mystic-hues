@@ -1,10 +1,12 @@
+
 // Culinary Journey
 
 import React, { useState } from 'react';
 import ScrollReveal from '../ui/ScrollReveal';
 import ParallaxSection from '../ui/ParallaxSection';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { MapPin, Utensils, Clock, Star } from 'lucide-react';
+import { MapPin, Utensils, Clock, Star, ChevronDown, ChevronUp, Filter } from 'lucide-react';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 type DishType = {
   id: number;
@@ -19,6 +21,19 @@ type DishType = {
 
 const Cuisine: React.FC = () => {
   const [selectedDish, setSelectedDish] = useState<DishType | null>(null);
+  const [isFiltersOpen, setIsFiltersOpen] = useState(false);
+  const [activeRegionFilter, setActiveRegionFilter] = useState('all');
+
+  // Regions for filtering
+  const regions = [
+    { id: 'all', name: 'All Regions' },
+    { id: 'north', name: 'North India' },
+    { id: 'south', name: 'South India' },
+    { id: 'east', name: 'East India' },
+    { id: 'west', name: 'West India' },
+    { id: 'central', name: 'Central India' },
+    { id: 'northeast', name: 'Northeast India' },
+  ];
 
   const dishes: DishType[] = [
     {
@@ -83,6 +98,21 @@ const Cuisine: React.FC = () => {
     },
   ];
 
+  const filteredDishes = activeRegionFilter === 'all' 
+    ? dishes 
+    : dishes.filter(dish => {
+        // Map origins to regions (simplified)
+        const regionMap: Record<string, string> = {
+          'Punjab': 'north',
+          'South India': 'south',
+          'Kashmir': 'north',
+          'Maharashtra': 'west',
+          'Hyderabad': 'south',
+          'West Bengal': 'east'
+        };
+        return regionMap[dish.origin] === activeRegionFilter;
+      });
+
   const openDishDetails = (dish: DishType) => {
     setSelectedDish(dish);
     document.body.style.overflow = 'hidden';
@@ -116,9 +146,9 @@ const Cuisine: React.FC = () => {
         {/* Section Header */}
         <ScrollReveal>
           <div className="text-center mb-16">
-            <p className="subtitle mb-3">Taste of India</p>
+            <p className="subtitle mb-3">Culinary Journey</p>
             <h2 className="section-title after:left-1/2 after:-translate-x-1/2">
-              Culinary Journey
+              Indian Cuisine
             </h2>
             <p className="mt-8 max-w-2xl mx-auto text-foreground/70">
               Discover the rich and diverse flavors of Indian cuisine, from spicy curries 
@@ -127,9 +157,49 @@ const Cuisine: React.FC = () => {
           </div>
         </ScrollReveal>
 
+        {/* Collapsible Filter Section */}
+        <ScrollReveal delay={1}>
+          <div className="mb-10">
+            <Collapsible 
+              open={isFiltersOpen} 
+              onOpenChange={setIsFiltersOpen}
+              className="w-full bg-background/80 rounded-lg shadow-sm overflow-hidden border border-border/50"
+            >
+              <CollapsibleTrigger className="flex items-center justify-between w-full p-4 text-left">
+                <div className="flex items-center gap-2">
+                  <Filter className="h-4 w-4 text-spice-500" />
+                  <span className="font-medium">Filter by Region</span>
+                </div>
+                {isFiltersOpen ? (
+                  <ChevronUp className="h-4 w-4 text-muted-foreground" />
+                ) : (
+                  <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                )}
+              </CollapsibleTrigger>
+              <CollapsibleContent className="p-4 pt-0 border-t border-border/50">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-2 pt-4">
+                  {regions.map(region => (
+                    <button
+                      key={region.id}
+                      className={`p-2 rounded-md text-sm font-medium transition-colors ${
+                        activeRegionFilter === region.id 
+                          ? 'bg-spice-500 text-white' 
+                          : 'bg-secondary/50 hover:bg-secondary'
+                      }`}
+                      onClick={() => setActiveRegionFilter(region.id)}
+                    >
+                      {region.name}
+                    </button>
+                  ))}
+                </div>
+              </CollapsibleContent>
+            </Collapsible>
+          </div>
+        </ScrollReveal>
+
         {/* Cuisine Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {dishes.map((dish, index) => (
+          {filteredDishes.map((dish, index) => (
             <ScrollReveal key={dish.id} delay={index % 3}>
               <Card className="overflow-hidden cursor-pointer hover:shadow-md transition-shadow h-full flex flex-col" onClick={() => openDishDetails(dish)}>
                 <div className="h-56 overflow-hidden">
