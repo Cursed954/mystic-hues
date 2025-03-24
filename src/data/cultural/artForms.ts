@@ -29,6 +29,9 @@ const regionMap: Record<string, string> = {
   "Northeast India": "northeast-india"
 };
 
+// Default image in case none is provided
+const defaultArtFormImage = "https://images.unsplash.com/photo-1576487236230-eaa4afe68192?q=80&w=1170";
+
 // Extract all cultural data with enhanced art form information
 export const artForms: ArtForm[] = stateData.flatMap(state => 
   state.artForms?.split(', ').map((art, index) => {
@@ -46,7 +49,7 @@ export const artForms: ArtForm[] = stateData.flatMap(state =>
       stateName: state.name,
       regionId: regionId,
       regionName: regionText,
-      image: "https://images.unsplash.com/photo-1576487236230-eaa4afe68192?q=80&w=1170",
+      image: defaultArtFormImage,
       description: `${art} is a traditional art form from ${state.name}, representing the rich cultural heritage of the region.`,
       history: {
         started: "Ancient times",

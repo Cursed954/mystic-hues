@@ -53,21 +53,29 @@ const Culture = () => {
   const [selectedFestival, setSelectedFestival] = useState<Festival | null>(null);
   const [selectedHeritageSite, setSelectedHeritageSite] = useState<HeritageSite | null>(null);
   
+  // Define a default image for festivals
+  const defaultFestivalImage = "https://images.unsplash.com/photo-1594815101424-0c644c8c63c6?q=80&w=1170";
+  
+  // Transform festivals from state data and ensure each has an image property
   const festivals: Festival[] = stateData.flatMap(state => 
     state.festivals?.list?.map(festival => ({
       ...festival,
       stateName: state.name,
       stateId: state.id,
-      image: festival.image || "https://images.unsplash.com/photo-1594815101424-0c644c8c63c6?q=80&w=1170"
+      image: festival.image || defaultFestivalImage
     })) || []
   );
   
+  // Define a default image for heritage sites
+  const defaultHeritageSiteImage = "https://images.unsplash.com/photo-1599661046289-e31897d36a68?q=80&w=1170";
+  
+  // Transform heritage sites from state data and ensure each has an image property
   const heritageSites: HeritageSite[] = stateData.flatMap(state => 
     state.heritage?.sites?.map(site => ({
       ...site,
       stateName: state.name,
       stateId: state.id,
-      image: site.image || "https://images.unsplash.com/photo-1599661046289-e31897d36a68?q=80&w=1170"
+      image: site.image || defaultHeritageSiteImage
     })) || []
   );
 
@@ -103,7 +111,7 @@ const Culture = () => {
       return matchesSearch && matchesState;
     });
     setFilteredHeritageSites(filteredSites);
-  }, [searchTerm, activeStateFilter, activeTab]);
+  }, [searchTerm, activeStateFilter]);
 
   return (
     <div className="min-h-screen flex flex-col">
