@@ -27,6 +27,7 @@ type ArtForm = {
   additionalImages?: string[];
 };
 
+// Update the type definition to include the image property
 type Festival = {
   name: string;
   timing: string;
@@ -36,6 +37,7 @@ type Festival = {
   image: string;
 };
 
+// Update the type definition to include the image property
 type HeritageSite = {
   name: string;
   location: string;
@@ -62,6 +64,7 @@ const Culture = () => {
       ...festival,
       stateName: state.name,
       stateId: state.id,
+      // Add the image property with a default if it doesn't exist in the source data
       image: festival.image || defaultFestivalImage
     })) || []
   );
@@ -75,6 +78,7 @@ const Culture = () => {
       ...site,
       stateName: state.name,
       stateId: state.id,
+      // Add the image property with a default if it doesn't exist in the source data
       image: site.image || defaultHeritageSiteImage
     })) || []
   );
