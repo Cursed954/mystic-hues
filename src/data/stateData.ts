@@ -1,4 +1,3 @@
-
 export const stateData = [
   {
     id: 'rajasthan',
@@ -14,7 +13,7 @@ export const stateData = [
     bannerImage: 'https://plus.unsplash.com/premium_photo-1661936495413-875706d59696?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mjh8fFJhamFzdGhhbnxlbnwwfHwwfHx8MQ%3D%3D',
     famousFor: ['Jaipur Pink City', 'Udaipur Lake Palace', 'Jaisalmer Fort', 'Pushkar Camel Fair', 'Desert Safaris'],
     culture: {
-      description: 'The culture of Rajasthan is a rich blend of traditions, customs, and arts that have been preserved over centuries. The state\'s vibrant folk music, colorful attire, and intricate handicrafts reflect its royal heritage and desert lifestyle. Rajasthan\'s cultural identity is deeply influenced by its history of Rajput warriors and their code of honor.',
+      description: 'The culture of Rajasthan is a rich blend of traditions, customs, and arts that have been preserved over centuries. The state\'s colorful festivals, traditional arts, and vast Thar Desert make it a visual feast for travelers.',
       traditions: [
         'Ghoomar - A traditional folk dance performed by women on special occasions',
         'Puppetry - The ancient art of Kathputli puppetry telling folkloric tales',
@@ -60,22 +59,26 @@ export const stateData = [
         {
           name: 'Desert Festival',
           timing: 'January/February',
-          description: 'Celebrated in Jaisalmer with camel races, folk performances, and turban tying competitions'
+          description: 'Celebrated in Jaisalmer with camel races, folk performances, and turban tying competitions',
+          image: 'https://images.unsplash.com/photo-1579630942078-100a2f8e9052?q=80&w=1974'
         },
         {
           name: 'Pushkar Camel Fair',
           timing: 'November',
-          description: 'One of the world\'s largest camel fairs, featuring trading, racing, and cultural programs'
+          description: 'One of the world\'s largest camel fairs, featuring trading, racing, and cultural programs',
+          image: 'https://images.unsplash.com/photo-1516471835429-775c34f97946?q=80&w=1974'
         },
         {
           name: 'Teej',
           timing: 'August',
-          description: 'Women-centric festival celebrating the monsoon and the goddess Parvati'
+          description: 'Women-centric festival celebrating the monsoon and the goddess Parvati',
+          image: 'https://images.unsplash.com/photo-1594815101424-0c644c8c63c6?q=80&w=1974'
         },
         {
           name: 'Gangaur',
           timing: 'March/April',
-          description: 'An 18-day festival honoring goddess Gauri, celebrated especially by women for marital happiness'
+          description: 'An 18-day festival honoring goddess Gauri, celebrated especially by women for marital happiness',
+          image: 'https://images.unsplash.com/photo-1625482606601-7822965257e6?q=80&w=1974'
         }
       ]
     },
@@ -179,22 +182,26 @@ export const stateData = [
         {
           name: 'Onam',
           timing: 'August/September',
-          description: 'The state\'s harvest festival featuring elaborate floral arrangements, boat races, and feasts'
+          description: 'The state\'s harvest festival featuring elaborate floral arrangements, boat races, and feasts',
+          image: 'https://images.unsplash.com/photo-1599030397827-b7ef9f791091?q=80&w=1974'
         },
         {
           name: 'Thrissur Pooram',
           timing: 'April/May',
-          description: 'A spectacular temple festival featuring decorated elephants, percussion ensembles, and fireworks'
+          description: 'A spectacular temple festival featuring decorated elephants, percussion ensembles, and fireworks',
+          image: 'https://images.unsplash.com/photo-1571575309949-29a1618b0555?q=80&w=1974'
         },
         {
           name: 'Vishu',
           timing: 'April',
-          description: 'Kerala\'s astronomical new year celebrated with ritual arrangements of auspicious items'
+          description: 'Kerala\'s astronomical new year celebrated with ritual arrangements of auspicious items',
+          image: 'https://images.unsplash.com/photo-1600265722363-2c1cd7be6b3b?q=80&w=1974'
         },
         {
           name: 'Theyyam',
           timing: 'November to May',
-          description: 'A series of ritual dance performances where performers embody deities'
+          description: 'A series of ritual dance performances where performers embody deities',
+          image: 'https://images.unsplash.com/photo-1594815101424-0c644c8c63c6?q=80&w=1974'
         }
       ]
     },
@@ -298,22 +305,26 @@ export const stateData = [
         {
           name: 'Pongal',
           timing: 'January',
-          description: 'A four-day harvest festival thanking the sun god for agricultural abundance'
+          description: 'A four-day harvest festival thanking the sun god for agricultural abundance',
+          image: 'https://images.unsplash.com/photo-1612863750372-50c1252b8c58?q=80&w=1974'
         },
         {
           name: 'Thai Pusam',
           timing: 'January/February',
-          description: 'A festival honoring Lord Murugan, marked by kavadi (physical burden) bearing'
+          description: 'A festival honoring Lord Murugan, marked by kavadi (physical burden) bearing',
+          image: 'https://images.unsplash.com/photo-1594815101424-0c644c8c63c6?q=80&w=1974'
         },
         {
           name: 'Madurai Meenakshi Temple Festival',
           timing: 'April/May',
-          description: 'A 10-day celebration of the divine wedding of Goddess Meenakshi and Lord Sundareswarar'
+          description: 'A 10-day celebration of the divine wedding of Goddess Meenakshi and Lord Sundareswarar',
+          image: 'https://images.unsplash.com/photo-1589494870900-75f4568b69e0?q=80&w=1974'
         },
         {
           name: 'Mahamaham',
           timing: 'Every 12 years',
-          description: 'A massive bathing festival at Kumbakonam\'s tank, considered equivalent to bathing in all sacred rivers'
+          description: 'A massive bathing festival at Kumbakonam\'s tank, considered equivalent to bathing in all sacred rivers',
+          image: 'https://images.unsplash.com/photo-1594815101424-0c644c8c63c6?q=80&w=1974'
         }
       ]
     },
@@ -417,22 +428,26 @@ export const stateData = [
         {
           name: 'Kullu Dussehra',
           timing: 'October',
-          description: 'A week-long festival where deities from surrounding villages are carried to Kullu for processions'
+          description: 'A week-long festival where deities from surrounding villages are carried to Kullu for processions',
+          image: 'https://images.unsplash.com/photo-1575789054929-2bd341b6c26c?q=80&w=1974'
         },
         {
           name: 'Losar',
           timing: 'February/March',
-          description: 'Tibetan New Year celebrated in the Buddhist regions with mask dances and prayer ceremonies'
+          description: 'Tibetan New Year celebrated in the Buddhist regions with mask dances and prayer ceremonies',
+          image: 'https://images.unsplash.com/photo-1594815101424-0c644c8c63c6?q=80&w=1974'
         },
         {
           name: 'Shivratri Fair',
           timing: 'February/March',
-          description: 'A seven-day festival in Mandi featuring deities from over 200 temples'
+          description: 'A seven-day festival in Mandi featuring deities from over 200 temples',
+          image: 'https://images.unsplash.com/photo-1594815101424-0c644c8c63c6?q=80&w=1974'
         },
         {
           name: 'Minjar Fair',
           timing: 'July/August',
-          description: 'An ancient festival in Chamba celebrating good harvest, with cultural performances'
+          description: 'An ancient festival in Chamba celebrating good harvest, with cultural performances',
+          image: 'https://images.unsplash.com/photo-1594815101424-0c644c8c63c6?q=80&w=1974'
         }
       ]
     },

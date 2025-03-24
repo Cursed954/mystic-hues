@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
@@ -8,44 +7,35 @@ import { stateData } from '@/data/stateData';
 import { Card, CardContent } from '@/components/ui/card';
 import { MapPin, Search, Image, X, Clock, History, Info, Globe } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { artForms } from '@/data/cultural';
+import { artForms, ArtForm, Festival, HeritageSite } from '@/data/cultural/artForms';
 
-type ArtForm = {
-  id: string;
-  name: string;
-  stateId: string;
-  stateName: string;
-  regionId: string;
-  regionName: string;
-  image: string;
-  description: string;
-  history: {
-    started?: string;
-    goldenPeriod?: string;
-    currentStatus?: string;
-  };
-  additionalImages?: string[];
-};
+// Define a default image for festivals
+const defaultFestivalImage = "https://images.unsplash.com/photo-1594815101424-0c644c8c63c6?q=80&w=1170";
 
-// Update the type definition to include the image property
-type Festival = {
-  name: string;
-  timing: string;
-  description: string;
-  stateName: string;
-  stateId: string;
-  image: string;
-};
+// Transform festivals from state data and ensure each has an image property
+const festivals: Festival[] = stateData.flatMap(state => 
+  state.festivals?.list?.map(festival => ({
+    ...festival,
+    stateName: state.name,
+    stateId: state.id,
+    // Add the image property with a default if it doesn't exist in the source data
+    image: festival.image || defaultFestivalImage
+  })) || []
+);
 
-// Update the type definition to include the image property
-type HeritageSite = {
-  name: string;
-  location: string;
-  description: string;
-  stateName: string;
-  stateId: string;
-  image: string;
-};
+// Define a default image for heritage sites
+const defaultHeritageSiteImage = "https://images.unsplash.com/photo-1599661046289-e31897d36a68?q=80&w=1170";
+
+// Transform heritage sites from state data and ensure each has an image property
+const heritageSites: HeritageSite[] = stateData.flatMap(state => 
+  state.heritage?.sites?.map(site => ({
+    ...site,
+    stateName: state.name,
+    stateId: state.id,
+    // Add the image property with a default if it doesn't exist in the source data
+    image: site.image || defaultHeritageSiteImage
+  })) || []
+);
 
 const Culture = () => {
   const [activeTab, setActiveTab] = useState<string>('artForms');
@@ -54,34 +44,6 @@ const Culture = () => {
   const [selectedArtForm, setSelectedArtForm] = useState<ArtForm | null>(null);
   const [selectedFestival, setSelectedFestival] = useState<Festival | null>(null);
   const [selectedHeritageSite, setSelectedHeritageSite] = useState<HeritageSite | null>(null);
-  
-  // Define a default image for festivals
-  const defaultFestivalImage = "https://images.unsplash.com/photo-1594815101424-0c644c8c63c6?q=80&w=1170";
-  
-  // Transform festivals from state data and ensure each has an image property
-  const festivals: Festival[] = stateData.flatMap(state => 
-    state.festivals?.list?.map(festival => ({
-      ...festival,
-      stateName: state.name,
-      stateId: state.id,
-      // Add the image property with a default if it doesn't exist in the source data
-      image: festival.image || defaultFestivalImage
-    })) || []
-  );
-  
-  // Define a default image for heritage sites
-  const defaultHeritageSiteImage = "https://images.unsplash.com/photo-1599661046289-e31897d36a68?q=80&w=1170";
-  
-  // Transform heritage sites from state data and ensure each has an image property
-  const heritageSites: HeritageSite[] = stateData.flatMap(state => 
-    state.heritage?.sites?.map(site => ({
-      ...site,
-      stateName: state.name,
-      stateId: state.id,
-      // Add the image property with a default if it doesn't exist in the source data
-      image: site.image || defaultHeritageSiteImage
-    })) || []
-  );
 
   const states = ['All', ...new Set(stateData.map(state => state.name))];
 

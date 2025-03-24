@@ -19,6 +19,25 @@ export type ArtForm = {
   additionalImages?: string[];
 };
 
+// Type definitions for festivals and heritage sites
+export type Festival = {
+  name: string;
+  timing: string;
+  description: string;
+  stateName: string;
+  stateId: string;
+  image: string;
+};
+
+export type HeritageSite = {
+  name: string;
+  location: string;
+  description: string;
+  stateName: string;
+  stateId: string;
+  image: string;
+};
+
 // Map of region IDs to names
 const regionMap: Record<string, string> = {
   "Northern India": "north-india",
