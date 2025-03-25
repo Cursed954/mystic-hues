@@ -1,5 +1,6 @@
 
 import { stateData } from '../stateData';
+import { getArtFormDetails } from './artformdata';
 
 // Create a more structured format for art forms
 export type ArtForm = {
@@ -29,18 +30,18 @@ const regionMap: Record<string, string> = {
   "Northeast India": "northeast-india"
 };
 
-// Default image in case none is provided
-const defaultArtFormImage = "https://images.unsplash.com/photo-1576487236230-eaa4afe68192?q=80&w=1170";
-
 // Extract all cultural data with enhanced art form information
 export const artForms: ArtForm[] = stateData.flatMap(state => 
-  state.artForms?.split(', ').map((art, index) => {
+  state.artForms?.split(', ').map((art) => {
     // Extract region info from state data
     const regionText = state.region || "";
     const regionId = regionMap[regionText] || "other";
     
     // Create slug for the ID
     const artId = art.toLowerCase().replace(/\s+/g, '-');
+    
+    // Get art form details from the new detailed data source
+    const artDetails = getArtFormDetails(art);
     
     return {
       id: `${state.id}-${artId}`,
@@ -49,18 +50,10 @@ export const artForms: ArtForm[] = stateData.flatMap(state =>
       stateName: state.name,
       regionId: regionId,
       regionName: regionText,
-      image: defaultArtFormImage,
-      description: `${art} is a traditional art form from ${state.name}, representing the rich cultural heritage of the region.`,
-      history: {
-        started: "Ancient times",
-        goldenPeriod: "17th to 19th century",
-        currentStatus: "Practiced by dedicated artists and being preserved through cultural programs"
-      },
-      additionalImages: [
-        "https://images.unsplash.com/photo-1594026112334-d8040bd05749?q=80&w=1170",
-        "https://images.unsplash.com/photo-1540122995631-7c74c46c0b8f?q=80&w=1170",
-        "https://images.unsplash.com/photo-1584806749948-697891c67821?q=80&w=1170"
-      ]
+      image: artDetails.image,
+      description: artDetails.description,
+      history: artDetails.history,
+      additionalImages: artDetails.additionalImages
     };
   }) || []
 );
