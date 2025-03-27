@@ -29,6 +29,19 @@ export const authService = {
         name: email.split('@')[0],
         isAuthenticated: true,
         profilePicture: `https://api.dicebear.com/7.x/avataaars/svg?seed=${email}`,
+        bio: "Travel enthusiast exploring the beauty of India",
+        phone: "",
+        address: {
+          street: "",
+          city: "",
+          state: "Delhi",
+          zipCode: ""
+        },
+        preferences: {
+          notifications: true,
+          newsletter: true,
+          travelAlerts: false
+        },
         trips: [
           { id: 1, destination: "Rajasthan", date: "2024-05-15", status: "Upcoming" },
           { id: 2, destination: "Kerala", date: "2023-12-10", status: "Completed" }
@@ -73,6 +86,19 @@ export const authService = {
         isAuthenticated: true,
         provider: provider,
         profilePicture: `https://api.dicebear.com/7.x/avataaars/svg?seed=${randomEmail}`,
+        bio: "Tech enthusiast and traveler",
+        phone: "",
+        address: {
+          street: "",
+          city: "",
+          state: "Mumbai",
+          zipCode: ""
+        },
+        preferences: {
+          notifications: true,
+          newsletter: true,
+          travelAlerts: true
+        },
         trips: [
           { id: 1, destination: "Himalayas", date: "2024-06-20", status: "Upcoming" }
         ]
@@ -94,6 +120,40 @@ export const authService = {
       return {
         success: false,
         message: `An error occurred during ${provider} login. Please try again.`
+      };
+    }
+  },
+  
+  updateUserProfile: async (userData: any): Promise<{ success: boolean; message: string; user?: any }> => {
+    try {
+      // This would be an API call to update user data in a real app
+      console.log("Updating user profile:", userData);
+      
+      // Retrieve current user data
+      const currentUserJSON = localStorage.getItem('user');
+      if (!currentUserJSON) {
+        return { success: false, message: "User not found" };
+      }
+      
+      // Update the user data
+      const updatedUser = { ...JSON.parse(currentUserJSON), ...userData };
+      
+      // Simulate network delay
+      await new Promise(resolve => setTimeout(resolve, 800));
+      
+      // Save updated user data
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+      
+      return {
+        success: true,
+        message: "Profile updated successfully!",
+        user: updatedUser
+      };
+    } catch (error) {
+      console.error("Update profile error:", error);
+      return {
+        success: false,
+        message: "An error occurred while updating your profile."
       };
     }
   },

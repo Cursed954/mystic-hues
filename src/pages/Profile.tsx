@@ -3,7 +3,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/context/AuthContext';
-import { UserCircle, LogOut, Calendar, MapPin, Package, ChevronRight } from 'lucide-react';
+import { UserCircle, LogOut, Calendar, MapPin, Package, ChevronRight, Edit, Mail, Phone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
@@ -44,7 +44,7 @@ const Profile = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="bg-white/10 backdrop-blur-md rounded-xl p-8 mb-8 shadow-lg"
+            className="bg-white/10 backdrop-blur-md rounded-xl p-8 mb-8 shadow-lg border border-white/10"
           >
             <div className="flex flex-col md:flex-row items-center gap-6">
               <div className="relative">
@@ -52,7 +52,7 @@ const Profile = () => {
                   <img 
                     src={user.profilePicture} 
                     alt={user.name} 
-                    className="w-32 h-32 rounded-full border-4 border-violet-500/50"
+                    className="w-32 h-32 rounded-full border-4 border-violet-500/50 object-cover"
                   />
                 ) : (
                   <div className="w-32 h-32 rounded-full bg-gradient-to-br from-violet-500 to-indigo-600 flex items-center justify-center">
@@ -64,6 +64,26 @@ const Profile = () => {
               <div className="flex-1 text-center md:text-left">
                 <h1 className="text-3xl font-bold">{user.name}</h1>
                 <p className="text-gray-400 mt-1">{user.email}</p>
+                
+                {user.bio && (
+                  <p className="text-gray-300 mt-2 italic">"{user.bio}"</p>
+                )}
+                
+                <div className="mt-2 space-y-1">
+                  {user.phone && (
+                    <div className="flex items-center justify-center md:justify-start text-gray-400 text-sm">
+                      <Phone className="mr-2 h-4 w-4 text-violet-400" />
+                      {user.phone}
+                    </div>
+                  )}
+                  
+                  {user.address?.city && user.address?.state && (
+                    <div className="flex items-center justify-center md:justify-start text-gray-400 text-sm">
+                      <MapPin className="mr-2 h-4 w-4 text-violet-400" />
+                      {[user.address.city, user.address.state].filter(Boolean).join(', ')}
+                    </div>
+                  )}
+                </div>
                 
                 {user.provider && (
                   <div className="inline-flex items-center gap-2 mt-2 bg-violet-900/30 px-3 py-1 rounded-full text-violet-300 text-sm">
@@ -77,6 +97,7 @@ const Profile = () => {
                     className="border-violet-500/50 hover:bg-violet-500/20"
                     onClick={() => navigate('/account-settings')}
                   >
+                    <Edit className="mr-2 h-4 w-4" />
                     Edit Profile
                   </Button>
                   

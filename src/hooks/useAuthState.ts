@@ -50,6 +50,19 @@ export function useAuthState() {
     }
   };
 
+  const updateProfile = async (userData: any) => {
+    setLoading(true);
+    try {
+      const result = await authService.updateUserProfile(userData);
+      if (result.success && result.user) {
+        setUser(result.user);
+      }
+      return result;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const logout = () => {
     authService.logout();
     setUser(null);
@@ -61,7 +74,8 @@ export function useAuthState() {
     user, 
     loading, 
     login, 
-    socialLogin, 
+    socialLogin,
+    updateProfile,
     logout, 
     isAuthenticated: !!user 
   };
