@@ -6,6 +6,7 @@ type AuthContextType = {
   user: any;
   loading: boolean;
   login: (email: string, password: string) => Promise<any>;
+  socialLogin: (provider: 'google' | 'github') => Promise<any>;
   logout: () => void;
   isAuthenticated: boolean;
 };

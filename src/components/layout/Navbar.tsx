@@ -1,18 +1,12 @@
 
 import React, { useState, useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, User } from 'lucide-react';
 import { Logo } from '../ui/Logo';
 import { ThemeToggle } from '../theme/ThemeToggle';
 import useMobile from '@/hooks/use-mobile';
 import { motion, AnimatePresence } from 'framer-motion';
-
-const navItems = [
-  { name: 'States', path: '/states' },
-  { name: 'Cuisine', path: '/cuisine' },
-  { name: 'Culture', path: '/culture' },
-  { name: 'Login', path: '/login' },
-];
+import { useAuth } from '@/context/AuthContext';
 
 const Navbar: React.FC = () => {
   const location = useLocation();
@@ -20,6 +14,7 @@ const Navbar: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const isHome = location.pathname === '/';
+  const { isAuthenticated } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -33,6 +28,23 @@ const Navbar: React.FC = () => {
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
   };
+
+  // Dynamic navigation items based on authentication status
+  const getNavItems = () => {
+    const baseItems = [
+      { name: 'States', path: '/states' },
+      { name: 'Cuisine', path: '/cuisine' },
+      { name: 'Culture', path: '/culture' },
+    ];
+    
+    if (isAuthenticated) {
+      return [...baseItems, { name: 'Profile', path: '/profile', icon: User }];
+    } else {
+      return [...baseItems, { name: 'Login', path: '/login' }];
+    }
+  };
+
+  const navItems = getNavItems();
 
   return (
     <motion.header
@@ -69,8 +81,9 @@ const Navbar: React.FC = () => {
                   to={item.path}
                   className={`nav-item ${
                     location.pathname === item.path ? 'text-spice-500' : ''
-                  }`}
+                  } ${item.name === 'Profile' ? 'flex items-center' : ''}`}
                 >
+                  {item.icon && <item.icon className="mr-1 h-4 w-4" />}
                   {item.name}
                 </Link>
               </motion.div>
@@ -125,11 +138,12 @@ const Navbar: React.FC = () => {
                 >
                   <Link
                     to={item.path}
-                    className={`py-3 text-lg font-medium hover:text-spice-500 transition-colors block ${
+                    className={`py-3 text-lg font-medium hover:text-spice-500 transition-colors flex items-center ${
                       location.pathname === item.path ? 'text-spice-500' : 'text-foreground'
                     }`}
                     onClick={toggleMobileMenu}
                   >
+                    {item.icon && <item.icon className="mr-2 h-5 w-5" />}
                     {item.name}
                   </Link>
                 </motion.div>

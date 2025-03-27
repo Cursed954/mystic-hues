@@ -13,6 +13,7 @@ import AllStates from "./pages/AllStates";
 import Cuisine from "./pages/Cuisine";
 import Culture from "./pages/Culture";
 import Login from "./pages/Login";
+import Profile from "./pages/Profile";
 import JourneyDetail from "./pages/JourneyDetail";
 import { useEffect } from "react";
 import { ThemeProvider } from "./components/theme/ThemeProvider";
@@ -41,6 +42,7 @@ const App = () => {
                 <Route path="/culture" element={<Culture />} />
                 <Route path="/journey/:journeyId" element={<JourneyDetail />} />
                 <Route path="/login" element={<Login />} />
+                <Route path="/profile" element={<Profile />} />
                 <Route path="/admin" element={<Admin />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />

@@ -1,36 +1,38 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Mail, Lock, ArrowRight } from 'lucide-react';
+import { Mail, Lock, ArrowRight, Github, Chrome } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { authService } from '@/lib/auth';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/context/AuthContext';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [socialLoading, setSocialLoading] = useState<string | null>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { login, socialLogin, isAuthenticated } = useAuth();
   
   useEffect(() => {
-    if (authService.isAuthenticated()) {
+    if (isAuthenticated) {
       navigate('/');
     }
-  }, [navigate]);
+  }, [isAuthenticated, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
-      const result = await authService.login(email, password);
+      const result = await login(email, password);
       
       if (result.success) {
         toast({
           title: "Login Successful",
           description: "Welcome back! You have been logged in.",
         });
-        navigate('/');
+        navigate('/profile');
       } else {
         toast({
           title: "Login Failed",
@@ -47,6 +49,37 @@ const Login = () => {
       });
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleSocialLogin = async (provider: 'google' | 'github') => {
+    setSocialLoading(provider);
+    
+    try {
+      const result = await socialLogin(provider);
+      
+      if (result.success) {
+        toast({
+          title: "Login Successful",
+          description: `You have been logged in with ${provider}.`,
+        });
+        navigate('/profile');
+      } else {
+        toast({
+          title: "Login Failed",
+          description: result.message,
+          variant: "destructive"
+        });
+      }
+    } catch (error) {
+      console.error(`${provider} login error:`, error);
+      toast({
+        title: "Login Error",
+        description: `An error occurred while logging in with ${provider}.`,
+        variant: "destructive"
+      });
+    } finally {
+      setSocialLoading(null);
     }
   };
 
@@ -190,17 +223,33 @@ const Login = () => {
                 className="flex items-center justify-center gap-2 px-4 py-3 border border-violet-500/30 rounded-lg bg-gray-800/30 backdrop-blur-sm hover:bg-gray-700/50 transition-all duration-300"
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
+                onClick={() => handleSocialLogin('google')}
+                disabled={!!socialLoading}
               >
-                <img src="https://www.google.com/favicon.ico" alt="Google" className="w-5 h-5" />
-                <span className="text-sm font-medium text-gray-300">Google</span>
+                {socialLoading === 'google' ? (
+                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                ) : (
+                  <>
+                    <Chrome className="w-5 h-5 text-white" />
+                    <span className="text-sm font-medium text-gray-300">Google</span>
+                  </>
+                )}
               </motion.button>
               <motion.button 
                 className="flex items-center justify-center gap-2 px-4 py-3 border border-violet-500/30 rounded-lg bg-gray-800/30 backdrop-blur-sm hover:bg-gray-700/50 transition-all duration-300"
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
+                onClick={() => handleSocialLogin('github')}
+                disabled={!!socialLoading}
               >
-                <img src="https://github.com/favicon.ico" alt="GitHub" className="w-5 h-5" />
-                <span className="text-sm font-medium text-gray-300">GitHub</span>
+                {socialLoading === 'github' ? (
+                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                ) : (
+                  <>
+                    <Github className="w-5 h-5 text-white" />
+                    <span className="text-sm font-medium text-gray-300">GitHub</span>
+                  </>
+                )}
               </motion.button>
             </div>
           </motion.div>

@@ -39,6 +39,20 @@ export const emailService = {
       // 1. Call a Supabase Edge Function that sends emails
       // 2. Store the message in a Supabase table for reference
       
+      // For demonstration purposes, log what would be sent in a real app
+      console.log("Email would be sent with the following data:");
+      console.log({
+        to: ["adhirajpundir783@gmail.com", "deepanshu95488@gmail.com"],
+        subject: `New Contact Form Submission from ${data.name}`,
+        html: `
+          <h1>New Message from Contact Form</h1>
+          <p><strong>Name:</strong> ${data.name}</p>
+          <p><strong>Email:</strong> ${data.email}</p>
+          <p><strong>Destination:</strong> ${data.destination || 'Not specified'}</p>
+          <p><strong>Message:</strong> ${data.message}</p>
+        `
+      });
+      
       return {
         success: true,
         message: "Your message has been sent successfully!"

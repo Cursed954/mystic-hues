@@ -37,6 +37,19 @@ export function useAuthState() {
     }
   };
 
+  const socialLogin = async (provider: 'google' | 'github') => {
+    setLoading(true);
+    try {
+      const result = await authService.socialLogin(provider);
+      if (result.success && result.user) {
+        setUser(result.user);
+      }
+      return result;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const logout = () => {
     authService.logout();
     setUser(null);
@@ -44,5 +57,12 @@ export function useAuthState() {
     window.dispatchEvent(new Event('storage'));
   };
 
-  return { user, loading, login, logout, isAuthenticated: !!user };
+  return { 
+    user, 
+    loading, 
+    login, 
+    socialLogin, 
+    logout, 
+    isAuthenticated: !!user 
+  };
 }
