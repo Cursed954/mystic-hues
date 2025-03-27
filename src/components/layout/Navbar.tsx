@@ -8,6 +8,23 @@ import useMobile from '@/hooks/use-mobile';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/context/AuthContext';
 
+// Define types for nav items
+type BaseNavItem = {
+  name: string;
+  path: string;
+};
+
+type NavItemWithIcon = BaseNavItem & {
+  icon: React.FC<{ className?: string }>;
+};
+
+type NavItem = BaseNavItem | NavItemWithIcon;
+
+// Type guard to check if item has icon
+const hasIcon = (item: NavItem): item is NavItemWithIcon => {
+  return 'icon' in item;
+};
+
 const Navbar: React.FC = () => {
   const location = useLocation();
   const isMobile = useMobile();
@@ -30,8 +47,8 @@ const Navbar: React.FC = () => {
   };
 
   // Dynamic navigation items based on authentication status
-  const getNavItems = () => {
-    const baseItems = [
+  const getNavItems = (): NavItem[] => {
+    const baseItems: NavItem[] = [
       { name: 'States', path: '/states' },
       { name: 'Cuisine', path: '/cuisine' },
       { name: 'Culture', path: '/culture' },
@@ -81,9 +98,9 @@ const Navbar: React.FC = () => {
                   to={item.path}
                   className={`nav-item ${
                     location.pathname === item.path ? 'text-spice-500' : ''
-                  } ${item.name === 'Profile' ? 'flex items-center' : ''}`}
+                  } ${hasIcon(item) ? 'flex items-center' : ''}`}
                 >
-                  {item.icon && <item.icon className="mr-1 h-4 w-4" />}
+                  {hasIcon(item) && <item.icon className="mr-1 h-4 w-4" />}
                   {item.name}
                 </Link>
               </motion.div>
@@ -143,7 +160,7 @@ const Navbar: React.FC = () => {
                     }`}
                     onClick={toggleMobileMenu}
                   >
-                    {item.icon && <item.icon className="mr-2 h-5 w-5" />}
+                    {hasIcon(item) && <item.icon className="mr-2 h-5 w-5" />}
                     {item.name}
                   </Link>
                 </motion.div>
