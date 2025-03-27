@@ -12,6 +12,7 @@ import AllStates from "./pages/AllStates";
 import Cuisine from "./pages/Cuisine";
 import Culture from "./pages/Culture";
 import Login from "./pages/Login";
+import JourneyDetail from "./pages/JourneyDetail";
 import { useEffect } from "react";
 import { ThemeProvider } from "./components/theme/ThemeProvider";
 
@@ -36,6 +37,7 @@ const App = () => {
               <Route path="/state/:stateId" element={<StateDetail />} />
               <Route path="/cuisine" element={<Cuisine />} />
               <Route path="/culture" element={<Culture />} />
+              <Route path="/journey/:journeyId" element={<JourneyDetail />} />
               <Route path="/login" element={<Login />} />
               <Route path="/admin" element={<Admin />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
