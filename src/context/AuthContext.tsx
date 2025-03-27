@@ -8,6 +8,9 @@ type AuthContextType = {
   login: (email: string, password: string) => Promise<any>;
   socialLogin: (provider: 'google' | 'github') => Promise<any>;
   updateProfile: (userData: any) => Promise<any>;
+  toggleFavoriteState: (stateId: string) => Promise<any>;
+  addTrip: (trip: any) => Promise<any>;
+  deleteTrip: (tripId: number) => Promise<any>;
   logout: () => void;
   isAuthenticated: boolean;
 };

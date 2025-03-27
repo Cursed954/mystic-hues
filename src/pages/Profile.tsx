@@ -1,19 +1,35 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/context/AuthContext';
-import { UserCircle, LogOut, Calendar, MapPin, Package, ChevronRight, Edit, Mail, Phone } from 'lucide-react';
+import { 
+  UserCircle, LogOut, Calendar, MapPin, Package, ChevronRight, 
+  Edit, Mail, Phone, Plus, Trash, Clock, Star, Heart 
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { stateData } from '@/data/stateData';
 
 const Profile = () => {
-  const { user, logout } = useAuth();
+  const { user, logout, addTrip, deleteTrip } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const [newTripDialogOpen, setNewTripDialogOpen] = useState(false);
+  const [confirmDeleteDialogOpen, setConfirmDeleteDialogOpen] = useState(false);
+  const [tripToDelete, setTripToDelete] = useState<number | null>(null);
+  const [newTripData, setNewTripData] = useState({
+    destination: '',
+    date: '',
+    status: 'Upcoming'
+  });
 
   // Redirect if not logged in
   React.useEffect(() => {
@@ -26,6 +42,14 @@ const Profile = () => {
     return null; // Don't render anything while redirecting
   }
 
+  // Get saved states data from stateData using user.savedStates
+  const savedStates = user.savedStates 
+    ? stateData.filter(state => user.savedStates.includes(state.id)) 
+    : [];
+
+  // Get recent activities from user data
+  const recentActivities = user.recentActivities || [];
+
   const handleLogout = () => {
     logout();
     toast({
@@ -33,6 +57,59 @@ const Profile = () => {
       description: "You have been successfully logged out",
     });
     navigate('/');
+  };
+
+  const handleAddTrip = async () => {
+    if (!newTripData.destination || !newTripData.date) {
+      toast({
+        title: "Validation Error",
+        description: "Please fill in all required fields",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const result = await addTrip(newTripData);
+    
+    if (result.success) {
+      toast({
+        title: "Trip Added",
+        description: `Your trip to ${newTripData.destination} has been added`,
+      });
+      setNewTripDialogOpen(false);
+      setNewTripData({
+        destination: '',
+        date: '',
+        status: 'Upcoming'
+      });
+    } else {
+      toast({
+        title: "Error",
+        description: result.message,
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleDeleteTrip = async () => {
+    if (tripToDelete === null) return;
+    
+    const result = await deleteTrip(tripToDelete);
+    
+    if (result.success) {
+      toast({
+        title: "Trip Deleted",
+        description: "Your trip has been deleted",
+      });
+      setConfirmDeleteDialogOpen(false);
+      setTripToDelete(null);
+    } else {
+      toast({
+        title: "Error",
+        description: result.message,
+        variant: "destructive"
+      });
+    }
   };
 
   return (
@@ -119,7 +196,13 @@ const Profile = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            <h2 className="text-2xl font-bold mb-4">Your Trips</h2>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-2xl font-bold">Your Trips</h2>
+              <Button onClick={() => setNewTripDialogOpen(true)} size="sm">
+                <Plus className="mr-2 h-4 w-4" />
+                Add Trip
+              </Button>
+            </div>
             
             {user.trips && user.trips.length > 0 ? (
               <div className="space-y-4">
@@ -128,7 +211,7 @@ const Profile = () => {
                     key={trip.id}
                     whileHover={{ scale: 1.02 }}
                     className="bg-white/5 backdrop-blur-sm rounded-lg p-5 flex justify-between items-center cursor-pointer border border-white/10 hover:border-violet-500/30 transition-all duration-300"
-                    onClick={() => navigate(`/journey/${trip.destination.toLowerCase()}`)}
+                    onClick={() => navigate(`/journey/${trip.destination.toLowerCase().replace(/\s+/g, '-')}`)}
                   >
                     <div className="flex items-center gap-4">
                       <div className="w-12 h-12 rounded-full bg-violet-900/20 flex items-center justify-center">
@@ -151,6 +234,19 @@ const Profile = () => {
                       }`}>
                         {trip.status}
                       </span>
+                      <Button 
+                        variant="ghost" 
+                        size="sm"
+                        className="text-red-400 hover:text-red-300 hover:bg-red-900/20"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setTripToDelete(trip.id);
+                          setConfirmDeleteDialogOpen(true);
+                        }}
+                      >
+                        <Trash className="h-4 w-4" />
+                        <span className="sr-only">Delete</span>
+                      </Button>
                       <ChevronRight className="w-5 h-5 text-gray-500" />
                     </div>
                   </motion.div>
@@ -177,17 +273,170 @@ const Profile = () => {
             className="grid grid-cols-1 md:grid-cols-2 gap-6"
           >
             <div className="bg-white/5 backdrop-blur-sm rounded-lg p-6 border border-white/10">
-              <h3 className="text-xl font-medium mb-4">Saved Destinations</h3>
-              <p className="text-gray-400">You haven't saved any destinations yet.</p>
+              <h3 className="text-xl font-medium mb-4 flex items-center">
+                <Heart className="w-5 h-5 mr-2 text-rose-400" />
+                Saved Destinations
+              </h3>
+              
+              {savedStates.length > 0 ? (
+                <div className="space-y-3">
+                  {savedStates.map(state => (
+                    <div 
+                      key={state.id}
+                      className="flex items-center space-x-3 p-2 hover:bg-white/5 rounded-md transition-colors cursor-pointer"
+                      onClick={() => navigate(`/state/${state.id}`)}
+                    >
+                      <div className="h-10 w-10 rounded-md overflow-hidden">
+                        <img 
+                          src={state.bannerImage} 
+                          alt={state.name} 
+                          className="h-full w-full object-cover"
+                        />
+                      </div>
+                      <div>
+                        <p className="font-medium">{state.name}</p>
+                        <p className="text-xs text-gray-400 flex items-center">
+                          <MapPin className="h-3 w-3 mr-1" />
+                          {state.capital}
+                        </p>
+                      </div>
+                      <ChevronRight className="w-4 h-4 text-gray-500 ml-auto" />
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-6">
+                  <Star className="w-10 h-10 mx-auto mb-2 text-gray-400" />
+                  <p className="text-gray-400">You haven't saved any destinations yet.</p>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="mt-3"
+                    onClick={() => navigate('/states')}
+                  >
+                    Browse States
+                  </Button>
+                </div>
+              )}
             </div>
             
             <div className="bg-white/5 backdrop-blur-sm rounded-lg p-6 border border-white/10">
-              <h3 className="text-xl font-medium mb-4">Recent Activities</h3>
-              <p className="text-gray-400">No recent activities to show.</p>
+              <h3 className="text-xl font-medium mb-4 flex items-center">
+                <Clock className="w-5 h-5 mr-2 text-blue-400" />
+                Recent Activities
+              </h3>
+              
+              {recentActivities.length > 0 ? (
+                <div className="space-y-4">
+                  {recentActivities.map((activity: any) => (
+                    <div key={activity.id} className="flex items-start space-x-3">
+                      <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        {activity.type === 'login' && <UserCircle className="h-4 w-4 text-primary" />}
+                        {activity.type === 'view' && <MapPin className="h-4 w-4 text-emerald-400" />}
+                        {activity.type === 'trip_added' && <Plus className="h-4 w-4 text-blue-400" />}
+                        {activity.type === 'trip_deleted' && <Trash className="h-4 w-4 text-rose-400" />}
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm">{activity.description}</p>
+                        <p className="text-xs text-gray-400">{new Date(activity.date).toLocaleString()}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-6">
+                  <Clock className="w-10 h-10 mx-auto mb-2 text-gray-400" />
+                  <p className="text-gray-400">No recent activities to show.</p>
+                </div>
+              )}
             </div>
           </motion.div>
         </div>
       </div>
+      
+      {/* Add Trip Dialog */}
+      <Dialog open={newTripDialogOpen} onOpenChange={setNewTripDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add New Trip</DialogTitle>
+            <DialogDescription>
+              Enter the details of your new trip below.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="destination">Destination</Label>
+              <Input
+                id="destination"
+                placeholder="e.g. Goa, Rajasthan"
+                value={newTripData.destination}
+                onChange={(e) => setNewTripData({ ...newTripData, destination: e.target.value })}
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="date">Date</Label>
+              <Input
+                id="date"
+                type="date"
+                value={newTripData.date}
+                onChange={(e) => setNewTripData({ ...newTripData, date: e.target.value })}
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="status">Status</Label>
+              <Select 
+                value={newTripData.status} 
+                onValueChange={(value) => setNewTripData({ ...newTripData, status: value })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Upcoming">Upcoming</SelectItem>
+                  <SelectItem value="In Progress">In Progress</SelectItem>
+                  <SelectItem value="Completed">Completed</SelectItem>
+                  <SelectItem value="Cancelled">Cancelled</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setNewTripDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleAddTrip}>
+              <Plus className="mr-2 h-4 w-4" />
+              Add Trip
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={confirmDeleteDialogOpen} onOpenChange={setConfirmDeleteDialogOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Delete Trip</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete this trip? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setConfirmDeleteDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={handleDeleteTrip}>
+              <Trash className="mr-2 h-4 w-4" />
+              Delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      
       <Footer />
     </>
   );

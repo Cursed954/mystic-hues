@@ -45,6 +45,11 @@ export const authService = {
         trips: [
           { id: 1, destination: "Rajasthan", date: "2024-05-15", status: "Upcoming" },
           { id: 2, destination: "Kerala", date: "2023-12-10", status: "Completed" }
+        ],
+        savedStates: ["kerala", "rajasthan"],
+        recentActivities: [
+          { id: 1, type: "login", description: "Logged in to account", date: new Date().toISOString() },
+          { id: 2, type: "view", description: "Viewed Kerala travel guide", date: new Date(Date.now() - 86400000).toISOString() }
         ]
       };
       
@@ -101,6 +106,10 @@ export const authService = {
         },
         trips: [
           { id: 1, destination: "Himalayas", date: "2024-06-20", status: "Upcoming" }
+        ],
+        savedStates: ["himachal-pradesh", "uttarakhand"],
+        recentActivities: [
+          { id: 1, type: "login", description: `Signed in with ${provider}`, date: new Date().toISOString() }
         ]
       };
       
