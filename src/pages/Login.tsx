@@ -1,34 +1,62 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Mail, Lock, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
-
+import { authService } from '@/lib/auth';
+import { useToast } from '@/hooks/use-toast';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const { toast } = useToast();
+  
+  useEffect(() => {
+    if (authService.isAuthenticated()) {
+      navigate('/');
+    }
+  }, [navigate]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
-    setTimeout(() => {
+    try {
+      const result = await authService.login(email, password);
+      
+      if (result.success) {
+        toast({
+          title: "Login Successful",
+          description: "Welcome back! You have been logged in.",
+        });
+        navigate('/');
+      } else {
+        toast({
+          title: "Login Failed",
+          description: result.message,
+          variant: "destructive"
+        });
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      toast({
+        title: "Login Error",
+        description: "An unexpected error occurred. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
       setIsLoading(false);
-      navigate('/');
-    }, 1500);
+    }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 relative overflow-hidden">
-      {/* Background gradients */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute top-0 left-0 w-2/3 h-2/3 bg-violet-600/30 rounded-full filter blur-3xl opacity-40 animate-float" />
         <div className="absolute bottom-0 right-0 w-2/3 h-2/3 bg-indigo-600/20 rounded-full filter blur-3xl opacity-40 animate-pulse-slow" />
       </div>
 
-      {/* Decorative elements */}
       <div className="absolute inset-0 -z-5">
         <div className="absolute top-1/4 left-1/4 w-32 h-32 border border-violet-500/20 rounded-full" />
         <div className="absolute bottom-1/4 right-1/4 w-48 h-48 border border-indigo-500/20 rounded-full" />
@@ -36,7 +64,6 @@ const Login = () => {
         <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(to_bottom,transparent,white,transparent)]" />
       </div>
 
-      {/* Form Container */}
       <motion.div 
         className="max-w-md w-full"
         initial={{ opacity: 0, y: 20 }}
