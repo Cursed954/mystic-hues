@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '@/components/layout/Navbar';
@@ -5,8 +6,12 @@ import Footer from '@/components/layout/Footer';
 import ScrollReveal from '@/components/ui/ScrollReveal';
 import { Card, CardContent } from '@/components/ui/card';
 import { stateData } from '@/data/stateData';
-import { MapPin, ArrowRight, Search, Filter } from 'lucide-react';
+import { MapPin, ArrowRight, Search, Filter, Heart } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useAuth } from '@/context/AuthContext';
+import { useToast } from '@/hooks/use-toast';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 // Define regions for filtering
 const regions = [
@@ -23,6 +28,8 @@ const AllStates = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeFilter, setActiveFilter] = useState('All');
   const [filteredStates, setFilteredStates] = useState(stateData);
+  const { user, toggleFavoriteState, isAuthenticated } = useAuth();
+  const { toast } = useToast();
 
   useEffect(() => {
     // Filter states based on search term and active filter
@@ -38,6 +45,48 @@ const AllStates = () => {
     
     setFilteredStates(results);
   }, [searchTerm, activeFilter]);
+
+  const handleToggleFavorite = async (e: React.MouseEvent, stateId: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (!isAuthenticated) {
+      toast({
+        title: "Authentication Required",
+        description: "Please login to save destinations",
+        action: (
+          <Button 
+            size="sm" 
+            variant="outline"
+            onClick={() => window.location.href = '/login'}
+          >
+            Login
+          </Button>
+        ),
+      });
+      return;
+    }
+    
+    const result = await toggleFavoriteState(stateId);
+    
+    if (result.success) {
+      toast({
+        title: "Success",
+        description: result.message,
+      });
+    } else {
+      toast({
+        title: "Error",
+        description: result.message,
+        variant: "destructive",
+      });
+    }
+  };
+
+  const isStateFavorited = (stateId: string) => {
+    if (!user || !user.savedStates) return false;
+    return user.savedStates.includes(stateId);
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -85,12 +134,8 @@ const AllStates = () => {
                 {regions.map(region => (
                   <button
                     key={region}
+                    className={`filter-tag ${activeFilter === region ? 'active' : ''}`}
                     onClick={() => setActiveFilter(region)}
-                    className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                      activeFilter === region
-                        ? 'bg-spice-500 text-white'
-                        : 'bg-white/40 dark:bg-white/10 text-foreground/80'
-                    }`}
                   >
                     {region}
                   </button>
@@ -125,6 +170,23 @@ const AllStates = () => {
                             <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
                               <h3 className="text-white text-xl font-medium">{state.name}</h3>
                             </div>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className={cn(
+                                "absolute top-2 right-2 rounded-full bg-black/30 backdrop-blur-sm hover:bg-black/50",
+                                isStateFavorited(state.id) && "text-rose-400 hover:text-rose-300"
+                              )}
+                              onClick={(e) => handleToggleFavorite(e, state.id)}
+                            >
+                              <Heart className={cn(
+                                "h-5 w-5",
+                                isStateFavorited(state.id) && "fill-current"
+                              )} />
+                              <span className="sr-only">
+                                {isStateFavorited(state.id) ? "Remove from favorites" : "Add to favorites"}
+                              </span>
+                            </Button>
                           </div>
                           <CardContent className="p-6">
                             <div className="flex items-center text-sm text-muted-foreground mb-4">

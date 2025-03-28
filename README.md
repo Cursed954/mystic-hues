@@ -1,69 +1,53 @@
-# Welcome to your Lovable project
+## 🌏 **Mystic India**
 
-## Project info
+Mystic India is not just a web application—it’s a captivating cultural odyssey. Step into the heart of India and experience her timeless traditions, vivid festivals, authentic cuisines, and ancient heritage skills. From the snow-clad Himalayas to the vibrant coasts of Kerala, Mystic India bridges the geographical and cultural gaps, offering users an immersive, interactive platform to explore the soul of every Indian state.
 
-**URL**: https://lovable.dev/projects/3c30897a-84c0-4c73-8e47-7f89262ca289
+Discover hidden gems through virtual tours, savor local delicacies, engage with indigenous arts, and celebrate India’s unmatched diversity, all in one seamless experience.
 
-## How can I edit this code?
+## 🌐 [Live Demo](https://mystic-hues-design.lovable.app/)
 
-There are several ways of editing your application.
+## ✨ Features
 
-**Use Lovable**
+- 🌐 Virtual Cultural Tours: Explore the unique cultural landscapes of different Indian states.
+- 🍛 Local Cuisine Discovery: Dive into authentic culinary experiences.
+-	🎉 Festival Highlights: Learn about traditional festivals and celebrations.
+-	🏺 Heritage Skills Showcase: Information about traditional arts and crafts.
+-	📱 Responsive Design: Seamless experience on all devices.
+-	🎨 Beautiful Animations & Transitions: Enhanced user engagement through smooth UI interactions.
+-	📝 User Reviews & Recommendations (Upcoming): Community-driven content sharing.
+-	📅 Cultural Calendar (Upcoming): Keep track of cultural events and festivals.
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/3c30897a-84c0-4c73-8e47-7f89262ca289) and start prompting.
 
-Changes made via Lovable will be committed automatically to this repo.
 
-**Use your preferred IDE**
+## 🚀 Technologies Used
+- ⚛️ React 18 + TypeScript – Robust, type-safe, and scalable frontend architecture.
+- 🎨 Tailwind CSS – Efficient, utility-first CSS framework for custom designs.
+- 🎞️ Framer Motion – Smooth animations and transitions enhancing user engagement.
+- 🌍 React Router – Dynamic and efficient routing for multi-page experience.
+- ⚡ Vite – Ultra-fast development server and build tool.
+- 🛠️ PostCSS + ESLint + Prettier – Code quality, formatting, and performance boosters.
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## 🎯 Project Structure
 
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+```
+mystic-india/
+├── src/
+│   ├── components/     # Reusable UI components
+│   ├── pages/         # Application routes/pages
+│   ├── data/          # Data files and constants
+│   ├── App.tsx        # Main application component
+│   └── main.tsx       # Application entry point
+├── public/            # Static assets
+├── mystic.js          # CLI launcher script
+└── package.json       # Project configuration
 ```
 
-**Edit a file directly in GitHub**
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## Contact Information:
+- Name: Deepanshu Chauhan
+- Enrollment Number: E23CSEU1617
+- Email: deepanshu95488@gmail.com
 
-**Use GitHub Codespaces**
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
 
-## What technologies are used for this project?
-
-This project is built with .
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/3c30897a-84c0-4c73-8e47-7f89262ca289) and click on Share -> Publish.
-
-## I want to use a custom domain - is that possible?
-
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)

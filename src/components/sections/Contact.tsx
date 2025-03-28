@@ -1,11 +1,11 @@
-// Start Your Journey
-
 import React, { useState } from 'react';
 import ScrollReveal from '../ui/ScrollReveal';
 import { Send, Mail, Phone, MapPin } from 'lucide-react';
+import { emailService, ContactFormData } from '@/lib/emailService';
+import { useToast } from '@/hooks/use-toast';
 
 const Contact: React.FC = () => {
-  const [formState, setFormState] = useState({
+  const [formState, setFormState] = useState<ContactFormData>({
     name: '',
     email: '',
     destination: '',
@@ -14,32 +14,68 @@ const Contact: React.FC = () => {
 
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const { toast } = useToast();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormState((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     
-    // Simulate API call
-    setTimeout(() => {
-      setLoading(false);
-      setSuccess(true);
-      setFormState({
-        name: '',
-        email: '',
-        destination: '',
-        message: '',
-      });
+    try {
+      // Validate form
+      if (!formState.name || !formState.email || !formState.message) {
+        toast({
+          title: "Missing Information",
+          description: "Please fill in all the required fields.",
+          variant: "destructive"
+        });
+        setLoading(false);
+        return;
+      }
       
-      // Reset success message after 5 seconds
-      setTimeout(() => {
-        setSuccess(false);
-      }, 5000);
-    }, 1500);
+      // Send the form data using our service
+      const result = await emailService.sendContactForm(formState);
+      
+      if (result.success) {
+        setSuccess(true);
+        toast({
+          title: "Message Sent!",
+          description: "Your message has been sent successfully to our team. We'll get back to you soon!",
+        });
+        
+        // Reset form
+        setFormState({
+          name: '',
+          email: '',
+          destination: '',
+          message: '',
+        });
+        
+        // Reset success message after 5 seconds
+        setTimeout(() => {
+          setSuccess(false);
+        }, 5000);
+      } else {
+        toast({
+          title: "Error",
+          description: result.message,
+          variant: "destructive"
+        });
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      toast({
+        title: "Error",
+        description: "An unexpected error occurred. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
