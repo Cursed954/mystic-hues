@@ -12,7 +12,7 @@ NC='\033[0m' # No Color
 echo -e "${BLUE}"
 echo "╭──────────────────────────────────────────────╮"
 echo "│                                              │"
-echo "│           🏮  MYSTIC INDIA  🏮              │"
+echo "│           🏮  MYSTIC INDIA  🏮               │"
 echo "│                                              │"
 echo "│     Journey Through India's Rich Heritage    │"
 echo "│                                              │"

@@ -1,5 +1,3 @@
-// User Experiences
-
 import React from 'react';
 import ScrollReveal from '../ui/ScrollReveal';
 import { Star, Quote } from 'lucide-react';
@@ -74,7 +72,8 @@ const Reviews: React.FC = () => {
   };
 
   return (
-    <section id="reviews" className="py-24 px-6 section-reviews">
+  <section id="reviews" className="py-24 px-6 section-reviews relative">
+    <div className="absolute inset-12 rounded-3xl bg-white/40 dark:bg-white/5 backdrop-blur-sm border border-white/50 dark:border-white/25 z-0"></div>
       <div className="container mx-auto">
         {/* Section Header */}
         <ScrollReveal>
@@ -87,45 +86,48 @@ const Reviews: React.FC = () => {
               Read authentic experiences from travelers who have explored India through our platform,
               from virtual tours to culinary discoveries.
             </p>
+            <div className="w-30 h-[3px] bg-spice-400 mx-auto mt-5"></div>
           </div>
         </ScrollReveal>
 
         {/* Reviews Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {reviews.map((review, index) => (
-            <ScrollReveal key={review.id} delay={index % 2 * 0.1 + 0.2}>
-              <motion.div 
-                className={`p-8 rounded-xl relative ${theme === 'dark' ? 'review-card' : 'bg-white shadow-sm border border-mystic-100'}`}
-                whileHover={{ y: -5, transition: { duration: 0.2 } }}
-              >
-                <Quote className="absolute top-6 right-6" size={40} color={quoteColor} />
-                
-                <div className="flex items-start mb-4">
-                  <div className="w-12 h-12 rounded-full overflow-hidden mr-4 border-2 border-white dark:border-purple-900 shadow-sm">
-                    <img 
-                      src={review.avatar} 
-                      alt={review.name} 
-                      className="w-full h-full object-cover"
-                    />
+        <div className={`p-8 rounded-3xl relative ${theme === 'dark' ? 'bg-white/5 border border-white/10' : 'bg-white shadow-sm border border-mystic-100'}`}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {reviews.map((review, index) => (
+              <ScrollReveal key={review.id} delay={index % 2 * 0.1 + 0.2}>
+                <motion.div 
+                  className={`p-8 rounded-xl relative ${theme === 'dark' ? 'bg-white/5 border border-white/10' : 'bg-white shadow-sm border border-mystic-100'}`}
+                  whileHover={{ y: -5, transition: { duration: 0.2 } }}
+                >
+                  <Quote className="absolute top-6 right-6" size={40} color={quoteColor} />
+                  
+                  <div className="flex items-start mb-4">
+                    <div className="w-12 h-12 rounded-full overflow-hidden mr-4 border-2 border-white dark:border-purple-900 shadow-sm">
+                      <img 
+                        src={review.avatar} 
+                        alt={review.name} 
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div>
+                      <h3 className="font-medium">{review.name}</h3>
+                      <p className="text-sm text-foreground/60">{review.location}</p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="font-medium">{review.name}</h3>
-                    <p className="text-sm text-foreground/60">{review.location}</p>
+                  
+                  <div className="flex mb-4">
+                    {renderStars(review.rating)}
                   </div>
-                </div>
-                
-                <div className="flex mb-4">
-                  {renderStars(review.rating)}
-                </div>
-                
-                <blockquote className="text-foreground/80 italic mb-4 relative z-10">
-                  "{review.text}"
-                </blockquote>
-                
-                <p className="text-sm text-foreground/60">{review.date}</p>
-              </motion.div>
-            </ScrollReveal>
-          ))}
+                  
+                  <blockquote className="text-foreground/80 italic mb-4 relative z-10">
+                    "{review.text}"
+                  </blockquote>
+                  
+                  <p className="text-sm text-foreground/60">{review.date}</p>
+                </motion.div>
+              </ScrollReveal>
+            ))}
+          </div>
         </div>
 
         {/* Call to Action */}
@@ -145,7 +147,7 @@ const Reviews: React.FC = () => {
               </motion.a>
               <motion.a 
                 href="#contact" 
-                className={`px-6 py-3 rounded-md font-medium border ${theme === 'dark' ? 'border-purple-700 hover:bg-purple-900/30' : 'border-mystic-300 hover:bg-mystic-50 hover:border-mystic-400'} transition-colors`}
+                className={`px-6 py-3 rounded-md font-medium border ${theme === 'dark' ? 'border-purple-700 hover:bg-purple-900/50' : 'border-mystic-300 hover:bg-mystic-50 hover:border-mystic-400'} transition-colors`}
                 whileHover={{ y: -5, transition: { duration: 0.2 } }}
                 whileTap={{ y: 0 }}
               >

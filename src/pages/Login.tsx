@@ -1,95 +1,34 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Mail, Lock, ArrowRight, Github, Chrome } from 'lucide-react';
+import { Mail, Lock, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { useToast } from '@/hooks/use-toast';
-import { useAuth } from '@/context/AuthContext';
+
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [socialLoading, setSocialLoading] = useState<string | null>(null);
   const navigate = useNavigate();
-  const { toast } = useToast();
-  const { login, socialLogin, isAuthenticated } = useAuth();
-  
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigate('/');
-    }
-  }, [isAuthenticated, navigate]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
-    try {
-      const result = await login(email, password);
-      
-      if (result.success) {
-        toast({
-          title: "Login Successful",
-          description: "Welcome back! You have been logged in.",
-        });
-        navigate('/profile');
-      } else {
-        toast({
-          title: "Login Failed",
-          description: result.message,
-          variant: "destructive"
-        });
-      }
-    } catch (error) {
-      console.error("Login error:", error);
-      toast({
-        title: "Login Error",
-        description: "An unexpected error occurred. Please try again.",
-        variant: "destructive"
-      });
-    } finally {
+    setTimeout(() => {
       setIsLoading(false);
-    }
-  };
-
-  const handleSocialLogin = async (provider: 'google' | 'github') => {
-    setSocialLoading(provider);
-    
-    try {
-      const result = await socialLogin(provider);
-      
-      if (result.success) {
-        toast({
-          title: "Login Successful",
-          description: `You have been logged in with ${provider}.`,
-        });
-        navigate('/profile');
-      } else {
-        toast({
-          title: "Login Failed",
-          description: result.message,
-          variant: "destructive"
-        });
-      }
-    } catch (error) {
-      console.error(`${provider} login error:`, error);
-      toast({
-        title: "Login Error",
-        description: `An error occurred while logging in with ${provider}.`,
-        variant: "destructive"
-      });
-    } finally {
-      setSocialLoading(null);
-    }
+      navigate('/');
+    }, 1500);
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 relative overflow-hidden">
+      {/* Background gradients */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute top-0 left-0 w-2/3 h-2/3 bg-violet-600/30 rounded-full filter blur-3xl opacity-40 animate-float" />
         <div className="absolute bottom-0 right-0 w-2/3 h-2/3 bg-indigo-600/20 rounded-full filter blur-3xl opacity-40 animate-pulse-slow" />
       </div>
 
+      {/* Decorative elements */}
       <div className="absolute inset-0 -z-5">
         <div className="absolute top-1/4 left-1/4 w-32 h-32 border border-violet-500/20 rounded-full" />
         <div className="absolute bottom-1/4 right-1/4 w-48 h-48 border border-indigo-500/20 rounded-full" />
@@ -97,6 +36,7 @@ const Login = () => {
         <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(to_bottom,transparent,white,transparent)]" />
       </div>
 
+      {/* Form Container */}
       <motion.div 
         className="max-w-md w-full"
         initial={{ opacity: 0, y: 20 }}
@@ -223,33 +163,17 @@ const Login = () => {
                 className="flex items-center justify-center gap-2 px-4 py-3 border border-violet-500/30 rounded-lg bg-gray-800/30 backdrop-blur-sm hover:bg-gray-700/50 transition-all duration-300"
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
-                onClick={() => handleSocialLogin('google')}
-                disabled={!!socialLoading}
               >
-                {socialLoading === 'google' ? (
-                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                ) : (
-                  <>
-                    <Chrome className="w-5 h-5 text-white" />
-                    <span className="text-sm font-medium text-gray-300">Google</span>
-                  </>
-                )}
+                <img src="https://www.google.com/favicon.ico" alt="Google" className="w-5 h-5" />
+                <span className="text-sm font-medium text-gray-300">Google</span>
               </motion.button>
               <motion.button 
                 className="flex items-center justify-center gap-2 px-4 py-3 border border-violet-500/30 rounded-lg bg-gray-800/30 backdrop-blur-sm hover:bg-gray-700/50 transition-all duration-300"
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
-                onClick={() => handleSocialLogin('github')}
-                disabled={!!socialLoading}
               >
-                {socialLoading === 'github' ? (
-                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                ) : (
-                  <>
-                    <Github className="w-5 h-5 text-white" />
-                    <span className="text-sm font-medium text-gray-300">GitHub</span>
-                  </>
-                )}
+                <img src="https://github.com/favicon.ico" alt="GitHub" className="w-5 h-5" />
+                <span className="text-sm font-medium text-gray-300">GitHub</span>
               </motion.button>
             </div>
           </motion.div>

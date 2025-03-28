@@ -1,5 +1,3 @@
-
-// Discover Indian States
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import ScrollReveal from '../ui/ScrollReveal';
@@ -49,7 +47,7 @@ const States: React.FC = () => {
   return (
     <section id="states" className="py-24 px-6 relative">
       {/* Translucent Background Layer */}
-      <div className="absolute inset-0 bg-white/70 dark:bg-black/50 backdrop-blur-sm"></div>
+      <div className="absolute inset-12 rounded-3xl bg-white/40 dark:bg-white/5 backdrop-blur-sm border border-white/50 dark:border-white/10 z-0"></div>
       
       <div className="container mx-auto relative z-10">
         {/* Section Header */}
@@ -176,7 +174,7 @@ const States: React.FC = () => {
                               {state.famousFor.map((item, index) => (
                                 <span 
                                   key={index} 
-                                  className="px-3 py-1 bg-mystic-100 text-foreground/70 rounded-full text-sm text-black"
+                                  className="px-3 py-1 bg-white/40 dark:bg-white/10 backdrop-blur-sm text-foreground/80 rounded-full text-sm"
                                 >
                                   {item}
                                 </span>

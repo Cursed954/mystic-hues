@@ -1,11 +1,11 @@
+// Start Your Journey
+
 import React, { useState } from 'react';
 import ScrollReveal from '../ui/ScrollReveal';
 import { Send, Mail, Phone, MapPin } from 'lucide-react';
-import { emailService, ContactFormData } from '@/lib/emailService';
-import { useToast } from '@/hooks/use-toast';
 
 const Contact: React.FC = () => {
-  const [formState, setFormState] = useState<ContactFormData>({
+  const [formState, setFormState] = useState({
     name: '',
     email: '',
     destination: '',
@@ -14,72 +14,37 @@ const Contact: React.FC = () => {
 
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const { toast } = useToast();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormState((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     
-    try {
-      // Validate form
-      if (!formState.name || !formState.email || !formState.message) {
-        toast({
-          title: "Missing Information",
-          description: "Please fill in all the required fields.",
-          variant: "destructive"
-        });
-        setLoading(false);
-        return;
-      }
-      
-      // Send the form data using our service
-      const result = await emailService.sendContactForm(formState);
-      
-      if (result.success) {
-        setSuccess(true);
-        toast({
-          title: "Message Sent!",
-          description: "Your message has been sent successfully to our team. We'll get back to you soon!",
-        });
-        
-        // Reset form
-        setFormState({
-          name: '',
-          email: '',
-          destination: '',
-          message: '',
-        });
-        
-        // Reset success message after 5 seconds
-        setTimeout(() => {
-          setSuccess(false);
-        }, 5000);
-      } else {
-        toast({
-          title: "Error",
-          description: result.message,
-          variant: "destructive"
-        });
-      }
-    } catch (error) {
-      console.error("Error submitting form:", error);
-      toast({
-        title: "Error",
-        description: "An unexpected error occurred. Please try again.",
-        variant: "destructive"
-      });
-    } finally {
+    // Simulate API call
+    setTimeout(() => {
       setLoading(false);
-    }
+      setSuccess(true);
+      setFormState({
+        name: '',
+        email: '',
+        destination: '',
+        message: '',
+      });
+      
+      // Reset success message after 5 seconds
+      setTimeout(() => {
+        setSuccess(false);
+      }, 5000);
+    }, 1500);
   };
 
   return (
-    <section id="contact" className="py-24 px-6 relative overflow-hidden">
+    <section id="contact" className="relative py-24 px-6 overflow-hidden">
+  <div className="absolute inset-12 rounded-3xl bg-white/40 dark:bg-white/5 backdrop-blur-sm border border-white/50 dark:border-white/20 z-0"></div>
       {/* Background Elements */}
       <div className="absolute top-20 right-0 w-64 h-64 bg-spice-100 rounded-full blur-3xl opacity-30"></div>
       <div className="absolute bottom-10 left-10 w-72 h-72 bg-indigo-100 rounded-full blur-3xl opacity-30"></div>

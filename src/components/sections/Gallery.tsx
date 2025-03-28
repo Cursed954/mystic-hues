@@ -1,5 +1,3 @@
-// Capturing India's Essence
-
 import React, { useState } from 'react';
 import ScrollReveal from '../ui/ScrollReveal';
 import { ChevronLeft, ChevronRight, X, Download } from 'lucide-react';
@@ -94,6 +92,7 @@ const Gallery: React.FC = () => {
 
   return (
     <section id="gallery" className="py-24 px-6 section-gallery relative overflow-hidden">
+      <div className="absolute inset-12 rounded-3xl bg-white/40 dark:bg-white/10 backdrop-blur-sm border border-white/50 dark:border-white/30 z-0"></div>
       {/* Abstract backgrounds */}
       {theme === 'light' && (
         <>
@@ -123,7 +122,7 @@ const Gallery: React.FC = () => {
           {images.map((image, index) => (
             <ScrollReveal key={image.id} delay={(index % 3) * 0.1} className="h-full">
               <motion.div 
-                className={`image-card h-full ${theme === 'dark' ? 'gallery-card' : 'bg-white shadow-sm'} rounded-lg overflow-hidden cursor-pointer`}
+                className={`image-card h-full ${theme === 'dark' ? 'bg-black/10 shadow-lg dark:shadow-black/50 border border-white/5' : 'bg-white shadow-md border border-mystic-100'} rounded-lg overflow-hidden cursor-pointer`}
                 onClick={() => openLightbox(image)}
                 whileHover={{ y: -5, scale: 1.02, transition: { duration: 0.2 } }}
               >
@@ -138,7 +137,7 @@ const Gallery: React.FC = () => {
                   </div>
                 </div>
                 <div className="p-4">
-                  <span className="text-xs uppercase tracking-wider font-medium" style={{ color: locationColor }}>
+                  <span className="text-xs uppercase tracking-wider font-medium text-foreground dark:text-gray-300">
                     {image.location}
                   </span>
                   <h3 className="text-lg font-medium mt-1">{image.alt}</h3>
@@ -152,10 +151,11 @@ const Gallery: React.FC = () => {
         <AnimatePresence>
           {selectedImage && (
             <motion.div 
-              className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4"
+              className="fixed inset-0 bg-black/90 dark:bg-black/80 z-50 flex items-center justify-center p-4"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
+              onClick={closeLightbox}
             >
               <button 
                 className="absolute top-5 right-5 text-white hover:text-pink-500 transition-colors"
@@ -176,6 +176,7 @@ const Gallery: React.FC = () => {
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ type: "spring", damping: 25 }}
+                onClick={(e) => e.stopPropagation()}
               >
                 <img 
                   src={selectedImage.url} 
@@ -188,7 +189,7 @@ const Gallery: React.FC = () => {
                     <p className="text-white/70 mt-1">{selectedImage.location}</p>
                   </div>
                   <motion.button 
-                    className={`px-4 py-2 rounded-md flex items-center transition-colors ${theme === 'dark' ? 'bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600' : 'bg-spice-500 hover:bg-spice-600'}`}
+                    className={`px-4 py-2 rounded-md flex items-center transition-colors ${theme === 'dark' ? 'bg-purple-700 hover:bg-purple-800' : 'bg-spice-500 hover:bg-spice-600'}`}
                     onClick={() => downloadImage(selectedImage.url, selectedImage.alt)}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}

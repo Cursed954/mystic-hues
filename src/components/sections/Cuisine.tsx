@@ -1,6 +1,3 @@
-
-// Culinary Journey
-
 import React, { useState } from 'react';
 import ScrollReveal from '../ui/ScrollReveal';
 import ParallaxSection from '../ui/ParallaxSection';
@@ -141,7 +138,8 @@ const Cuisine: React.FC = () => {
   };
 
   return (
-    <section id="cuisine" className="py-24 px-6">
+    <section id="cuisine" className="py-24 px-6 relative">
+      <div className="absolute inset-12 rounded-3xl bg-white/40 dark:bg-white/10 backdrop-blur-sm border border-white/50 dark:border-white/30 z-0"></div>
       <div className="container mx-auto">
         {/* Section Header */}
         <ScrollReveal>
@@ -150,10 +148,11 @@ const Cuisine: React.FC = () => {
             <h2 className="section-title after:left-1/2 after:-translate-x-1/2">
               Indian Cuisine
             </h2>
-            <p className="mt-8 max-w-2xl mx-auto text-foreground/70">
+            <p className="mt-8 max-w-2xl mx-auto text-foreground dark:text-gray-300">
               Discover the rich and diverse flavors of Indian cuisine, from spicy curries 
               to sweet delicacies, each dish telling a story of regional traditions.
             </p>
+            <div className="w-30 h-[3px] bg-spice-400 mx-auto mt-6"></div>
           </div>
         </ScrollReveal>
 
@@ -163,7 +162,7 @@ const Cuisine: React.FC = () => {
             <Collapsible 
               open={isFiltersOpen} 
               onOpenChange={setIsFiltersOpen}
-              className="w-full bg-background/80 rounded-lg shadow-sm overflow-hidden border border-border/50"
+              className="w-full bg-background/80 dark:bg-background/50 rounded-lg shadow-sm overflow-hidden border border-border dark:border-white/20"
             >
               <CollapsibleTrigger className="flex items-center justify-between w-full p-4 text-left">
                 <div className="flex items-center gap-2">
@@ -176,7 +175,7 @@ const Cuisine: React.FC = () => {
                   <ChevronDown className="h-4 w-4 text-muted-foreground" />
                 )}
               </CollapsibleTrigger>
-              <CollapsibleContent className="p-4 pt-0 border-t border-border/50">
+              <CollapsibleContent className="p-4 pt-0 border-t border-border dark:border-white/20">
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-2 pt-4">
                   {regions.map(region => (
                     <button
@@ -225,7 +224,7 @@ const Cuisine: React.FC = () => {
                   </div>
                 </CardHeader>
                 <CardContent className="flex-grow">
-                  <p className="text-foreground/70 line-clamp-3">
+                  <p className="text-foreground dark:text-gray-300 line-clamp-3">
                     {dish.description}
                   </p>
                 </CardContent>
@@ -248,7 +247,7 @@ const Cuisine: React.FC = () => {
             onClick={closeDishDetails}
           >
             <div 
-              className="bg-white rounded-xl overflow-hidden max-w-4xl w-full max-h-[90vh] flex flex-col md:flex-row"
+              className="bg-background dark:bg-gray-900 rounded-xl overflow-hidden max-w-4xl w-full max-h-[90vh] flex flex-col md:flex-row"
               onClick={e => e.stopPropagation()}
             >
               <div className="md:w-1/2 h-64 md:h-auto relative">
@@ -265,7 +264,7 @@ const Cuisine: React.FC = () => {
                 <div className="flex justify-between items-start mb-4">
                   <div>
                     <h3 className="text-2xl font-serif font-medium">{selectedDish.name}</h3>
-                    <p className="flex items-center text-foreground/70 mt-1">
+                    <p className="flex items-center text-foreground dark:text-gray-300 mt-1">
                       <MapPin size={16} className="mr-1" /> {selectedDish.origin}
                     </p>
                   </div>
@@ -286,7 +285,7 @@ const Cuisine: React.FC = () => {
                     <Utensils size={16} className="mr-2 text-spice-500" />
                     Description
                   </h4>
-                  <p className="text-foreground/70 leading-relaxed">
+                  <p className="text-foreground dark:text-gray-300 leading-relaxed">
                     {selectedDish.description}
                   </p>
                 </div>
@@ -297,7 +296,7 @@ const Cuisine: React.FC = () => {
                     {selectedDish.ingredients.map((ingredient, index) => (
                       <span 
                         key={index} 
-                        className="px-3 py-1 bg-mystic-100 text-foreground/70 rounded-full text-sm"
+                        className="px-3 py-1 bg-white/30 dark:bg-white/10 backdrop-blur-sm text-foreground dark:text-gray-300 rounded-full text-sm"
                       >
                         {ingredient}
                       </span>
@@ -305,7 +304,7 @@ const Cuisine: React.FC = () => {
                   </div>
                 </div>
                 
-                <div className="mt-auto pt-4 border-t border-gray-100">
+                <div className="mt-auto pt-4 border-t border-border dark:border-white/20">
                   <button 
                     className="btn-primary w-full justify-center"
                     onClick={closeDishDetails}
