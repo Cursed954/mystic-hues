@@ -4,7 +4,7 @@ Mystic India is not just a web application—it’s a captivating cultural odyss
 
 Discover hidden gems through virtual tours, savor local delicacies, engage with indigenous arts, and celebrate India’s unmatched diversity, all in one seamless experience.
 
-## 🌐 [Live Demo](https://mystic-hues-design.lovable.app/)
+## 🌐 [Live Demo](https://67e61c1b61bfe6b67572d424--mystic-india.netlify.app/)
 
 ## ✨ Features
 
@@ -48,6 +48,3 @@ mystic-india/
 - Name: Deepanshu Chauhan
 - Enrollment Number: E23CSEU1617
 - Email: deepanshu95488@gmail.com
-
-
-
