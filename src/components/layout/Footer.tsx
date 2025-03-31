@@ -38,14 +38,6 @@ const Footer: React.FC = () => {
           </div>
           
           <div>
-            <h4 className="text-lg font-medium mb-4">Destinations</h4>
-            <ul className="space-y-2">
-              <li><a href="#" className="text-mystic-100/80 hover:text-spice-500 transition-colors">Rajasthan</a></li>
-              <li><a href="#" className="text-mystic-100/80 hover:text-spice-500 transition-colors">Kerala</a></li>
-              <li><a href="#" className="text-mystic-100/80 hover:text-spice-500 transition-colors">Himalayas</a></li>
-              <li><a href="#" className="text-mystic-100/80 hover:text-spice-500 transition-colors">Varanasi</a></li>
-              <li><a href="#" className="text-mystic-100/80 hover:text-spice-500 transition-colors">Goa</a></li>
-            </ul>
           </div>
           
           <div>

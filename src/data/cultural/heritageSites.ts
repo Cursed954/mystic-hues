@@ -12,7 +12,7 @@ export type HeritageSite = {
 };
 
 // Default image for heritage sites
-const defaultHeritageSiteImage = "https://images.unsplash.com/photo-1599661046289-e31897d36a68?q=80&w=1170";
+const defaultHeritageSiteImage = "https://www.shutterstock.com/shutterstock/photos/330924773/display_1500/stock-photo-place-word-330924773.jpg";
 
 // Transform heritage sites from state data and ensure each has an image property
 export const heritageSites: HeritageSite[] = stateData.flatMap(state => 

@@ -4,16 +4,18 @@ import Footer from '@/components/layout/Footer';
 import ScrollReveal from '@/components/ui/ScrollReveal';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Card, CardContent } from '@/components/ui/card';
-import { MapPin, Search, Image, X, Clock, History, Info, Globe } from 'lucide-react';
+import { MapPin, Search, Image, X, Clock, History, Info, Globe, Filter } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { artForms, ArtForm } from '@/data/cultural/artForms';
 import { festivals, Festival } from '@/data/cultural/festivals';
 import { heritageSites, HeritageSite } from '@/data/cultural/heritageSites';
+import { regions } from '@/data/cultural'; // Import regions
 
 const Culture = () => {
   const [activeTab, setActiveTab] = useState<string>('artForms');
   const [searchTerm, setSearchTerm] = useState('');
   const [activeStateFilter, setActiveStateFilter] = useState('All');
+  const [activeRegionFilter, setActiveRegionFilter] = useState('All'); // Add region filter state
   const [selectedArtForm, setSelectedArtForm] = useState<ArtForm | null>(null);
   const [selectedFestival, setSelectedFestival] = useState<Festival | null>(null);
   const [selectedHeritageSite, setSelectedHeritageSite] = useState<HeritageSite | null>(null);
@@ -25,32 +27,50 @@ const Culture = () => {
   const [filteredHeritageSites, setFilteredHeritageSites] = useState(heritageSites);
 
   useEffect(() => {
-    const filteredArts = artForms.filter(art => {
+    let filteredArts = [...artForms];
+    let filteredFests = [...festivals];
+    let filteredSites = [...heritageSites];
+
+    if (activeRegionFilter !== 'All') {
+      const region = regions.find(r => r.name.toLowerCase() === activeRegionFilter.toLowerCase());
+      if (region) {
+        filteredArts = filteredArts.filter(art => region.states.includes(art.stateId));
+        filteredFests = filteredFests.filter(festival => region.states.includes(festival.stateId));
+        filteredSites = filteredSites.filter(site => region.states.includes(site.stateId));
+      }
+    }
+
+    filteredArts = filteredArts.filter(art => {
       const matchesSearch = art.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                           art.stateName.toLowerCase().includes(searchTerm.toLowerCase());
+                            art.stateName.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesState = activeStateFilter === 'All' || art.stateName === activeStateFilter;
       return matchesSearch && matchesState;
     });
-    setFilteredArtForms(filteredArts);
 
-    const filteredFests = festivals.filter(festival => {
+    filteredFests = filteredFests.filter(festival => {
       const matchesSearch = festival.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                           festival.stateName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           (festival.description && festival.description.toLowerCase().includes(searchTerm.toLowerCase()));
+                            festival.stateName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                            (festival.description && festival.description.toLowerCase().includes(searchTerm.toLowerCase()));
       const matchesState = activeStateFilter === 'All' || festival.stateName === activeStateFilter;
       return matchesSearch && matchesState;
     });
-    setFilteredFestivals(filteredFests);
 
-    const filteredSites = heritageSites.filter(site => {
+    filteredSites = filteredSites.filter(site => {
       const matchesSearch = site.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                          site.stateName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          (site.description && site.description.toLowerCase().includes(searchTerm.toLowerCase()));
+                            site.stateName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                            (site.description && site.description.toLowerCase().includes(searchTerm.toLowerCase()));
       const matchesState = activeStateFilter === 'All' || site.stateName === activeStateFilter;
       return matchesSearch && matchesState;
     });
+
+    filteredArts.sort((a, b) => a.name.localeCompare(b.name)); // Sort alphabetically
+    filteredFests.sort((a, b) => a.name.localeCompare(b.name)); // Sort alphabetically
+    filteredSites.sort((a, b) => a.name.localeCompare(b.name)); // Sort alphabetically
+
+    setFilteredArtForms(filteredArts);
+    setFilteredFestivals(filteredFests);
     setFilteredHeritageSites(filteredSites);
-  }, [searchTerm, activeStateFilter]);
+  }, [searchTerm, activeStateFilter, activeRegionFilter]); // Add activeRegionFilter to dependencies
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -89,13 +109,18 @@ const Culture = () => {
                 </div>
                 
                 <div className="filter-container flex flex-wrap gap-2">
-                  {states.map(state => (
+                  {/* Region Filter */}
+                  <div className="flex items-center gap-2">
+                    <Filter className="h-4 w-4 text-foreground/70" />
+                    <span className="text-sm font-medium text-foreground/70">Filter by region:</span>
+                  </div>
+                  {regions.map(region => (
                     <button
-                      key={state}
-                      className={`filter-tag px-3 py-1 text-sm rounded-full ${activeStateFilter === state ? 'bg-spice-500 text-white' : 'bg-background/70 backdrop-blur-sm text-foreground border border-input'}`}
-                      onClick={() => setActiveStateFilter(state)}
+                      key={region.name}
+                      className={`filter-tag ${activeRegionFilter === region.name ? 'active' : ''}`}
+                      onClick={() => setActiveRegionFilter(region.name)}
                     >
-                      {state}
+                      {region.name}
                     </button>
                   ))}
                 </div>

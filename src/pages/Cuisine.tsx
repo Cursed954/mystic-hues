@@ -1,12 +1,11 @@
-
-import React, { useState } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import ScrollReveal from '@/components/ui/ScrollReveal';
 import { Card, CardContent } from '@/components/ui/card';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { stateData } from '@/data/stateData';
-import { MapPin, X, Search, Filter, Flame, Clock, Utensils, Image, ChevronDown, ChevronUp } from 'lucide-react';
+import { MapPin, X, Search, Filter, Flame, Clock, Utensils, Image, ChevronDown, ChevronUp, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 // Define types
@@ -22,6 +21,70 @@ type Dish = {
   ingredients?: string[];
 };
 
+// Pre-compute lookup tables for better performance
+const TASTE_LOOKUP = {
+  'Dal Baati Churma': 'Spicy with sweet notes, earthy',
+  'Laal Maas': 'Fiery hot with complex spices',
+  'Ker Sangri': 'Tangy and spicy',
+  'Ghevar': 'Sweet and syrupy',
+  'Appam with Stew': 'Mildly sweet with savory, coconutty stew',
+  'Malabar Biryani': 'Aromatic, mild spice, hint of sweetness',
+  'Kerala Fish Curry': 'Tangy, spicy, coconutty',
+  'Puttu and Kadala Curry': 'Mild, earthy with spicy curry',
+  'Idli Sambhar': 'Savory, tangy with complex spices',
+  'Dosa': 'Fermented tangy crepe with savory fillings',
+  'Chettinad Chicken': 'Very spicy with complex layers',
+  'Pongal': 'Savory version is peppery; sweet version is rich and jaggery-sweet',
+  'Butter Chicken': 'Creamy, mildly spiced with tomato sweetness',
+  'Biryani': 'Aromatic, layered flavors with tender meat',
+  'Rasgulla': 'Sweet, spongy and syrupy',
+  'Pav Bhaji': 'Spicy, tangy with buttery bread'
+};
+
+const COOKING_TIME_LOOKUP = {
+  'Dal Baati Churma': '2-3 hours',
+  'Laal Maas': '1-2 hours',
+  'Ker Sangri': '45 minutes',
+  'Ghevar': '1 hour',
+  'Appam with Stew': '1 hour',
+  'Malabar Biryani': '1.5 hours',
+  'Kerala Fish Curry': '30-40 minutes',
+  'Puttu and Kadala Curry': '45 minutes',
+  'Idli Sambhar': '30 minutes (plus fermentation)',
+  'Dosa': '20 minutes (plus fermentation)',
+  'Chettinad Chicken': '1 hour',
+  'Pongal': '30-40 minutes'
+};
+
+const SPICE_LEVEL_LOOKUP = {
+  'Dal Baati Churma': 'Medium',
+  'Laal Maas': 'Very Hot',
+  'Ker Sangri': 'Medium',
+  'Ghevar': 'Mild',
+  'Appam with Stew': 'Mild',
+  'Malabar Biryani': 'Medium',
+  'Kerala Fish Curry': 'Hot',
+  'Puttu and Kadala Curry': 'Medium',
+  'Idli Sambhar': 'Medium',
+  'Dosa': 'Medium',
+  'Chettinad Chicken': 'Very Hot',
+  'Pongal': 'Mild'
+};
+
+const INGREDIENTS_LOOKUP = {
+  'Dal Baati Churma': ['Wheat flour', 'Various lentils', 'Ghee', 'Jaggery', 'Spices'],
+  'Laal Maas': ['Mutton', 'Mathania red chilies', 'Yogurt', 'Ghee', 'Spices'],
+  'Ker Sangri': ['Ker (desert berries)', 'Sangri (beans)', 'Spices', 'Oil'],
+  'Ghevar': ['Flour', 'Ghee', 'Sugar syrup', 'Nuts'],
+  'Appam with Stew': ['Rice', 'Coconut', 'Vegetables/Meat', 'Spices', 'Coconut milk'],
+  'Kerala Fish Curry': ['Fish', 'Coconut milk', 'Kokum', 'Curry leaves', 'Spices'],
+  'Puttu and Kadala Curry': ['Rice flour', 'Coconut', 'Black chickpeas', 'Spices'],
+  'Idli Sambhar': ['Rice', 'Urad dal', 'Vegetables', 'Tamarind', 'Spices'],
+  'Dosa': ['Rice', 'Urad dal', 'Fenugreek seeds', 'Potato filling', 'Spices'],
+  'Chettinad Chicken': ['Chicken', 'Star anise', 'Fennel', 'Red chilies', 'Coconut'],
+  'Pongal': ['Rice', 'Moong dal', 'Pepper', 'Cumin', 'Ghee', 'Cashews']
+};
+
 const Cuisine = () => {
   const [selectedDish, setSelectedDish] = useState<Dish | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
@@ -29,116 +92,59 @@ const Cuisine = () => {
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const [isSpiceLevelFilterOpen, setIsSpiceLevelFilterOpen] = useState(false);
   const [activeSpiceLevelFilter, setActiveSpiceLevelFilter] = useState('All');
+  const [isLoading, setIsLoading] = useState(true);
+  const [displayedDishes, setDisplayedDishes] = useState<Dish[]>([]);
 
-  // Extract all dishes from all states with enhanced properties
-  const allDishes: Dish[] = stateData.flatMap(state => 
-    state.cuisine?.dishes?.map(dish => ({
-      ...dish, 
-      stateName: state.name,
-      stateId: state.id,
-      taste: getTasteForDish(dish.name),
-      cookingTime: getCookingTimeForDish(dish.name),
-      spiceLevel: getSpiceLevelForDish(dish.name),
-      ingredients: getIngredientsForDish(dish.name)
-    })) || []
-  );
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
-  // Get unique states for filtering
-  const states = ['All', ...new Set(stateData.map(state => state.name))];
+  // Memoize the dish processing to prevent recalculation on every render
+  const allDishes = useMemo(() => {
+    return stateData.flatMap(state => 
+      state.cuisine?.dishes?.map(dish => ({
+        ...dish, 
+        stateName: state.name,
+        stateId: state.id,
+        taste: TASTE_LOOKUP[dish.name as keyof typeof TASTE_LOOKUP] || 'Complex blend of spices with regional flavors',
+        cookingTime: COOKING_TIME_LOOKUP[dish.name as keyof typeof COOKING_TIME_LOOKUP] || '45-60 minutes',
+        spiceLevel: (SPICE_LEVEL_LOOKUP[dish.name as keyof typeof SPICE_LEVEL_LOOKUP] || 'Medium') as 'Mild' | 'Medium' | 'Hot' | 'Very Hot',
+        ingredients: INGREDIENTS_LOOKUP[dish.name as keyof typeof INGREDIENTS_LOOKUP] || ['Regional spices', 'Local ingredients', 'Traditional herbs']
+      })) || []
+    );
+  }, []);
+
+  // Memoize filtered dishes
+  const filteredDishes = useMemo(() => {
+    const dishes = allDishes.filter(dish => {
+      const matchesSearch = dish.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                            dish.stateName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                            (dish.description && dish.description.toLowerCase().includes(searchTerm.toLowerCase()));
+      const matchesState = activeStateFilter === 'All' || dish.stateName === activeStateFilter;
+      const matchesSpiceLevel = activeSpiceLevelFilter === 'All' || dish.spiceLevel === activeSpiceLevelFilter;
+      return matchesSearch && matchesState && matchesSpiceLevel;
+    });
+
+    return dishes.sort((a, b) => a.name.localeCompare(b.name)); // Sort alphabetically
+  }, [allDishes, searchTerm, activeStateFilter, activeSpiceLevelFilter]);
+
+  // Memoize states list
+  const states = useMemo(() => ['All', ...new Set(stateData.map(state => state.name))], []);
   
   // Spice levels for filtering
   const spiceLevels = ['All', 'Mild', 'Medium', 'Hot', 'Very Hot'];
 
-  // Filter dishes based on search, state filter, and spice level
-  const filteredDishes = allDishes.filter(dish => {
-    const matchesSearch = dish.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                        dish.stateName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                        (dish.description && dish.description.toLowerCase().includes(searchTerm.toLowerCase()));
-    const matchesState = activeStateFilter === 'All' || dish.stateName === activeStateFilter;
-    const matchesSpiceLevel = activeSpiceLevelFilter === 'All' || dish.spiceLevel === activeSpiceLevelFilter;
-    return matchesSearch && matchesState && matchesSpiceLevel;
-  });
+  // Lazy load dishes with a delay
+  useEffect(() => {
+    setIsLoading(true);
+    const timer = setTimeout(() => {
+      setDisplayedDishes(filteredDishes.sort((a, b) => a.name.localeCompare(b.name))); // Ensure sorting
+      setIsLoading(false);
+    }, 100); // Small delay to prevent flash of loading state
 
-  // Helper functions to generate dish details
-  function getTasteForDish(dishName: string): string {
-    const tastes = {
-      'Dal Baati Churma': 'Spicy with sweet notes, earthy',
-      'Laal Maas': 'Fiery hot with complex spices',
-      'Ker Sangri': 'Tangy and spicy',
-      'Ghevar': 'Sweet and syrupy',
-      'Appam with Stew': 'Mildly sweet with savory, coconutty stew',
-      'Malabar Biryani': 'Aromatic, mild spice, hint of sweetness',
-      'Kerala Fish Curry': 'Tangy, spicy, coconutty',
-      'Puttu and Kadala Curry': 'Mild, earthy with spicy curry',
-      'Idli Sambhar': 'Savory, tangy with complex spices',
-      'Dosa': 'Fermented tangy crepe with savory fillings',
-      'Chettinad Chicken': 'Very spicy with complex layers',
-      'Pongal': 'Savory version is peppery; sweet version is rich and jaggery-sweet',
-      'Butter Chicken': 'Creamy, mildly spiced with tomato sweetness',
-      'Biryani': 'Aromatic, layered flavors with tender meat',
-      'Rasgulla': 'Sweet, spongy and syrupy',
-      'Pav Bhaji': 'Spicy, tangy with buttery bread'
-    };
-    
-    return tastes[dishName as keyof typeof tastes] || 'Complex blend of spices with regional flavors';
-  }
-
-  function getCookingTimeForDish(dishName: string): string {
-    const times = {
-      'Dal Baati Churma': '2-3 hours',
-      'Laal Maas': '1-2 hours',
-      'Ker Sangri': '45 minutes',
-      'Ghevar': '1 hour',
-      'Appam with Stew': '1 hour',
-      'Malabar Biryani': '1.5 hours',
-      'Kerala Fish Curry': '30-40 minutes',
-      'Puttu and Kadala Curry': '45 minutes',
-      'Idli Sambhar': '30 minutes (plus fermentation)',
-      'Dosa': '20 minutes (plus fermentation)',
-      'Chettinad Chicken': '1 hour',
-      'Pongal': '30-40 minutes'
-    };
-    
-    return times[dishName as keyof typeof times] || '45-60 minutes';
-  }
-
-  function getSpiceLevelForDish(dishName: string): 'Mild' | 'Medium' | 'Hot' | 'Very Hot' {
-    const levels = {
-      'Dal Baati Churma': 'Medium',
-      'Laal Maas': 'Very Hot',
-      'Ker Sangri': 'Medium',
-      'Ghevar': 'Mild',
-      'Appam with Stew': 'Mild',
-      'Malabar Biryani': 'Medium',
-      'Kerala Fish Curry': 'Hot',
-      'Puttu and Kadala Curry': 'Medium',
-      'Idli Sambhar': 'Medium',
-      'Dosa': 'Medium',
-      'Chettinad Chicken': 'Very Hot',
-      'Pongal': 'Mild'
-    };
-    
-    return (levels[dishName as keyof typeof levels] || 'Medium') as 'Mild' | 'Medium' | 'Hot' | 'Very Hot';
-  }
-
-  function getIngredientsForDish(dishName: string): string[] {
-    const ingredients = {
-      'Dal Baati Churma': ['Wheat flour', 'Various lentils', 'Ghee', 'Jaggery', 'Spices'],
-      'Laal Maas': ['Mutton', 'Mathania red chilies', 'Yogurt', 'Ghee', 'Spices'],
-      'Ker Sangri': ['Ker (desert berries)', 'Sangri (beans)', 'Spices', 'Oil'],
-      'Ghevar': ['Flour', 'Ghee', 'Sugar syrup', 'Nuts'],
-      'Appam with Stew': ['Rice', 'Coconut', 'Vegetables/Meat', 'Spices', 'Coconut milk'],
-      'Malabar Biryani': ['Basmati rice', 'Meat', 'Spices', 'Ghee', 'Caramelized onions'],
-      'Kerala Fish Curry': ['Fish', 'Coconut milk', 'Kokum', 'Curry leaves', 'Spices'],
-      'Puttu and Kadala Curry': ['Rice flour', 'Coconut', 'Black chickpeas', 'Spices'],
-      'Idli Sambhar': ['Rice', 'Urad dal', 'Vegetables', 'Tamarind', 'Spices'],
-      'Dosa': ['Rice', 'Urad dal', 'Fenugreek seeds', 'Potato filling', 'Spices'],
-      'Chettinad Chicken': ['Chicken', 'Star anise', 'Fennel', 'Red chilies', 'Coconut'],
-      'Pongal': ['Rice', 'Moong dal', 'Pepper', 'Cumin', 'Ghee', 'Cashews']
-    };
-    
-    return ingredients[dishName as keyof typeof ingredients] || ['Regional spices', 'Local ingredients', 'Traditional herbs'];
-  }
+    return () => clearTimeout(timer);
+  }, [filteredDishes]);
 
   // Render spice level indicator
   const SpiceLevelIndicator = ({ level }: { level: 'Mild' | 'Medium' | 'Hot' | 'Very Hot' }) => {
@@ -278,14 +284,18 @@ const Cuisine = () => {
         <section className="py-16 px-6">
           <div className="container mx-auto">
             <ScrollReveal>
-              {filteredDishes.length > 0 ? (
+              {isLoading ? (
+                <div className="flex items-center justify-center min-h-[400px]">
+                  <Loader2 className="h-8 w-8 animate-spin text-spice-500" />
+                </div>
+              ) : displayedDishes.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                  {filteredDishes.map((dish, index) => (
+                  {displayedDishes.map((dish, index) => (
                     <motion.div
                       key={index}
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.05 }}
+                      transition={{ delay: index * 0.1 }}
                     >
                       <Card 
                         className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer h-full"

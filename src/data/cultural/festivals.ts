@@ -12,7 +12,7 @@ export type Festival = {
 };
 
 // Default image for festivals
-const defaultFestivalImage = "https://images.unsplash.com/photo-1594815101424-0c644c8c63c6?q=80&w=1170";
+const defaultFestivalImage = "https://www.shutterstock.com/shutterstock/videos/3420493313/thumb/1.jpg?ip=x480";
 
 // Transform festivals from state data and ensure each has an image property
 export const festivals: Festival[] = stateData.flatMap(state => 

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '@/components/layout/Navbar';
@@ -12,17 +11,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-
-// Define regions for filtering
-const regions = [
-  "All",
-  "North",
-  "South", 
-  "East",
-  "West",
-  "Central",
-  "Northeast"
-];
+import { regions, getStateRegion } from '@/data/cultural';
 
 const AllStates = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -32,17 +21,25 @@ const AllStates = () => {
   const { toast } = useToast();
 
   useEffect(() => {
-    // Filter states based on search term and active filter
-    const results = stateData.filter(state => {
-      const matchesSearch = state.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                           state.capital.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           state.description.toLowerCase().includes(searchTerm.toLowerCase());
-      
-      const matchesRegion = activeFilter === 'All' || state.region === activeFilter;
-      
-      return matchesSearch && matchesRegion;
+    let filtered = [...stateData];
+
+    if (activeFilter !== 'All') {
+      const region = regions.find(r => r.name.toLowerCase() === activeFilter.toLowerCase());
+      if (region) {
+        filtered = filtered.filter(state => region.states.includes(state.id));
+      }
+    }
+
+    const results = filtered.filter((state) => {
+      const matchesSearch =
+        state.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        state.capital.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        state.description.toLowerCase().includes(searchTerm.toLowerCase());
+
+      return matchesSearch;
     });
-    
+
+    results.sort((a, b) => a.name.localeCompare(b.name)); // Sort alphabetically
     setFilteredStates(results);
   }, [searchTerm, activeFilter]);
 
@@ -133,11 +130,11 @@ const AllStates = () => {
               <div className="filter-container">
                 {regions.map(region => (
                   <button
-                    key={region}
-                    className={`filter-tag ${activeFilter === region ? 'active' : ''}`}
-                    onClick={() => setActiveFilter(region)}
+                    key={region.name}
+                    className={`filter-tag ${activeFilter === region.name ? 'active' : ''}`}
+                    onClick={() => setActiveFilter(region.name)}
                   >
-                    {region}
+                    {region.name}
                   </button>
                 ))}
               </div>

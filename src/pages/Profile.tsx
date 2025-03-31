@@ -1,6 +1,5 @@
-
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/context/AuthContext';
 import { 
@@ -210,44 +209,70 @@ const Profile = () => {
                   <motion.div
                     key={trip.id}
                     whileHover={{ scale: 1.02 }}
-                    className="bg-white/5 backdrop-blur-sm rounded-lg p-5 flex justify-between items-center cursor-pointer border border-white/10 hover:border-violet-500/30 transition-all duration-300"
-                    onClick={() => navigate(`/journey/${trip.destination.toLowerCase().replace(/\s+/g, '-')}`)}
+                    className="bg-white/5 backdrop-blur-sm rounded-lg p-5 flex flex-col border border-white/10 hover:border-violet-500/30 transition-all duration-300"
                   >
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-full bg-violet-900/20 flex items-center justify-center">
-                        <MapPin className="w-6 h-6 text-violet-400" />
-                      </div>
-                      <div>
-                        <h3 className="font-medium">{trip.destination}</h3>
-                        <div className="flex items-center gap-2 text-sm text-gray-400">
-                          <Calendar className="w-4 h-4" />
-                          <span>{trip.date}</span>
+                    <div className="relative h-48 overflow-hidden rounded-t-lg">
+                      <img 
+                        src={trip.imageSrc || 'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?q=80&w=2071'} 
+                        alt={trip.destination} 
+                        className="w-full h-full object-cover transition-transform duration-700 hover:scale-110"
+                      />
+                      <div className="absolute top-4 right-4">
+                        <div className="bg-white/80 dark:bg-black/60 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-medium flex items-center">
+                          <Star size={14} className="mr-1 text-violet-400" fill="#e94cff" stroke="#e94cff" />
+                          {trip.status}
                         </div>
                       </div>
                     </div>
                     
-                    <div className="flex items-center gap-3">
-                      <span className={`px-3 py-1 rounded-full text-xs ${
-                        trip.status === 'Upcoming' 
-                          ? 'bg-emerald-900/30 text-emerald-400' 
-                          : 'bg-blue-900/30 text-blue-400'
-                      }`}>
-                        {trip.status}
-                      </span>
-                      <Button 
-                        variant="ghost" 
-                        size="sm"
-                        className="text-red-400 hover:text-red-300 hover:bg-red-900/20"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setTripToDelete(trip.id);
-                          setConfirmDeleteDialogOpen(true);
-                        }}
-                      >
-                        <Trash className="h-4 w-4" />
-                        <span className="sr-only">Delete</span>
-                      </Button>
-                      <ChevronRight className="w-5 h-5 text-gray-500" />
+                    <div className="p-6 flex flex-col flex-grow">
+                      <h3 className="text-xl font-serif font-semibold mb-3">{trip.destination}</h3>
+                      
+                      <p className="text-foreground/80 mb-4">
+                        Your upcoming journey to {trip.destination}. Get ready for an amazing adventure!
+                      </p>
+                      
+                      <div className="flex flex-wrap gap-4 mb-4 text-sm mt-auto">
+                        <div className="flex items-center text-foreground/70">
+                          <Calendar size={16} className="mr-1" />
+                          {trip.date}
+                        </div>
+                        <div className="flex items-center text-foreground/70">
+                          <MapPin size={16} className="mr-1" />
+                          {trip.destination}
+                        </div>
+                      </div>
+                      
+                      <div className="flex justify-between items-center mt-4">
+                        <motion.div>
+                          <Link 
+                            to={`/journey/${trip.id}`}
+                            className="inline-flex items-center font-medium transition-colors text-violet-400 hover:text-violet-300"
+                          >
+                            <motion.span
+                              whileHover={{ x: 5 }}
+                              transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                              className="flex items-center"
+                            >
+                              View Details <ChevronRight size={16} className="ml-1" />
+                            </motion.span>
+                          </Link>
+                        </motion.div>
+                        
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          className="text-red-400 hover:text-red-300 hover:bg-red-900/20"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setTripToDelete(trip.id);
+                            setConfirmDeleteDialogOpen(true);
+                          }}
+                        >
+                          <Trash className="h-4 w-4" />
+                          <span className="sr-only">Delete</span>
+                        </Button>
+                      </div>
                     </div>
                   </motion.div>
                 ))}

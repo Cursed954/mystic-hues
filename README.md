@@ -4,7 +4,7 @@ Mystic India is not just a web application—it’s a captivating cultural odyss
 
 Discover hidden gems through virtual tours, savor local delicacies, engage with indigenous arts, and celebrate India’s unmatched diversity, all in one seamless experience.
 
-## 🌐 [Live Demo](https://67e61c1b61bfe6b67572d424--mystic-india.netlify.app/)
+## 🌐  [Live Demo](https://mystic-india.netlify.app/)
 
 ## ✨ Features
 
@@ -31,16 +31,34 @@ Discover hidden gems through virtual tours, savor local delicacies, engage with 
 ## 🎯 Project Structure
 
 ```
-mystic-india/
-├── src/
-│   ├── components/     # Reusable UI components
-│   ├── pages/         # Application routes/pages
-│   ├── data/          # Data files and constants
-│   ├── App.tsx        # Main application component
-│   └── main.tsx       # Application entry point
-├── public/            # Static assets
-├── mystic.js          # CLI launcher script
-└── package.json       # Project configuration
+Mystic_India/  
+│── public/                # Static assets (favicon, images, etc.)  
+│── src/                   # Source code  
+│   ├── assets/            # Images, icons, and other assets  
+│   ├── components/        # Reusable UI components  
+│   │   ├── layout/        # Layout components (Navbar, Footer, etc.)  
+│   │   ├── ui/            # UI elements (buttons, cards, etc.)  
+│   ├── context/           # Global state management (Auth, Theme, etc.)  
+│   ├── hooks/             # Custom hooks  
+│   ├── pages/             # Main pages of the application  
+│   │   ├── Home.tsx       # Landing page  
+│   │   ├── States.tsx     # State-wise cultural details  
+│   │   ├── Cuisine.tsx    # Regional cuisine exploration  
+│   │   ├── Culture.tsx    # Cultural insights and festivals  
+│   │   ├── Profile.tsx    # User profile page  
+│   │   ├── Login.tsx      # Authentication page  
+│   ├── services/          # API calls and external data fetching  
+│   ├── styles/            # Global styles and Tailwind configurations  
+│   ├── App.tsx            # Root component  
+│   ├── main.tsx           # Entry point for React app  
+│── .eslintrc.js           # ESLint configuration  
+│── .prettierrc            # Prettier configuration  
+│── package.json           # Dependencies and scripts  
+│── tailwind.config.js     # Tailwind CSS configuration  
+│── tsconfig.json          # TypeScript configuration  
+│── vite.config.ts         # Vite configuration  
+│── README.md              # Project documentation
+
 ```
 
 
@@ -48,3 +66,6 @@ mystic-india/
 - Name: Deepanshu Chauhan
 - Enrollment Number: E23CSEU1617
 - Email: deepanshu95488@gmail.com
+
+
+

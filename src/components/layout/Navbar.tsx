@@ -1,14 +1,12 @@
-
 import React, { useState, useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import { Menu, X, User } from 'lucide-react';
 import { Logo } from '../ui/Logo';
 import { ThemeToggle } from '../theme/ThemeToggle';
 import useMobile from '@/hooks/use-mobile';
-import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/context/AuthContext';
+import { useScrollToTop } from '@/hooks/useScrollToTop';
 
-// Define types for nav items
 type BaseNavItem = {
   name: string;
   path: string;
@@ -20,7 +18,6 @@ type NavItemWithIcon = BaseNavItem & {
 
 type NavItem = BaseNavItem | NavItemWithIcon;
 
-// Type guard to check if item has icon
 const hasIcon = (item: NavItem): item is NavItemWithIcon => {
   return 'icon' in item;
 };
@@ -32,6 +29,7 @@ const Navbar: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const isHome = location.pathname === '/';
   const { isAuthenticated } = useAuth();
+  const scrollToTop = useScrollToTop();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -43,7 +41,6 @@ const Navbar: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    // Close mobile menu when route changes
     setMobileMenuOpen(false);
   }, [location.pathname]);
 
@@ -51,7 +48,6 @@ const Navbar: React.FC = () => {
     setMobileMenuOpen(!mobileMenuOpen);
   };
 
-  // Dynamic navigation items based on authentication status
   const getNavItems = (): NavItem[] => {
     const baseItems: NavItem[] = [
       { name: 'States', path: '/states' },
@@ -68,61 +64,47 @@ const Navbar: React.FC = () => {
 
   const navItems = getNavItems();
 
+  const handleNavigation = () => {
+    setMobileMenuOpen(false);
+    scrollToTop();
+  };
+
   return (
-    <motion.header
-      initial={{ y: -100, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.5, ease: "easeOut" }}
-    className={`fixed top-4 left-[2.5%] transform -translate-x-1/2 w-[90%] md:w-[95%] z-40 transition-all duration-300 rounded-full shadow-lg backdrop-blur-md border border-white/20 dark:border-white/20 ${
+    <header
+      className={`fixed top-4 left-0 right-0 flex justify-center items-center z-40 transition-all duration-700 ease-out rounded-full shadow-lg backdrop-blur-md border border-white/30 dark:border-white/30 ${
         isScrolled || !isHome
-          ? 'py-2.5 bg-white/60 dark:bg-black/50'
-          : 'py-4 bg-transparent'
+          ? 'py-2.5 bg-white/60 dark:bg-black/60 md:w-[50%] mx-auto'
+          : 'py-4 bg-transparent md:w-[90%] mx-auto'
       }`}
     >
       <nav className="container mx-auto px-6 flex justify-between items-center">
-        <Link to="/" className="z-10">
+        <Link to="/" className="z-10" onClick={handleNavigation}>
           <Logo className="h-10 w-auto" />
         </Link>
 
-        {/* Desktop Navigation */}
         {!isMobile && (
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2, duration: 0.5 }}
-            className="flex items-center space-x-1"
-          >
+          <div className="flex items-center space-x-1">
             {navItems.map((item, index) => (
-              <motion.div
-                key={item.name}
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 * index + 0.3, duration: 0.5 }}
-              >
+              <div key={item.name}>
                 <Link
                   to={item.path}
-                  className={`nav-item ${
-                    location.pathname === item.path ? 'text-spice-500' : ''
+                  onClick={handleNavigation}
+                  className={`nav-item transition-colors duration-500 ease-in-out ${
+                    location.pathname === item.path ? 'text-spice-500 font-semibold' : 'hover:text-spice-400'
                   } ${hasIcon(item) ? 'flex items-center' : ''}`}
                 >
                   {hasIcon(item) && <item.icon className="mr-1 h-4 w-4" />}
                   {item.name}
                 </Link>
-              </motion.div>
+              </div>
             ))}
 
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.7, duration: 0.3 }}
-              className="ml-4"
-            >
+            <div className="ml-4">
               <ThemeToggle />
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
         )}
 
-        {/* Mobile Navigation */}
         {isMobile && (
           <div className="flex items-center">
             <ThemeToggle />
@@ -137,44 +119,27 @@ const Navbar: React.FC = () => {
         )}
       </nav>
 
-      {/* Mobile Menu */}
-      <AnimatePresence>
-        {isMobile && mobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2 }}
-            className="fixed inset-0 top-16 z-50 bg-background/95 backdrop-blur-md"
-          >
-            <div className="container mx-auto px-6 py-8 flex flex-col items-center">
-              {navItems.map((item, index) => (
-                <motion.div
-                  key={item.name}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ 
-                    opacity: 1, 
-                    y: 0,
-                    transition: { delay: index * 0.05 + 0.1 } 
-                  }}
+      {isMobile && mobileMenuOpen && (
+        <div className="fixed inset-0 top-16 z-50 bg-background/95 backdrop-blur-md">
+          <div className="container mx-auto px-6 py-8 flex flex-col items-center">
+            {navItems.map((item, index) => (
+              <div key={item.name}>
+                <Link
+                  to={item.path}
+                  onClick={handleNavigation}
+                  className={`py-3 text-lg font-medium hover:text-spice-500 transition-colors flex items-center ${
+                    location.pathname === item.path ? 'text-spice-500' : 'text-foreground'
+                  }`}
                 >
-                  <Link
-                    to={item.path}
-                    className={`py-3 text-lg font-medium hover:text-spice-500 transition-colors flex items-center ${
-                      location.pathname === item.path ? 'text-spice-500' : 'text-foreground'
-                    }`}
-                    onClick={toggleMobileMenu}
-                  >
-                    {hasIcon(item) && <item.icon className="mr-2 h-5 w-5" />}
-                    {item.name}
-                  </Link>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.header>
+                  {hasIcon(item) && <item.icon className="mr-2 h-5 w-5" />}
+                  {item.name}
+                </Link>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </header>
   );
 };
 
