@@ -6,6 +6,7 @@ type AuthContextType = {
   user: any;
   loading: boolean;
   login: (email: string, password: string) => Promise<any>;
+  signUp: (name: string, email: string, password: string) => Promise<any>;
   socialLogin: (provider: 'google' | 'github') => Promise<any>;
   updateProfile: (userData: any) => Promise<any>;
   toggleFavoriteState: (stateId: string) => Promise<any>;

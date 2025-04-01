@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { authService } from '@/lib/auth';
 
@@ -28,6 +27,19 @@ export function useAuthState() {
     setLoading(true);
     try {
       const result = await authService.login(email, password);
+      if (result.success && result.user) {
+        setUser(result.user);
+      }
+      return result;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const signUp = async (name: string, email: string, password: string) => {
+    setLoading(true);
+    try {
+      const result = await authService.signUp(name, email, password);
       if (result.success && result.user) {
         setUser(result.user);
       }
@@ -204,7 +216,8 @@ export function useAuthState() {
   return { 
     user, 
     loading, 
-    login, 
+    login,
+    signUp,
     socialLogin,
     updateProfile,
     toggleFavoriteState,

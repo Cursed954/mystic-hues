@@ -1,4 +1,3 @@
-
 /**
  * Authentication service for handling login functionality
  */
@@ -69,6 +68,79 @@ export const authService = {
       return { 
         success: false, 
         message: "An error occurred during login. Please try again."
+      };
+    }
+  },
+  
+  signUp: async (name: string, email: string, password: string): Promise<{ success: boolean; message: string; user?: any }> => {
+    try {
+      // This is a simulated signup flow
+      // In a real app, this would make an API call to your authentication service
+      
+      console.log("Signup attempt with:", { name, email });
+      
+      // Simple validation
+      if (!name || !email || !password) {
+        return { success: false, message: "All fields are required" };
+      }
+      
+      if (password.length < 6) {
+        return { success: false, message: "Password must be at least 6 characters" };
+      }
+      
+      // Check if email already exists (this is a mock implementation)
+      // In a real app, this would be checked on the server
+      const userJson = localStorage.getItem('user');
+      if (userJson) {
+        const existingUser = JSON.parse(userJson);
+        if (existingUser.email === email) {
+          return { success: false, message: "This email is already registered" };
+        }
+      }
+      
+      // Simulate successful signup with a mock user
+      const mockUser = {
+        id: `user-${Math.floor(Math.random() * 1000)}`,
+        email,
+        name,
+        isAuthenticated: true,
+        profilePicture: `https://api.dicebear.com/7.x/avataaars/svg?seed=${email}`,
+        bio: "Travel enthusiast exploring the beauty of India",
+        phone: "",
+        address: {
+          street: "",
+          city: "",
+          state: "Delhi",
+          zipCode: ""
+        },
+        preferences: {
+          notifications: true,
+          newsletter: true,
+          travelAlerts: false
+        },
+        trips: [],
+        savedStates: [],
+        recentActivities: [
+          { id: 1, type: "signup", description: "Created an account", date: new Date().toISOString() }
+        ]
+      };
+      
+      // Simulate network delay for realism
+      await new Promise(resolve => setTimeout(resolve, 800));
+
+      // Store user in localStorage to persist signup state
+      localStorage.setItem('user', JSON.stringify(mockUser));
+      
+      return { 
+        success: true, 
+        message: "Account created successfully!",
+        user: mockUser
+      };
+    } catch (error) {
+      console.error("Signup error:", error);
+      return { 
+        success: false, 
+        message: "An error occurred during signup. Please try again."
       };
     }
   },
