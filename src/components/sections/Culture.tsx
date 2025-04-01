@@ -30,7 +30,10 @@ const Culture: React.FC = () => {
     if (activeRegionFilter !== 'all') {
       const region = regions.find(r => r.id === activeRegionFilter);
       if (region) {
-        filtered = culturalData.filter(item => region.items.includes(item.id));
+        filtered = culturalData.filter(item => {
+          const itemStateId = item.id.split('-')[0];
+          return region.states.includes(itemStateId);
+        });
       }
     }
     
