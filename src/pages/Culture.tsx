@@ -20,10 +20,11 @@ const Culture = () => {
     heritage: heritageSites
   };
 
+  // Fix the filtering to use the id property instead of location
   const filteredData = category === 'regions' 
     ? filter === 'all' 
       ? regions 
-      : regions.filter(region => region.location === filter)
+      : regions.filter(region => region.id.includes(filter))
     : categoryData[category];
 
   return (
