@@ -1,21 +1,53 @@
 
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { Mail, Lock, ArrowRight, User, Github, Chrome } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/context/AuthContext';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { 
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage
+} from '@/components/ui/form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import * as z from 'zod';
+
+const signUpSchema = z.object({
+  name: z.string().min(2, { message: "Name must be at least 2 characters long" }),
+  email: z.string().email({ message: "Please enter a valid email address" }),
+  password: z.string().min(6, { message: "Password must be at least 6 characters long" }),
+  confirmPassword: z.string()
+}).refine(data => data.password === data.confirmPassword, {
+  message: "Passwords do not match",
+  path: ["confirmPassword"],
+});
+
+type SignUpFormValues = z.infer<typeof signUpSchema>;
 
 const SignUp = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [socialLoading, setSocialLoading] = useState<string | null>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
   const { signUp, socialLogin, isAuthenticated } = useAuth();
+  
+  const form = useForm<SignUpFormValues>({
+    resolver: zodResolver(signUpSchema),
+    defaultValues: {
+      name: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+    },
+  });
   
   useEffect(() => {
     if (isAuthenticated) {
@@ -23,31 +55,11 @@ const SignUp = () => {
     }
   }, [isAuthenticated, navigate]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (password !== confirmPassword) {
-      toast({
-        title: "Password Mismatch",
-        description: "Passwords do not match. Please try again.",
-        variant: "destructive"
-      });
-      return;
-    }
-    
-    if (password.length < 6) {
-      toast({
-        title: "Password Too Short",
-        description: "Password must be at least 6 characters long.",
-        variant: "destructive"
-      });
-      return;
-    }
-    
+  const onSubmit = async (values: SignUpFormValues) => {
     setIsLoading(true);
 
     try {
-      const result = await signUp(name, email, password);
+      const result = await signUp(values.name, values.email, values.password);
       
       if (result.success) {
         toast({
@@ -106,7 +118,7 @@ const SignUp = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 relative overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center px-4 py-12 relative overflow-hidden">
       <div className="absolute inset-0 -z-10">
         <div className="absolute top-0 right-0 w-2/3 h-2/3 bg-emerald-600/30 rounded-full filter blur-3xl opacity-40 animate-float" />
         <div className="absolute bottom-0 left-0 w-2/3 h-2/3 bg-teal-600/20 rounded-full filter blur-3xl opacity-40 animate-pulse-slow" />
@@ -138,115 +150,140 @@ const SignUp = () => {
           animate={{ scale: 1 }}
           transition={{ delay: 0.2, duration: 0.4 }}
         >
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <motion.div
-              initial={{ x: -20, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ delay: 0.3, duration: 0.4 }}
-            >
-              <label htmlFor="name" className="block text-sm font-medium text-gray-400 mb-2">
-                Full Name
-              </label>
-              <div className="relative group">
-                <User className="absolute left-4 top-1/2 transform -translate-y-1/2 text-emerald-400 w-5 h-5" />
-                <input
-                  id="name"
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="w-full bg-gray-800/50 backdrop-blur-sm text-white pl-12 pr-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 border border-emerald-500/30 transition-all duration-300"
-                  placeholder="Enter your full name"
-                  required
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              <motion.div
+                initial={{ x: -20, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ delay: 0.3, duration: 0.4 }}
+              >
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-sm font-medium text-gray-400">Full Name</FormLabel>
+                      <div className="relative group">
+                        <User className="absolute left-4 top-1/2 transform -translate-y-1/2 text-emerald-400 w-5 h-5" />
+                        <FormControl>
+                          <Input
+                            {...field}
+                            className="w-full bg-gray-800/50 backdrop-blur-sm text-white pl-12 pr-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 border border-emerald-500/30 transition-all duration-300"
+                            placeholder="Enter your full name"
+                          />
+                        </FormControl>
+                        <FormMessage className="text-red-400 text-sm mt-1" />
+                      </div>
+                    </FormItem>
+                  )}
                 />
-              </div>
-            </motion.div>
+              </motion.div>
 
-            <motion.div
-              initial={{ x: -20, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ delay: 0.4, duration: 0.4 }}
-            >
-              <label htmlFor="email" className="block text-sm font-medium text-gray-400 mb-2">
-                Email Address
-              </label>
-              <div className="relative group">
-                <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 text-emerald-400 w-5 h-5" />
-                <input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-gray-800/50 backdrop-blur-sm text-white pl-12 pr-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 border border-emerald-500/30 transition-all duration-300"
-                  placeholder="Enter your email"
-                  required
+              <motion.div
+                initial={{ x: -20, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ delay: 0.4, duration: 0.4 }}
+              >
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-sm font-medium text-gray-400">Email Address</FormLabel>
+                      <div className="relative group">
+                        <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 text-emerald-400 w-5 h-5" />
+                        <FormControl>
+                          <Input
+                            {...field}
+                            type="email"
+                            className="w-full bg-gray-800/50 backdrop-blur-sm text-white pl-12 pr-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 border border-emerald-500/30 transition-all duration-300"
+                            placeholder="Enter your email"
+                          />
+                        </FormControl>
+                        <FormMessage className="text-red-400 text-sm mt-1" />
+                      </div>
+                    </FormItem>
+                  )}
                 />
-              </div>
-            </motion.div>
+              </motion.div>
 
-            <motion.div
-              initial={{ x: -20, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ delay: 0.5, duration: 0.4 }}
-            >
-              <label htmlFor="password" className="block text-sm font-medium text-gray-400 mb-2">
-                Password
-              </label>
-              <div className="relative group">
-                <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-emerald-400 w-5 h-5" />
-                <input
-                  id="password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-gray-800/50 backdrop-blur-sm text-white pl-12 pr-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 border border-emerald-500/30 transition-all duration-300"
-                  placeholder="Create a password"
-                  required
+              <motion.div
+                initial={{ x: -20, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ delay: 0.5, duration: 0.4 }}
+              >
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-sm font-medium text-gray-400">Password</FormLabel>
+                      <div className="relative group">
+                        <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-emerald-400 w-5 h-5" />
+                        <FormControl>
+                          <Input
+                            {...field}
+                            type="password"
+                            className="w-full bg-gray-800/50 backdrop-blur-sm text-white pl-12 pr-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 border border-emerald-500/30 transition-all duration-300"
+                            placeholder="Create a password"
+                          />
+                        </FormControl>
+                        <FormMessage className="text-red-400 text-sm mt-1" />
+                      </div>
+                    </FormItem>
+                  )}
                 />
-              </div>
-            </motion.div>
+              </motion.div>
 
-            <motion.div
-              initial={{ x: -20, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ delay: 0.6, duration: 0.4 }}
-            >
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-400 mb-2">
-                Confirm Password
-              </label>
-              <div className="relative group">
-                <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-emerald-400 w-5 h-5" />
-                <input
-                  id="confirmPassword"
-                  type="password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="w-full bg-gray-800/50 backdrop-blur-sm text-white pl-12 pr-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 border border-emerald-500/30 transition-all duration-300"
-                  placeholder="Confirm your password"
-                  required
+              <motion.div
+                initial={{ x: -20, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ delay: 0.6, duration: 0.4 }}
+              >
+                <FormField
+                  control={form.control}
+                  name="confirmPassword"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-sm font-medium text-gray-400">Confirm Password</FormLabel>
+                      <div className="relative group">
+                        <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-emerald-400 w-5 h-5" />
+                        <FormControl>
+                          <Input
+                            {...field}
+                            type="password"
+                            className="w-full bg-gray-800/50 backdrop-blur-sm text-white pl-12 pr-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 border border-emerald-500/30 transition-all duration-300"
+                            placeholder="Confirm your password"
+                          />
+                        </FormControl>
+                        <FormMessage className="text-red-400 text-sm mt-1" />
+                      </div>
+                    </FormItem>
+                  )}
                 />
-              </div>
-            </motion.div>
+              </motion.div>
 
-            <motion.button
-              type="submit"
-              disabled={isLoading}
-              className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white py-3 rounded-lg font-semibold flex items-center justify-center gap-2 transition-all duration-300 relative overflow-hidden group shadow-lg shadow-emerald-900/30"
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.7, duration: 0.4 }}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              {isLoading ? (
-                <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
-              ) : (
-                <>
-                  Sign Up
-                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
-                </>
-              )}
-            </motion.button>
-          </form>
+              <motion.button
+                type="submit"
+                disabled={isLoading}
+                className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white py-3 rounded-lg font-semibold flex items-center justify-center gap-2 transition-all duration-300 relative overflow-hidden group shadow-lg shadow-emerald-900/30"
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.7, duration: 0.4 }}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                {isLoading ? (
+                  <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                ) : (
+                  <>
+                    Sign Up
+                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
+                  </>
+                )}
+              </motion.button>
+            </form>
+          </Form>
 
           <motion.div 
             className="mt-6"
@@ -307,12 +344,12 @@ const SignUp = () => {
           transition={{ delay: 0.9, duration: 0.6 }}
         >
           Already have an account?{' '}
-          <button 
-            onClick={() => navigate('/login')}
+          <Link 
+            to="/login"
             className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-500 hover:from-emerald-500 hover:to-teal-600 font-medium transition-all duration-300 hover:scale-105 inline-block"
           >
             Sign in
-          </button>
+          </Link>
         </motion.p>
       </motion.div>
     </div>
