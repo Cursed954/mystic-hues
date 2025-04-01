@@ -156,45 +156,6 @@ const Cuisine: React.FC = () => {
           </div>
         </ScrollReveal>
 
-        {/* Collapsible Filter Section */}
-        <ScrollReveal delay={1}>
-          <div className="mb-10">
-            <Collapsible 
-              open={isFiltersOpen} 
-              onOpenChange={setIsFiltersOpen}
-              className="w-full bg-background/80 dark:bg-background/50 rounded-lg shadow-sm overflow-hidden border border-border dark:border-white/20"
-            >
-              <CollapsibleTrigger className="flex items-center justify-between w-full p-4 text-left">
-                <div className="flex items-center gap-2">
-                  <Filter className="h-4 w-4 text-spice-500" />
-                  <span className="font-medium">Filter by Region</span>
-                </div>
-                {isFiltersOpen ? (
-                  <ChevronUp className="h-4 w-4 text-muted-foreground" />
-                ) : (
-                  <ChevronDown className="h-4 w-4 text-muted-foreground" />
-                )}
-              </CollapsibleTrigger>
-              <CollapsibleContent className="p-4 pt-0 border-t border-border dark:border-white/20">
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-2 pt-4">
-                  {regions.map(region => (
-                    <button
-                      key={region.id}
-                      className={`p-2 rounded-md text-sm font-medium transition-colors ${
-                        activeRegionFilter === region.id 
-                          ? 'bg-spice-500 text-white' 
-                          : 'bg-secondary/50 hover:bg-secondary'
-                      }`}
-                      onClick={() => setActiveRegionFilter(region.id)}
-                    >
-                      {region.name}
-                    </button>
-                  ))}
-                </div>
-              </CollapsibleContent>
-            </Collapsible>
-          </div>
-        </ScrollReveal>
 
         {/* Cuisine Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

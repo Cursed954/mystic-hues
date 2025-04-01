@@ -1,5 +1,312 @@
 export const stateData = [
   {
+    id: 'andhra-pradesh',
+    name: 'Andhra Pradesh',
+    capital: 'Amaravati',
+    population: '49 million',
+    language: 'Telugu',
+    region: 'Southern India',
+    established: '1 November 1956',
+    artForms: 'Kuchipudi Dance, Nakshi Kantha Embroidery, Kalamkari Paintings',
+    cuisineType: 'Spicy, Rice-based, and Vegetarian',
+    description:
+      'Andhra Pradesh, located in southern India, is known for its rich cultural heritage, spicy cuisine, and scenic landscapes. The state offers a mix of urban life and rural charm.',
+    bannerImage:
+      'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d',
+    famousFor: [
+      'Tirupati Temple',
+      'Kuchipudi Dance',
+      'Nagarjuna Sagar Dam',
+      'Kalamkari Art',
+      'Spicy Cuisine'
+    ],
+    culture: {
+      description:
+        'Andhra Pradesh\'s culture is deeply rooted in its traditions and festivals. The state is known for its classical arts, music, and intricate handicrafts.',
+      traditions: [
+        'Kuchipudi Dance - A classical dance form originating from the state',
+        'Kalamkari Paintings - Hand-painted fabrics depicting mythological themes',
+        'Bonalu - A festival honoring the goddess Mahakali',
+        'Sankranti - A harvest festival celebrated with kite flying',
+        'Nakshi Kantha Embroidery - Intricate stitching on textiles'
+      ],
+      images: [
+        'https://i.pinimg.com/736x/7a/1b/2b/7a1b2b4f5f6f6f6f6f6f6f6f6f6f6f6.jpg',
+        'https://i.pinimg.com/736x/7a/1b/2b/7a1b2b4f5f6f6f6f6f6f6f6f6f6f6f6.jpg'
+      ]
+    },
+    cuisine: {
+      description:
+        'Andhra cuisine is known for its spiciness and use of tamarind and red chilies. The food is flavorful and often includes rice-based dishes.',
+      dishes: [
+        {
+          name: 'Pesarattu',
+          description: 'Green gram dosa served with ginger chutney',
+          image:
+            'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+        },
+        {
+          name: 'Gongura Pachadi',
+          description: 'A tangy chutney made with sorrel leaves',
+          image:
+            'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+        },
+        {
+          name: 'Hyderabadi Biryani',
+          description: 'Aromatic rice dish cooked with meat or vegetables',
+          image:
+            'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+        }
+      ]
+    },
+    festivals: {
+      description:
+        'Andhra Pradesh\'s festivals celebrate the state\'s agricultural cycles, cultural diversity, and spiritual heritage.',
+      list: [
+        {
+          name: 'Sankranti',
+          timing: 'January',
+          description: 'A harvest festival celebrated with bonfires and kites',
+          image:
+            'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+        },
+        {
+          name: 'Bonalu',
+          timing: 'July/August',
+          description: 'A festival honoring the goddess Mahakali',
+          image:
+            'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+        }
+      ]
+    },
+    heritage: {
+      description:
+        'Andhra Pradesh\'s heritage sites include ancient temples, forts, and natural wonders that reflect its cultural and historical significance.',
+      sites: [
+        {
+          name: 'Tirumala Venkateswara Temple',
+          location: 'Tirupati',
+          description: 'One of India\'s most visited pilgrimage sites',
+          image:
+            'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+        },
+        {
+          name: 'Nagarjuna Sagar Dam',
+          location: 'Nagarjuna Sagar',
+          description: 'One of the world\'s largest masonry dams',
+          image:
+            'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+        }
+      ]
+    }
+  },
+  {
+    id: 'arunachal-pradesh',
+    name: 'Arunachal Pradesh',
+    capital: 'Itanagar',
+    population: '1.4 million',
+    language: 'English, Tani, Monpa',
+    region: 'Northeast India',
+    established: '20 February 1987',
+    artForms: 'Aji Lhamu Dance, Thangka Paintings, Bamboo Craft',
+    cuisineType: 'Simple, Fermented, and Smoky',
+    description:
+      'Arunachal Pradesh, located in northeastern India, is known for its stunning landscapes, tribal culture, and spiritual sites. The state offers a unique blend of traditions and natural wonders.',
+    bannerImage:
+      'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d',
+    famousFor: [
+      'Tawang Monastery',
+      'Ziro Valley',
+      'Namdhapha National Park',
+      'Tribal Culture',
+      'Adventure Sports'
+    ],
+    culture: {
+      description:
+        'Arunachal Pradesh\'s culture is deeply influenced by its tribal communities. The state is known for its music, dance, and traditional crafts.',
+      traditions: [
+        'Aji Lhamu Dance - A traditional dance performed during festivals',
+        'Thangka Paintings - Scroll paintings depicting Buddhist themes',
+        'Bamboo Craft - Products made from bamboo, including baskets',
+        'Losar - Tibetan New Year celebrated with prayer ceremonies',
+        'Weaving - Intricate designs woven into traditional fabrics'
+      ],
+      images: [
+        'https://i.pinimg.com/736x/7a/1b/2b/7a1b2b4f5f6f6f6f6f6f6f6f6f6f6f6.jpg',
+        'https://i.pinimg.com/736x/7a/1b/2b/7a1b2b4f5f6f6f6f6f6f6f6f6f6f6f6.jpg'
+      ]
+    },
+    cuisine: {
+      description:
+        'Arunachal Pradesh cuisine is simple yet flavorful, with fermented foods playing a significant role. The food is often spicy and uses locally sourced ingredients.',
+      dishes: [
+        {
+          name: 'Pika Pila',
+          description: 'A spicy chutney made with fermented bamboo shoots',
+          image:
+            'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+        },
+        {
+          name: 'Apong',
+          description: 'Traditional rice beer brewed by tribal communities',
+          image:
+            'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+        },
+        {
+          name: 'Thukpa',
+          description: 'A noodle soup with vegetables or meat',
+          image:
+            'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+        }
+      ]
+    },
+    festivals: {
+      description:
+        'Arunachal Pradesh\'s festivals celebrate the state\'s cultural diversity and spiritual heritage.',
+      list: [
+        {
+          name: 'Losar',
+          timing: 'February/March',
+          description: 'Tibetan New Year celebrated with prayer ceremonies',
+          image:
+            'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+        },
+        {
+          name: 'Solung',
+          timing: 'September',
+          description: 'A festival celebrating the harvest season',
+          image:
+            'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+        }
+      ]
+    },
+    heritage: {
+      description:
+        'Arunachal Pradesh\'s heritage sites include ancient monasteries, wildlife sanctuaries, and scenic valleys that reflect its cultural and ecological richness.',
+      sites: [
+        {
+          name: 'Tawang Monastery',
+          location: 'Tawang',
+          description: 'A prominent Tibetan Buddhist monastery',
+          image:
+            'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+        },
+        {
+          name: 'Namdhapha National Park',
+          location: 'Changlang',
+          description: 'A biodiversity hotspot with rare species',
+          image:
+            'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+        }
+      ]
+    }
+  },
+  {
+    id: 'assam',
+    name: 'Assam',
+    capital: 'Dispur',
+    population: '31 million',
+    language: 'Assamese',
+    region: 'Northeast India',
+    established: '26 January 1950',
+    artForms: 'Bihu Dance, Bamboo Craft, Xophura Weaving',
+    cuisineType: 'Rice-based, Fish and Meat',
+    description: 'Assam, located in northeastern India, is known for its lush green landscapes, tea gardens, and rich biodiversity. The state is a gateway to the Seven Sisters of Northeast India.',
+    bannerImage: 'https://i.pinimg.com/736x/f3/44/87/f3448758f72bafc39c3e6d8ab05679b9.jpg',
+    famousFor: ['Kaziranga National Park', 'Brahmaputra River', 'Assam Tea', 'One-Horned Rhinoceros', 'Bihu Dance'],
+    culture: {
+      description: 'Assam\'s culture is a blend of indigenous traditions and external influences. The state is known for its music, dance, and vibrant festivals.',
+      traditions: [
+        'Bihu Dance - A traditional dance performed during the Bihu festival',
+        'Xophura weaving - Traditional silk weaving with intricate patterns',
+        'Bamboo craft - Products made from bamboo, including furniture and utensils',
+        'Me-Dam-Me-Phi - Ancestor worship festival among the Ahom community',
+        'Jhumur dance - A folk dance performed by tea tribes'
+      ],
+      images: [
+        'https://i.pinimg.com/736x/e1/a1/82/e1a1820abbde3a63f6e871dccc04662b.jpg',
+        'https://i.pinimg.com/736x/2b/35/7a/2b357ada33ed9ffe76574874fa24c71b.jpg'
+      ]
+    },
+    cuisine: {
+      description: 'Assamese cuisine is simple and healthy, with rice, fish, and meat being staples. The food is lightly spiced and often uses local herbs and ingredients.',
+      dishes: [
+        {
+          name: 'Masor Tenga',
+          description: 'A tangy fish curry made with tomatoes and lemon',
+          image: 'https://images.unsplash.com/photo-1555126634-323283e090fa'
+        },
+        {
+          name: 'Khar',
+          description: 'A traditional dish made with raw papaya and filtered ashes',
+          image: 'https://images.unsplash.com/photo-1559925393-8be0ec4767c8'
+        },
+        {
+          name: 'Pitha',
+          description: 'Rice cakes stuffed with sweet fillings like jaggery and coconut',
+          image: 'https://images.unsplash.com/photo-1559847844-5315695dadae'
+        },
+        {
+          name: 'Duck Meat Curry',
+          description: 'A flavorful curry made with duck and local herbs',
+          image: 'https://images.unsplash.com/photo-1574653853027-5382a3d23a15'
+        },
+        {
+          name: 'Poitabhat',
+          description: 'Overnight soaked rice served with curries and chutneys',
+          image: 'https://images.unsplash.com/photo-1555126634-323283e090fa'
+        },
+        {
+          name: 'Aloo Pitika',
+          description: 'Mashed potatoes mixed with mustard oil and onions',
+          image: 'https://images.unsplash.com/photo-1559925393-8be0ec4767c8'
+        },
+        {
+          name: 'Larusi Pitha',
+          description: 'Sweet rice cakes made with black sesame seeds and jaggery',
+          image: 'https://images.unsplash.com/photo-1559847844-5315695dadae'
+        }
+      ]
+    },
+    festivals: {
+      description: 'Assam\'s festivals celebrate the state\'s agricultural cycles, cultural diversity, and spiritual heritage.',
+      list: [
+        {
+          name: 'Bihu',
+          timing: 'April, January, October',
+          description: 'Three festivals marking different phases of the agricultural cycle'
+        },
+        {
+          name: 'Ambubachi Mela',
+          timing: 'June',
+          description: 'A fair at Kamakhya Temple celebrating the goddess\' menstruation'
+        },
+        {
+          name: 'Jonbeel Mela',
+          timing: 'January',
+          description: 'A traditional fair with barter trade and cultural programs'
+        }
+      ]
+    },
+    heritage: {
+      description: 'Assam\'s heritage sites include ancient temples, wildlife sanctuaries, and archaeological ruins that reflect its natural and cultural wealth.',
+      sites: [
+        {
+          name: 'Kamakhya Temple',
+          location: 'Guwahati',
+          description: 'A major Hindu temple dedicated to the goddess Kamakhya',
+          image: 'https://images.unsplash.com/photo-1583405200381-12eafa9c1ebd'
+        },
+        {
+          name: 'Sivasagar Tanks',
+          location: 'Sivasagar',
+          description: 'Ancient tanks and monuments built during the Ahom dynasty',
+          image: 'https://images.unsplash.com/photo-1583074800364-0ea3c5b8c1e4'
+        }
+      ]
+    }
+  },
+  {
     id: 'rajasthan',
     name: 'Rajasthan',
     capital: 'Jaipur',
@@ -1024,111 +1331,6 @@ export const stateData = [
       ]
     }
   },
-  {
-    id: 'assam',
-    name: 'Assam',
-    capital: 'Dispur',
-    population: '31 million',
-    language: 'Assamese',
-    region: 'Northeast India',
-    established: '26 January 1950',
-    artForms: 'Bihu Dance, Bamboo Craft, Xophura Weaving',
-    cuisineType: 'Rice-based, Fish and Meat',
-    description: 'Assam, located in northeastern India, is known for its lush green landscapes, tea gardens, and rich biodiversity. The state is a gateway to the Seven Sisters of Northeast India.',
-    bannerImage: 'https://i.pinimg.com/736x/f3/44/87/f3448758f72bafc39c3e6d8ab05679b9.jpg',
-    famousFor: ['Kaziranga National Park', 'Brahmaputra River', 'Assam Tea', 'One-Horned Rhinoceros', 'Bihu Dance'],
-    culture: {
-      description: 'Assam\'s culture is a blend of indigenous traditions and external influences. The state is known for its music, dance, and vibrant festivals.',
-      traditions: [
-        'Bihu Dance - A traditional dance performed during the Bihu festival',
-        'Xophura weaving - Traditional silk weaving with intricate patterns',
-        'Bamboo craft - Products made from bamboo, including furniture and utensils',
-        'Me-Dam-Me-Phi - Ancestor worship festival among the Ahom community',
-        'Jhumur dance - A folk dance performed by tea tribes'
-      ],
-      images: [
-        'https://i.pinimg.com/736x/e1/a1/82/e1a1820abbde3a63f6e871dccc04662b.jpg',
-        'https://i.pinimg.com/736x/2b/35/7a/2b357ada33ed9ffe76574874fa24c71b.jpg'
-      ]
-    },
-    cuisine: {
-      description: 'Assamese cuisine is simple and healthy, with rice, fish, and meat being staples. The food is lightly spiced and often uses local herbs and ingredients.',
-      dishes: [
-        {
-          name: 'Masor Tenga',
-          description: 'A tangy fish curry made with tomatoes and lemon',
-          image: 'https://images.unsplash.com/photo-1555126634-323283e090fa'
-        },
-        {
-          name: 'Khar',
-          description: 'A traditional dish made with raw papaya and filtered ashes',
-          image: 'https://images.unsplash.com/photo-1559925393-8be0ec4767c8'
-        },
-        {
-          name: 'Pitha',
-          description: 'Rice cakes stuffed with sweet fillings like jaggery and coconut',
-          image: 'https://images.unsplash.com/photo-1559847844-5315695dadae'
-        },
-        {
-          name: 'Duck Meat Curry',
-          description: 'A flavorful curry made with duck and local herbs',
-          image: 'https://images.unsplash.com/photo-1574653853027-5382a3d23a15'
-        },
-        {
-          name: 'Poitabhat',
-          description: 'Overnight soaked rice served with curries and chutneys',
-          image: 'https://images.unsplash.com/photo-1555126634-323283e090fa'
-        },
-        {
-          name: 'Aloo Pitika',
-          description: 'Mashed potatoes mixed with mustard oil and onions',
-          image: 'https://images.unsplash.com/photo-1559925393-8be0ec4767c8'
-        },
-        {
-          name: 'Larusi Pitha',
-          description: 'Sweet rice cakes made with black sesame seeds and jaggery',
-          image: 'https://images.unsplash.com/photo-1559847844-5315695dadae'
-        }
-      ]
-    },
-    festivals: {
-      description: 'Assam\'s festivals celebrate the state\'s agricultural cycles, cultural diversity, and spiritual heritage.',
-      list: [
-        {
-          name: 'Bihu',
-          timing: 'April, January, October',
-          description: 'Three festivals marking different phases of the agricultural cycle'
-        },
-        {
-          name: 'Ambubachi Mela',
-          timing: 'June',
-          description: 'A fair at Kamakhya Temple celebrating the goddess\' menstruation'
-        },
-        {
-          name: 'Jonbeel Mela',
-          timing: 'January',
-          description: 'A traditional fair with barter trade and cultural programs'
-        }
-      ]
-    },
-    heritage: {
-      description: 'Assam\'s heritage sites include ancient temples, wildlife sanctuaries, and archaeological ruins that reflect its natural and cultural wealth.',
-      sites: [
-        {
-          name: 'Kamakhya Temple',
-          location: 'Guwahati',
-          description: 'A major Hindu temple dedicated to the goddess Kamakhya',
-          image: 'https://images.unsplash.com/photo-1583405200381-12eafa9c1ebd'
-        },
-        {
-          name: 'Sivasagar Tanks',
-          location: 'Sivasagar',
-          description: 'Ancient tanks and monuments built during the Ahom dynasty',
-          image: 'https://images.unsplash.com/photo-1583074800364-0ea3c5b8c1e4'
-        }
-      ]
-    }
-  },
    {
       id: 'punjab',
       name: 'Punjab',
@@ -1728,6 +1930,1422 @@ export const stateData = [
           }
         ]
       }
-    }
+    },
+    {
+        id: 'bihar',
+        name: 'Bihar',
+        capital: 'Patna',
+        population: '104 million',
+        language: 'Hindi, Bhojpuri, Maithili',
+        region: 'Eastern India',
+        established: '26 January 1950',
+        artForms: 'Jat-Jatin Dance, Madhubani Paintings, Sujni Embroidery',
+        cuisineType: 'Simple, Spicy, and Vegetarian',
+        description:
+          'Bihar, located in eastern India, is known for its ancient history, religious significance, and vibrant culture. The state is home to important Buddhist sites and offers a mix of spiritual heritage and rural charm.',
+        bannerImage:
+          'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d',
+        famousFor: [
+          'Bodh Gaya',
+          'Nalanda University',
+          'Madhubani Paintings',
+          'Sujni Embroidery',
+          'Bihari Cuisine'
+        ],
+        culture: {
+          description:
+            'Bihar\'s culture is deeply rooted in its history and spirituality. The state is known for its classical arts, literature, and traditional crafts.',
+          traditions: [
+            'Madhubani Paintings - Traditional art depicting mythological themes',
+            'Sujni Embroidery - Hand-stitched quilts with intricate designs',
+            'Chhath Puja - A festival dedicated to the Sun God',
+            'Jat-Jatin Dance - A folk dance performed by women',
+            'Buddhist influence - Ancient monasteries and stupas'
+          ],
+          images: [
+            'https://i.pinimg.com/736x/7a/1b/2b/7a1b2b4f5f6f6f6f6f6f6f6f6f6f6f6.jpg',
+            'https://i.pinimg.com/736x/7a/1b/2b/7a1b2b4f5f6f6f6f6f6f6f6f6f6f6f6.jpg'
+          ]
+        },
+        cuisine: {
+          description:
+            'Bihari cuisine is simple yet flavorful, with rice, lentils, and vegetables forming the core of the diet. The food is mildly spiced and often features local ingredients.',
+          dishes: [
+            {
+              name: 'Litti Chokha',
+              description: 'Baked wheat balls served with roasted vegetable mash',
+              image:
+                'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+            },
+            {
+              name: 'Thekua',
+              description: 'Sweet snacks made from wheat flour and jaggery',
+              image:
+                'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+            },
+            {
+              name: 'Khaja',
+              description: 'Layered sweet pastry soaked in sugar syrup',
+              image:
+                'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+            }
+          ]
+        },
+        festivals: {
+          description:
+            'Bihar\'s festivals are deeply spiritual and community-oriented, reflecting the state\'s devotion to deities and cultural heritage.',
+          list: [
+            {
+              name: 'Chhath Puja',
+              timing: 'October/November',
+              description: 'A festival dedicated to the Sun God celebrated with rituals',
+              image:
+                'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+            },
+            {
+              name: 'Sama-Chakeva',
+              timing: 'Winter',
+              description: 'A festival celebrating the bond between brothers and sisters',
+              image:
+                'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+            }
+          ]
+        },
+        heritage: {
+          description:
+            'Bihar\'s heritage sites include ancient Buddhist monasteries, temples, and archaeological ruins that reflect its spiritual and historical significance.',
+          sites: [
+            {
+              name: 'Mahabodhi Temple',
+              location: 'Bodh Gaya',
+              description: 'A UNESCO World Heritage site marking Buddha\'s enlightenment',
+              image:
+                'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+            },
+            {
+              name: 'Nalanda University',
+              location: 'Nalanda',
+              description: 'An ancient center of learning and Buddhist scholarship',
+              image:
+                'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+            }
+          ]
+        }
+      },
+      {
+        id: 'madhya-pradesh',
+        name: 'Madhya Pradesh',
+        capital: 'Bhopal',
+        population: '72 million',
+        language: 'Hindi',
+        region: 'Central India',
+        established: '1 November 1956',
+        artForms: 'Gond Art, Kathak Dance, Mandu Festival',
+        cuisineType: 'Spicy, Rich, and Flavorful',
+        description:
+          'Madhya Pradesh, located in central India, is known for its rich cultural heritage, wildlife sanctuaries, and historical monuments. The state offers diverse landscapes and architectural marvels.',
+        bannerImage:
+          'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d',
+        famousFor: [
+          'Khajuraho Temples',
+          'Bandhavgarh National Park',
+          'Pachmarhi Hill Station',
+          'Kanha Tiger Reserve',
+          'Gond Tribal Art'
+        ],
+        culture: {
+          description:
+            'Madhya Pradesh\'s culture is a blend of tribal traditions and classical arts. The state is known for its music, dance, and intricate handicrafts.',
+          traditions: [
+            'Gond Art - Tribal paintings using natural colors',
+            'Kathak Dance - A classical dance form with intricate footwork',
+            'Mandu Festival - Celebrating the history and culture of Mandu',
+            'Tribal jewelry - Made from beads, metals, and natural materials',
+            'Folk dances - Performed during festivals and celebrations'
+          ],
+          images: [
+            'https://i.pinimg.com/736x/7a/1b/2b/7a1b2b4f5f6f6f6f6f6f6f6f6f6f6f6.jpg',
+            'https://i.pinimg.com/736x/7a/1b/2b/7a1b2b4f5f6f6f6f6f6f6f6f6f6f6f6.jpg'
+          ]
+        },
+        cuisine: {
+          description:
+            'Madhya Pradesh\'s cuisine is rich and flavorful, with a variety of vegetarian and non-vegetarian dishes. The food is spicy and uses local herbs and ingredients.',
+          dishes: [
+            {
+              name: 'Poha',
+              description: 'Flattened rice dish served with sev and chutney',
+              image:
+                'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+            },
+            {
+              name: 'Bhutte ka Kees',
+              description: 'Grated corn roasted with spices',
+              image:
+                'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+            },
+            {
+              name: 'Dal Bafla',
+              description: 'Wheat cakes served with lentil curry',
+              image:
+                'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+            }
+          ]
+        },
+        festivals: {
+          description:
+            'Madhya Pradesh\'s festivals celebrate the state\'s cultural diversity and spiritual heritage.',
+          list: [
+            {
+              name: 'Khajuraho Dance Festival',
+              timing: 'February',
+              description: 'A festival showcasing classical dance forms',
+              image:
+                'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+            },
+            {
+              name: 'Tansen Music Festival',
+              timing: 'November',
+              description: 'A festival honoring the legendary musician Tansen',
+              image:
+                'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+            }
+          ]
+        },
+        heritage: {
+          description:
+            'Madhya Pradesh\'s heritage sites include ancient temples, forts, and wildlife sanctuaries that reflect its natural and cultural wealth.',
+          sites: [
+            {
+              name: 'Khajuraho Temples',
+              location: 'Khajuraho',
+              description: 'UNESCO World Heritage site known for its erotic sculptures',
+              image:
+                'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+            },
+            {
+              name: 'Sanchi Stupa',
+              location: 'Sanchi',
+              description: 'A Buddhist monument housing relics of Buddha',
+              image:
+                'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+            }
+          ]
+        }
+      },
+      {
+        id: 'maharashtra',
+        name: 'Maharashtra',
+        capital: 'Mumbai',
+        population: '112 million',
+        language: 'Marathi',
+        region: 'Western India',
+        established: '1 May 1960',
+        artForms: 'Lavani Dance, Warli Paintings, Ganesh Chaturthi',
+        cuisineType: 'Spicy, Rice-based, and Vegetarian',
+        description:
+          'Maharashtra, located in western India, is known for its bustling cities, historic forts, and vibrant culture. The state offers a mix of urban life and rural charm.',
+        bannerImage:
+          'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d',
+        famousFor: [
+          'Gateway of India',
+          'Ajanta and Ellora Caves',
+          'Ganesh Chaturthi',
+          'Warli Paintings',
+          'Vada Pav'
+        ],
+        culture: {
+          description:
+            'Maharashtra\'s culture is a blend of urban modernity and rural traditions. The state is known for its music, dance, and festivals.',
+          traditions: [
+            'Lavani Dance - A traditional dance form with rhythmic movements',
+            'Warli Paintings - Tribal art depicting daily life',
+            'Ganesh Chaturthi - A festival celebrating Lord Ganesha',
+            'Koli Dance - A folk dance performed by the fishing community',
+            'Handicrafts - Intricate designs on textiles and pottery'
+          ],
+          images: [
+            'https://i.pinimg.com/736x/7a/1b/2b/7a1b2b4f5f6f6f6f6f6f6f6f6f6f6f6.jpg',
+            'https://i.pinimg.com/736x/7a/1b/2b/7a1b2b4f5f6f6f6f6f6f6f6f6f6f6f6.jpg'
+          ]
+        },
+        cuisine: {
+          description:
+            'Maharashtrian cuisine is diverse, with regional variations across the state. Rice, lentils, and spices are staples, and both vegetarian and non-vegetarian dishes are popular.',
+          dishes: [
+            {
+              name: 'Vada Pav',
+              description: 'A spicy potato fritter sandwich',
+              image:
+                'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+            },
+            {
+              name: 'Misal Pav',
+              description: 'A spicy curry made with sprouted lentils',
+              image:
+                'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+            },
+            {
+              name: 'Puran Poli',
+              description: 'Sweet flatbread stuffed with lentils and jaggery',
+              image:
+                'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+            }
+          ]
+        },
+        festivals: {
+          description:
+            'Maharashtra\'s festivals are vibrant and community-oriented, reflecting the state\'s cultural and spiritual ethos.',
+          list: [
+            {
+              name: 'Ganesh Chaturthi',
+              timing: 'August/September',
+              description: 'A festival celebrating Lord Ganesha with processions',
+              image:
+                'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+            },
+            {
+              name: 'Gudi Padwa',
+              timing: 'March/April',
+              description: 'Maharashtrian New Year celebrated with traditional foods',
+              image:
+                'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+            }
+          ]
+        },
+        heritage: {
+          description:
+            'Maharashtra\'s heritage sites include ancient caves, forts, and colonial architecture that highlight its historical and cultural significance.',
+          sites: [
+            {
+              name: 'Ajanta and Ellora Caves',
+              location: 'Aurangabad',
+              description: 'UNESCO World Heritage site with rock-cut temples',
+              image:
+                'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+            },
+            {
+              name: 'Gateway of India',
+              location: 'Mumbai',
+              description: 'A historic monument commemorating British rule',
+              image:
+                'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+            }
+          ]
+        }
+      },
+      {
+        id: 'nagaland',
+        name: 'Nagaland',
+        capital: 'Kohima',
+        population: '2 million',
+        language: 'English, Naga languages',
+        region: 'Northeast India',
+        established: '1 December 1963',
+        artForms: 'Naga Dance, Bamboo Craft, Tattooing',
+        cuisineType: 'Spicy, Fermented, and Smoky',
+        description:
+          'Nagaland, located in northeastern India, is known for its tribal culture, scenic beauty, and vibrant festivals. The state offers a unique glimpse into the traditions of its Naga tribes.',
+        bannerImage:
+          'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d',
+        famousFor: [
+          'Hornbill Festival',
+          'Naga Warriors',
+          'Bamboo Crafts',
+          'Smoky Pork Dishes',
+          'Tattoo Traditions'
+        ],
+        culture: {
+          description:
+            'Nagaland\'s culture is deeply influenced by its Naga tribes. The state is known for its folk music, dance, and traditional crafts.',
+          traditions: [
+            'Naga Dance - A traditional dance performed during festivals',
+            'Bamboo Craft - Products made from bamboo, including utensils',
+            'Tattooing - Symbolic tattoos representing tribal identity',
+            'Festivals - Celebrations like Hornbill Festival showcase Naga culture',
+            'Weaving - Intricate designs woven into traditional shawls'
+          ],
+          images: [
+            'https://i.pinimg.com/736x/7a/1b/2b/7a1b2b4f5f6f6f6f6f6f6f6f6f6f6f6.jpg',
+            'https://i.pinimg.com/736x/7a/1b/2b/7a1b2b4f5f6f6f6f6f6f6f6f6f6f6f6.jpg'
+          ]
+        },
+        cuisine: {
+          description:
+            'Naga cuisine is simple yet flavorful, with fermented foods playing a significant role. The food is often spicy and uses locally sourced ingredients.',
+          dishes: [
+            {
+              name: 'Smoked Pork with Akhuni',
+              description: 'Pork cooked with fermented soybean paste',
+              image:
+                'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+            },
+            {
+              name: 'Galho',
+              description: 'A stew made with rice, meat, and vegetables',
+              image:
+                'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+            },
+            {
+              name: 'Axone',
+              description: 'Fermented soybean paste used as a condiment',
+              image:
+                'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+            }
+          ]
+        },
+        festivals: {
+          description:
+            'Nagaland\'s festivals celebrate the state\'s cultural diversity and tribal heritage.',
+          list: [
+            {
+              name: 'Hornbill Festival',
+              timing: 'December',
+              description: 'A festival showcasing Naga culture through music and dance',
+              image:
+                'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+            },
+            {
+              name: 'Moatsu Festival',
+              timing: 'May',
+              description: 'A festival celebrating the harvest season',
+              image:
+                'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+            }
+          ]
+        },
+        heritage: {
+          description:
+            'Nagaland\'s heritage sites include ancient villages, tribal settlements, and natural wonders that reflect its cultural and ecological richness.',
+          sites: [
+            {
+              name: 'Kisama Heritage Village',
+              location: 'Kohima',
+              description: 'A village showcasing traditional Naga houses',
+              image:
+                'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+            },
+            {
+              name: 'Dzukou Valley',
+              location: 'Kohima',
+              description: 'A scenic valley known for its trekking trails',
+              image:
+                'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+            }
+          ]
+        }
+      },
+      {
+        id: 'sikkim',
+        name: 'Sikkim',
+        capital: 'Gangtok',
+        population: '600,000',
+        language: 'Nepali, Bhutia, Lepcha',
+        region: 'Northeast India',
+        established: '16 May 1975',
+        artForms: 'Mask Dance, Thangka Paintings, Tibetan Carpets',
+        cuisineType: 'Spicy, Fermented, and Nutritious',
+        description:
+          'Sikkim, located in northeastern India, is known for its breathtaking mountain landscapes, Buddhist monasteries, and vibrant culture. The state offers a perfect blend of natural beauty and spiritual heritage.',
+        bannerImage:
+          'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d',
+        famousFor: [
+          'Mount Kanchenjunga',
+          'Rumtek Monastery',
+          'Thangka Paintings',
+          'Momos',
+          'Rhododendron Forests'
+        ],
+        culture: {
+          description:
+            'Sikkim\'s culture is deeply influenced by Tibetan Buddhism. The state is known for its monasteries, mask dances, and traditional crafts.',
+          traditions: [
+            'Mask Dance - A ritualistic dance performed during festivals',
+            'Thangka Paintings - Scroll paintings depicting Buddhist themes',
+            'Losar - Tibetan New Year celebrated with prayer ceremonies',
+            'Traditional clothing - Woolen garments with vibrant patterns',
+            'Buddhist monasteries - Centers of spiritual learning'
+          ],
+          images: [
+            'https://i.pinimg.com/736x/7a/1b/2b/7a1b2b4f5f6f6f6f6f6f6f6f6f6f6f6.jpg',
+            'https://i.pinimg.com/736x/7a/1b/2b/7a1b2b4f5f6f6f6f6f6f6f6f6f6f6f6.jpg'
+          ]
+        },
+        cuisine: {
+          description:
+            'Sikkimese cuisine is simple yet nutritious, with fermented foods playing a significant role. The food is often spicy and uses locally sourced ingredients.',
+          dishes: [
+            {
+              name: 'Momos',
+              description: 'Steamed dumplings filled with meat or vegetables',
+              image:
+                'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+            },
+            {
+              name: 'Thukpa',
+              description: 'A noodle soup with vegetables or meat',
+              image:
+                'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+            },
+            {
+              name: 'Gundruk',
+              description: 'Fermented leafy greens used as a side dish',
+              image:
+                'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+            }
+          ]
+        },
+        festivals: {
+          description:
+            'Sikkim\'s festivals are deeply spiritual and community-oriented, reflecting the state\'s devotion to Buddhism and cultural heritage.',
+          list: [
+            {
+              name: 'Saga Dawa',
+              timing: 'May/June',
+              description: 'A festival celebrating Buddha\'s birth, enlightenment, and death',
+              image:
+                'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+            },
+            {
+              name: 'Losar',
+              timing: 'February/March',
+              description: 'Tibetan New Year celebrated with prayer ceremonies',
+              image:
+                'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+            }
+          ]
+        },
+        heritage: {
+          description:
+            'Sikkim\'s heritage sites include ancient monasteries, sacred lakes, and natural wonders that reflect its spiritual and ecological richness.',
+          sites: [
+            {
+              name: 'Rumtek Monastery',
+              location: 'Gangtok',
+              description: 'A prominent Tibetan Buddhist monastery',
+              image:
+                'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+            },
+            {
+              name: 'Tsomgo Lake',
+              location: 'East Sikkim',
+              description: 'A glacial lake surrounded by mountains',
+              image:
+                'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+            }
+          ]
+        }
+      },
+      {
+        id: 'tripura',
+        name: 'Tripura',
+        capital: 'Agartala',
+        population: '4 million',
+        language: 'Bengali, Kokborok',
+        region: 'Northeast India',
+        established: '21 January 1972',
+        artForms: 'Hojagiri Dance, Bamboo Craft, Paitkar Paintings',
+        cuisineType: 'Spicy, Rice-based, and Vegetarian',
+        description:
+          'Tripura, located in northeastern India, is known for its rich cultural heritage, lush green landscapes, and vibrant festivals. The state offers a mix of tribal traditions and modern influences.',
+        bannerImage:
+          'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d',
+        famousFor: [
+          'Ujjayanta Palace',
+          'Neermahal Palace',
+          'Hojagiri Dance',
+          'Bamboo Crafts',
+          'Wildlife Sanctuaries'
+        ],
+        culture: {
+          description:
+            'Tripura\'s culture is a blend of tribal traditions and Bengali influences. The state is known for its folk music, dance, and traditional crafts.',
+          traditions: [
+            'Hojagiri Dance - A traditional dance performed by women',
+            'Bamboo Craft - Products made from bamboo, including furniture',
+            'Paitkar Paintings - Traditional scroll paintings depicting myths',
+            'Festivals - Celebrations like Kharchi Puja honor tribal deities',
+            'Weaving - Intricate designs woven into traditional fabrics'
+          ],
+          images: [
+            'https://i.pinimg.com/736x/7a/1b/2b/7a1b2b4f5f6f6f6f6f6f6f6f6f6f6f6.jpg',
+            'https://i.pinimg.com/736x/7a/1b/2b/7a1b2b4f5f6f6f6f6f6f6f6f6f6f6f6.jpg'
+          ]
+        },
+        cuisine: {
+          description:
+            'Tripuri cuisine is simple yet flavorful, with rice, fish, and vegetables forming the core of the diet. The food is mildly spiced and often features local ingredients.',
+          dishes: [
+            {
+              name: 'Berma',
+              description: 'Fermented fish used as a condiment',
+              image:
+                'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+            },
+            {
+              name: 'Wahan Mosdeng',
+              description: 'A spicy chutney made with dried fish and herbs',
+              image:
+                'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+            },
+            {
+              name: 'Chakhwi',
+              description: 'A sour fish curry cooked with local herbs',
+              image:
+                'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+            }
+          ]
+        },
+        festivals: {
+          description:
+            'Tripura\'s festivals celebrate the state\'s cultural diversity and tribal heritage.',
+          list: [
+            {
+              name: 'Kharchi Puja',
+              timing: 'July',
+              description: 'A festival honoring the tribal goddesses',
+              image:
+                'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+            },
+            {
+              name: 'Garia Puja',
+              timing: 'April',
+              description: 'A festival celebrating the tribal god Garia',
+              image:
+                'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+            }
+          ]
+        },
+        heritage: {
+          description:
+            'Tripura\'s heritage sites include ancient palaces, temples, and wildlife sanctuaries that reflect its cultural and ecological richness.',
+          sites: [
+            {
+              name: 'Ujjayanta Palace',
+              location: 'Agartala',
+              description: 'A historic palace now housing a museum',
+              image:
+                'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+            },
+            {
+              name: 'Neermahal Palace',
+              location: 'Melaghar',
+              description: 'A water palace built in the middle of a lake',
+              image:
+                'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+            }
+          ]
+        }
+      },
+      {
+        id: 'meghalaya',
+        name: 'Meghalaya',
+        capital: 'Shillong',
+        population: '3 million',
+        language: 'Khasi, Garo, English',
+        region: 'Northeast India',
+        established: '21 January 1972',
+        artForms: 'Nongkrem Dance, Wood Carving, Jaintia Architecture',
+        cuisineType: 'Simple, Spicy, and Fermented',
+        description:
+          'Meghalaya, located in northeastern India, is known for its stunning waterfalls, living root bridges, and vibrant tribal culture. The state offers a unique blend of natural beauty and cultural heritage.',
+        bannerImage:
+          'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d',
+        famousFor: [
+          'Living Root Bridges',
+          'Cherrapunji Rainfall',
+          'Nongkrem Dance',
+          'Jaintia Hills',
+          'Khasi Tribes'
+        ],
+        culture: {
+          description:
+            'Meghalaya\'s culture is deeply influenced by its Khasi, Jaintia, and Garo tribes. The state is known for its music, dance, and traditional crafts.',
+          traditions: [
+            'Nongkrem Dance - A traditional dance performed during festivals',
+            'Wood Carving - Intricate designs carved into wood',
+            'Jaintia Architecture - Ancient temples and structures',
+            'Festivals - Celebrations like Wangala honor tribal traditions',
+            'Weaving - Intricate designs woven into traditional shawls'
+          ],
+          images: [
+            'https://i.pinimg.com/736x/7a/1b/2b/7a1b2b4f5f6f6f6f6f6f6f6f6f6f6f6.jpg',
+            'https://i.pinimg.com/736x/7a/1b/2b/7a1b2b4f5f6f6f6f6f6f6f6f6f6f6f6.jpg'
+          ]
+        },
+        cuisine: {
+          description:
+            'Meghalayan cuisine is simple yet flavorful, with fermented foods playing a significant role. The food is often spicy and uses locally sourced ingredients.',
+          dishes: [
+            {
+              name: 'Jadoh',
+              description: 'A rice and meat dish cooked with spices',
+              image:
+                'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+            },
+            {
+              name: 'Dohkhlieh',
+              description: 'A salad made with pork and local herbs',
+              image:
+                'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+            },
+            {
+              name: 'Tungrymbai',
+              description: 'A fermented soybean dish cooked with spices',
+              image:
+                'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+            }
+          ]
+        },
+        festivals: {
+          description:
+            'Meghalaya\'s festivals celebrate the state\'s cultural diversity and tribal heritage.',
+          list: [
+            {
+              name: 'Nongkrem Dance Festival',
+              timing: 'November',
+              description: 'A festival celebrating the harvest season',
+              image:
+                'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+            },
+            {
+              name: 'Wangala Festival',
+              timing: 'October/November',
+              description: 'A festival honoring the sun god Misi Saljong',
+              image:
+                'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+            }
+          ]
+        },
+        heritage: {
+          description:
+            'Meghalaya\'s heritage sites include living root bridges, ancient temples, and natural wonders that reflect its cultural and ecological richness.',
+          sites: [
+            {
+              name: 'Double Decker Living Root Bridge',
+              location: 'Cherrapunji',
+              description: 'A bridge made from living tree roots',
+              image:
+                'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+            },
+            {
+              name: 'Mawlynnong Village',
+              location: 'East Khasi Hills',
+              description: 'Known as the cleanest village in Asia',
+              image:
+                'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+            }
+          ]
+        }
+      },
+      {
+          id: 'telangana',
+          name: 'Telangana',
+          capital: 'Hyderabad',
+          population: '35 million',
+          language: 'Telugu, Urdu',
+          region: 'Southern India',
+          established: '2 June 2014',
+          artForms: 'Dollu Kunitha Dance, Bidriware, Cheriyal Scroll Paintings',
+          cuisineType: 'Spicy, Rice-based, and Non-Vegetarian',
+          description:
+            'Telangana, located in southern India, is known for its rich history, royal legacy, and vibrant culture. The state offers a mix of urban sophistication and rural traditions.',
+          bannerImage:
+            'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d',
+          famousFor: [
+            'Charminar',
+            'Golconda Fort',
+            'Bidriware',
+            'Hyderabadi Cuisine',
+            'Kakatiya Temples'
+          ],
+          culture: {
+            description:
+              'Telangana\'s culture is a blend of Hindu and Islamic influences. The state is known for its music, dance, and traditional crafts.',
+            traditions: [
+              'Dollu Kunitha Dance - A drum dance performed during festivals',
+              'Bidriware - Metal handicrafts with intricate designs',
+              'Cheriyal Scroll Paintings - Traditional paintings depicting folklore',
+              'Bonalu - A festival honoring the goddess Mahakali',
+              'Sankranti - A harvest festival celebrated with kite flying'
+            ],
+            images: [
+              'https://i.pinimg.com/736x/7a/1b/2b/7a1b2b4f5f6f6f6f6f6f6f6f6f6f6f6.jpg',
+              'https://i.pinimg.com/736x/7a/1b/2b/7a1b2b4f5f6f6f6f6f6f6f6f6f6f6f6.jpg'
+            ]
+          },
+          cuisine: {
+            description:
+              'Telangana cuisine is known for its spiciness and use of tamarind and red chilies. The food is flavorful and often includes rice-based dishes.',
+            dishes: [
+              {
+                name: 'Hyderabadi Biryani',
+                description: 'Aromatic rice dish cooked with meat or vegetables',
+                image:
+                  'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+              },
+              {
+                name: 'Haleem',
+                description: 'Slow-cooked stew made with wheat, meat, and spices',
+                image:
+                  'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+              },
+              {
+                name: 'Double Ka Meetha',
+                description: 'Sweet bread pudding soaked in sugar syrup',
+                image:
+                  'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+              }
+            ]
+          },
+          festivals: {
+            description:
+              'Telangana\'s festivals celebrate the state\'s cultural diversity and spiritual heritage.',
+            list: [
+              {
+                name: 'Bonalu',
+                timing: 'July/August',
+                description: 'A festival honoring the goddess Mahakali',
+                image:
+                  'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+              },
+              {
+                name: 'Bathukamma',
+                timing: 'September/October',
+                description: 'A floral festival celebrating the goddess Gauri',
+                image:
+                  'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+              }
+            ]
+          },
+          heritage: {
+            description:
+              'Telangana\'s heritage sites include ancient forts, temples, and palaces that reflect its historical and cultural significance.',
+            sites: [
+              {
+                name: 'Charminar',
+                location: 'Hyderabad',
+                description: 'An iconic mosque and monument',
+                image:
+                  'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+              },
+              {
+                name: 'Golconda Fort',
+                location: 'Hyderabad',
+                description: 'A historic fort known for its acoustics',
+                image:
+                  'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+              }
+            ]
+          }
+        },
+        {
+          id: 'uttarakhand',
+          name: 'Uttarakhand',
+          capital: 'Dehradun',
+          population: '10 million',
+          language: 'Hindi, Garhwali, Kumaoni',
+          region: 'Northern India',
+          established: '9 November 2000',
+          artForms: 'Chholiya Dance, Aipan Art, Wood Carving',
+          cuisineType: 'Simple, Spicy, and Nutritious',
+          description:
+            'Uttarakhand, located in northern India, is known for its Himalayan landscapes, spiritual sites, and adventure tourism. The state offers a mix of natural beauty and cultural heritage.',
+          bannerImage:
+            'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d',
+          famousFor: [
+            'Valley of Flowers',
+            'Nanda Devi National Park',
+            'Kedarnath Temple',
+            'Adventure Sports',
+            'Spiritual Retreats'
+          ],
+          culture: {
+            description:
+              'Uttarakhand\'s culture is deeply rooted in its mountain traditions. The state is known for its folk music, dance, and traditional crafts.',
+            traditions: [
+              'Chholiya Dance - A sword dance performed during weddings',
+              'Aipan Art - Rangoli-like designs made with rice paste',
+              'Wood Carving - Intricate designs carved into wood',
+              'Kumbh Mela - A massive Hindu pilgrimage held in Haridwar',
+              'Festivals - Celebrations like Phool Dei honor nature'
+            ],
+            images: [
+              'https://i.pinimg.com/736x/7a/1b/2b/7a1b2b4f5f6f6f6f6f6f6f6f6f6f6f6.jpg',
+              'https://i.pinimg.com/736x/7a/1b/2b/7a1b2b4f5f6f6f6f6f6f6f6f6f6f6f6.jpg'
+            ]
+          },
+          cuisine: {
+            description:
+              'Uttarakhand cuisine is simple yet nutritious, with locally sourced ingredients. The food is mildly spiced and often includes millets and dairy products.',
+            dishes: [
+              {
+                name: 'Kafuli',
+                description: 'A spinach-based curry served with rice',
+                image:
+                  'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+              },
+              {
+                name: 'Bhang Ki Chutney',
+                description: 'A spicy chutney made with hemp seeds',
+                image:
+                  'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+              },
+              {
+                name: 'Bal Mithai',
+                description: 'A sweet fudge-like dessert made with khoya',
+                image:
+                  'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+              }
+            ]
+          },
+          festivals: {
+            description:
+              'Uttarakhand\'s festivals celebrate the state\'s natural beauty, cultural diversity, and spiritual heritage.',
+            list: [
+              {
+                name: 'Kumbh Mela',
+                timing: 'Every 12 years',
+                description: 'A massive Hindu pilgrimage held in Haridwar',
+                image:
+                  'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+              },
+              {
+                name: 'Phool Dei',
+                timing: 'March/April',
+                description: 'A spring festival celebrating nature',
+                image:
+                  'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+              }
+            ]
+          },
+          heritage: {
+            description:
+              'Uttarakhand\'s heritage sites include ancient temples, national parks, and scenic valleys that reflect its cultural and ecological richness.',
+            sites: [
+              {
+                name: 'Kedarnath Temple',
+                location: 'Kedarnath',
+                description: 'A sacred temple dedicated to Lord Shiva',
+                image:
+                  'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+              },
+              {
+                name: 'Valley of Flowers',
+                location: 'Chamoli',
+                description: 'A UNESCO World Heritage site with alpine meadows',
+                image:
+                  'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d'
+              }
+            ]
+          }
+        },
+        {
+            id: 'haryana',
+            name: 'Haryana',
+            capital: 'Chandigarh',
+            population: '28 million',
+            language: 'Haryanvi, Hindi',
+            region: 'Northern India',
+            established: '1 November 1966',
+            artForms: 'Swang Dance, Phulkari Embroidery, Folk Songs',
+            cuisineType: 'Spicy, Wheat-based',
+            description:
+              'Haryana, located in northern India, is known for its agricultural productivity, historic sites, and vibrant culture. The state offers a mix of traditional and modern lifestyles.',
+            bannerImage: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d',
+            famousFor: ['Kurukshetra', 'Surajkund Crafts Mela', 'Bhangra Dance', 'Phulkari Embroidery'],
+            culture: {
+              description:
+                'Haryana\'s culture is deeply rooted in its rural traditions and martial history. The state is known for its folk music, dance, and crafts.',
+              traditions: [
+                'Swang Dance - A traditional dance form performed during festivals',
+                'Phulkari Embroidery - Intricate needlework on fabric',
+                'Folk Songs - Ballads celebrating valor and love',
+                'Wrestling - A popular sport with deep cultural significance'
+              ],
+              images: ['https://i.pinimg.com/736x/7a/1b/2b/7a1b2b4f5f6f6f6f6f6f6f6f6f6f6f6.jpg']
+            },
+            cuisine: {
+              description:
+                'Haryanvi cuisine is simple yet flavorful, with wheat as a staple. The food reflects the agrarian lifestyle of the state.',
+              dishes: [
+                { name: 'Bathua Raita', description: 'Yogurt mixed with bathua leaves', image: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d' },
+                { name: 'Kachri ki Sabzi', description: 'A dish made with wild cucumbers', image: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d' },
+                { name: 'Singri ki Sabzi', description: 'A curry made from desert beans', image: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d' }
+              ]
+            },
+            festivals: {
+              description: 'Haryana\'s festivals celebrate the state\'s agricultural cycles and cultural heritage.',
+              list: [
+                { name: 'Gugga Navami', timing: 'August/September', description: 'A festival honoring the snake god Gugga', image: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d' },
+                { name: 'Teej', timing: 'July/August', description: 'A monsoon festival celebrated by women', image: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d' }
+              ]
+            },
+            heritage: {
+              description: 'Haryana\'s heritage sites include ancient battlefields, temples, and historical monuments.',
+              sites: [
+                { name: 'Kurukshetra', location: 'Kurukshetra', description: 'The site of the Mahabharata war', image: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d' },
+                { name: 'Sultanpur National Park', location: 'Gurgaon', description: 'A bird sanctuary and wildlife reserve', image: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d' }
+              ]
+            }
+          },
+          {
+            id: 'mizoram',
+            name: 'Mizoram',
+            capital: 'Aizawl',
+            population: '1.2 million',
+            language: 'Mizo, English',
+            region: 'Northeast India',
+            established: '20 February 1987',
+            artForms: 'Cheraw Dance, Bamboo Craft, Puan Clothing',
+            cuisineType: 'Simple, Rice-based',
+            description:
+              'Mizoram, located in northeastern India, is known for its lush green landscapes, bamboo forests, and vibrant tribal culture. The state offers a unique blend of traditions and natural beauty.',
+            bannerImage: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d',
+            famousFor: ['Cheraw Dance', 'Bamboo Crafts', 'Mizo Shawls', 'Lush Valleys', 'Peaceful Lifestyle'],
+            culture: {
+              description:
+                'Mizoram\'s culture is deeply influenced by its Mizo tribes. The state is known for its music, dance, and traditional crafts.',
+              traditions: [
+                'Cheraw Dance - A traditional bamboo dance performed during festivals',
+                'Puan Clothing - Traditional handwoven fabrics with intricate designs',
+                'Bamboo Craft - Products made from bamboo, including furniture and utensils',
+                'Mizo Music - Folk songs and instruments like the guitar and drum'
+              ],
+              images: ['https://i.pinimg.com/736x/7a/1b/2b/7a1b2b4f5f6f6f6f6f6f6f6f6f6f6f6.jpg']
+            },
+            cuisine: {
+              description:
+                'Mizo cuisine is simple and wholesome, with rice as a staple. The food incorporates local ingredients like bamboo shoots and herbs.',
+              dishes: [
+                { name: 'Bai', description: 'A vegetable stew cooked with fermented soybeans', image: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d' },
+                { name: 'Vawksa Rep', description: 'Smoked pork cooked with mustard leaves', image: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d' },
+                { name: 'Misa Mach Poora', description: 'Grilled prawns marinated with spices', image: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d' }
+              ]
+            },
+            festivals: {
+              description: 'Mizoram\'s festivals celebrate the state\'s cultural diversity and tribal heritage.',
+              list: [
+                { name: 'Chapchar Kut', timing: 'March', description: 'A harvest festival celebrated with traditional dances', image: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d' },
+                { name: 'Mim Kut', timing: 'August/September', description: 'A festival honoring the maize harvest', image: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d' }
+              ]
+            },
+            heritage: {
+              description: 'Mizoram\'s heritage sites include scenic valleys, wildlife sanctuaries, and traditional villages.',
+              sites: [
+                { name: 'Phawngpui Blue Mountain', location: 'Lawngtlai', description: 'A scenic mountain range with diverse flora and fauna', image: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d' },
+                { name: 'Dampa Tiger Reserve', location: 'Mamit', description: 'A wildlife sanctuary home to tigers and other species', image: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d' }
+              ]
+            }
+          },
+          {
+              id: 'andaman-and-nicobar',
+              name: 'Andaman and Nicobar Islands',
+              capital: 'Port Blair',
+              population: '400,000',
+              language: 'Hindi, English, Bengali, Tamil',
+              region: 'Bay of Bengal',
+              established: '1 November 1956',
+              artForms: 'Nicobarese Dance, Tribal Crafts',
+              cuisineType: 'Seafood-based, Spicy',
+              description:
+                'The Andaman and Nicobar Islands are a group of islands in the Bay of Bengal. Known for their pristine beaches, coral reefs, and rich biodiversity, they offer a unique blend of natural beauty and tribal culture.',
+              bannerImage: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d',
+              famousFor: ['Radhanagar Beach', 'Cellular Jail', 'Ross Island', 'Marine National Park'],
+              culture: {
+                description:
+                  'The culture of the Andaman and Nicobar Islands is influenced by its indigenous tribes and settlers from mainland India. The islands are known for their vibrant festivals and traditional crafts.',
+                traditions: [
+                  'Nicobarese Dance - A traditional dance form performed during festivals',
+                  'Tribal Crafts - Handicrafts made by the indigenous tribes',
+                  'Island Festivals - Celebrations featuring music and dance'
+                ],
+                images: ['https://i.pinimg.com/736x/7a/1b/2b/7a1b2b4f5f6f6f6f6f6f6f6f6f6f6f6.jpg']
+              },
+              cuisine: {
+                description:
+                  'The cuisine of the Andaman and Nicobar Islands is seafood-centric, with influences from Bengali, Tamil, and other mainland cuisines.',
+                dishes: [
+                  { name: 'Fish Curry', description: 'A spicy fish curry made with local spices', image: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d' },
+                  { name: 'Tandoori Lobster', description: 'Grilled lobster marinated in spices', image: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d' }
+                ]
+              },
+              festivals: {
+                description: 'The islands celebrate a variety of festivals reflecting their diverse cultural heritage.',
+                list: [
+                  { name: 'Island Tourism Festival', timing: 'January', description: 'A festival showcasing the islands\' culture and tourism', image: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d' },
+                  { name: 'Subhash Mela', timing: 'January', description: 'A fair celebrating Netaji Subhash Chandra Bose', image: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d' }
+                ]
+              },
+              heritage: {
+                description: 'The heritage sites of the Andaman and Nicobar Islands include historical landmarks and natural wonders.',
+                sites: [
+                  { name: 'Cellular Jail', location: 'Port Blair', description: 'A colonial-era prison', image: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d' },
+                  { name: 'Radhanagar Beach', location: 'Havelock Island', description: 'One of Asia\'s best beaches', image: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d' }
+                ]
+              }
+            },
+            {
+              id: 'chandigarh',
+              name: 'Chandigarh',
+              capital: 'Chandigarh',
+              population: '1 million',
+              language: 'Punjabi, Hindi, English',
+              region: 'Northern India',
+              established: '1 November 1966',
+              artForms: 'Modern Art, Rock Garden Sculptures',
+              cuisineType: 'North Indian, Punjabi',
+              description:
+                'Chandigarh is a union territory and serves as the capital of two states, Punjab and Haryana. Known for its modern architecture and urban planning, it is a symbol of India\'s post-independence development.',
+              bannerImage: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d',
+              famousFor: ['Rock Garden', 'Sukhna Lake', 'Rose Garden', 'Capitol Complex'],
+              culture: {
+                description:
+                  'Chandigarh\'s culture reflects its status as a planned city, with a focus on modernity and innovation. The city is known for its art and architecture.',
+                traditions: [
+                  'Rock Garden Art - Sculptures made from recycled materials',
+                  'Urban Festivals - Celebrations highlighting the city\'s modern lifestyle'
+                ],
+                images: ['https://i.pinimg.com/736x/7a/1b/2b/7a1b2b4f5f6f6f6f6f6f6f6f6f6f6f6.jpg']
+              },
+              cuisine: {
+                description:
+                  'Chandigarh\'s cuisine is heavily influenced by Punjabi food, with a focus on rich and flavorful dishes.',
+                dishes: [
+                  { name: 'Butter Chicken', description: 'A rich and creamy chicken dish', image: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d' },
+                  { name: 'Chole Bhature', description: 'Spicy chickpeas served with fried bread', image: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d' }
+                ]
+              },
+              festivals: {
+                description: 'Chandigarh celebrates a variety of festivals reflecting its diverse cultural influences.',
+                list: [
+                  { name: 'Chandigarh Carnival', timing: 'November', description: 'A festival celebrating the city\'s culture', image: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d' },
+                  { name: 'Baisakhi', timing: 'April', description: 'A harvest festival celebrated with music and dance', image: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d' }
+                ]
+              },
+              heritage: {
+                description: 'Chandigarh\'s heritage sites include modernist architecture and urban landmarks.',
+                sites: [
+                  { name: 'Rock Garden', location: 'Chandigarh', description: 'A garden made from industrial waste', image: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d' },
+                  { name: 'Capitol Complex', location: 'Chandigarh', description: 'A UNESCO World Heritage Site designed by Le Corbusier', image: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d' }
+                ]
+              }
+            },
+            {
+              id: 'dadra-and-nagar-haveli',
+              name: 'Dadra and Nagar Haveli',
+              capital: 'Silvassa',
+              population: '350,000',
+              language: 'Gujarati, Hindi, Marathi',
+              region: 'Western India',
+              established: '11 August 1961',
+              artForms: 'Tribal Dance, Bamboo Crafts',
+              cuisineType: 'Simple, Rice-based',
+              description:
+                'Dadra and Nagar Haveli is a union territory located in western India. Known for its lush green landscapes, tribal culture, and serene environment, it offers a peaceful retreat.',
+              bannerImage: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d',
+              famousFor: ['Vanganga Lake', 'Governor\'s Palace', 'Tribal Villages'],
+              culture: {
+                description:
+                  'The culture of Dadra and Nagar Haveli is deeply rooted in its tribal traditions. The region is known for its folk music, dance, and crafts.',
+                traditions: [
+                  'Tribal Dance - Traditional dances performed during festivals',
+                  'Bamboo Crafts - Handicrafts made from bamboo'
+                ],
+                images: ['https://i.pinimg.com/736x/7a/1b/2b/7a1b2b4f5f6f6f6f6f6f6f6f6f6f6f6.jpg']
+              },
+              cuisine: {
+                description:
+                  'The cuisine of Dadra and Nagar Haveli is simple and flavorful, with influences from Gujarati and Maharashtrian food.',
+                dishes: [
+                  { name: 'Khichdi', description: 'A rice and lentil dish', image: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d' },
+                  { name: 'Undhiyu', description: 'A mixed vegetable dish cooked with spices', image: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d' }
+                ]
+              },
+              festivals: {
+                description: 'The region celebrates a variety of festivals reflecting its tribal heritage.',
+                list: [
+                  { name: 'Divaso', timing: 'November', description: 'A tribal festival celebrating nature', image: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d' }
+                ]
+              },
+              heritage: {
+                description: 'Dadra and Nagar Haveli\'s heritage sites include natural landmarks and cultural monuments.',
+                sites: [
+                  { name: 'Vanganga Lake', location: 'Silvassa', description: 'A scenic lake surrounded by gardens', image: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d' },
+                  { name: 'Governor\'s Palace', location: 'Silvassa', description: 'A historic building with colonial architecture', image: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d' }
+                ]
+              }
+            },
+            {
+              id: 'daman-and-diu',
+              name: 'Daman and Diu',
+              capital: 'Daman',
+              population: '250,000',
+              language: 'Gujarati, Hindi, Portuguese',
+              region: 'Western India',
+              established: '30 May 1987',
+              artForms: 'Folk Dance, Pottery',
+              cuisineType: 'Seafood-based, Spicy',
+              description:
+                'Daman and Diu is a union territory located on the western coast of India. Known for its beaches, Portuguese heritage, and vibrant culture, it offers a mix of relaxation and history.',
+              bannerImage: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d',
+              famousFor: ['Naida Caves', 'Fort of St. Jerome', 'Beaches'],
+              culture: {
+                description:
+                  'The culture of Daman and Diu reflects its Portuguese heritage and coastal lifestyle. The region is known for its music, dance, and festivals.',
+                traditions: [
+                  'Folk Dance - Traditional dances performed during festivals',
+                  'Pottery - Handcrafted earthenware'
+                ],
+                images: ['https://i.pinimg.com/736x/7a/1b/2b/7a1b2b4f5f6f6f6f6f6f6f6f6f6f6f6.jpg']
+              },
+              cuisine: {
+                description:
+                  'The cuisine of Daman and Diu is seafood-centric, with influences from Portuguese and Gujarati food.',
+                dishes: [
+                  { name: 'Fish Recheado', description: 'Fish stuffed with spicy masala', image: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d' },
+                  { name: 'Sol Kadhi', description: 'A refreshing drink made from coconut milk and kokum', image: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d' }
+                ]
+              },
+              festivals: {
+                description: 'The region celebrates a variety of festivals reflecting its cultural diversity.',
+                list: [
+                  { name: 'Feast of Our Lady of Sea', timing: 'February', description: 'A festival honoring the patron saint of fishermen', image: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d' }
+                ]
+              },
+              heritage: {
+                description: 'Daman and Diu\'s heritage sites include Portuguese forts and natural landmarks.',
+                sites: [
+                  { name: 'Fort of St. Jerome', location: 'Daman', description: 'A historic fort built by the Portuguese', image: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d' },
+                  { name: 'Naida Caves', location: 'Diu', description: 'A network of caves carved into limestone', image: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d' }
+                ]
+              }
+            },
+            {
+              id: 'delhi',
+              name: 'Delhi',
+              capital: 'New Delhi',
+              population: '20 million',
+              language: 'Hindi, English, Punjabi',
+              region: 'Northern India',
+              established: '1 November 1956',
+              artForms: 'Classical Music, Kathak Dance',
+              cuisineType: 'Mughlai, North Indian',
+              description:
+                'Delhi, the capital of India, is a bustling metropolis known for its historic landmarks, vibrant culture, and modern infrastructure. It offers a blend of ancient history and contemporary life.',
+              bannerImage: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d',
+              famousFor: ['Red Fort', 'Qutub Minar', 'India Gate', 'Lotus Temple'],
+              culture: {
+                description:
+                  'Delhi\'s culture is a melting pot of influences from across India and the world. The city is known for its arts, music, and festivals.',
+                traditions: [
+                  'Kathak Dance - A classical dance form',
+                  'Mughlai Cuisine - Rich and flavorful dishes'
+                ],
+                images: ['https://i.pinimg.com/736x/7a/1b/2b/7a1b2b4f5f6f6f6f6f6f6f6f6f6f6f6.jpg']
+              },
+              cuisine: {
+                description:
+                  'Delhi\'s cuisine is diverse, with influences from Mughlai, Punjabi, and other regional cuisines.',
+                dishes: [
+                  { name: 'Butter Chicken', description: 'A rich and creamy chicken dish', image: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d' },
+                  { name: 'Paratha', description: 'Stuffed flatbread served with pickles', image: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d' }
+                ]
+              },
+              festivals: {
+                description: 'Delhi celebrates a variety of festivals reflecting its cultural diversity.',
+                list: [
+                  { name: 'Republic Day Parade', timing: 'January', description: 'A grand parade showcasing India\'s military and cultural heritage', image: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d' },
+                  { name: 'Diwali', timing: 'October/November', description: 'The festival of lights celebrated with fireworks', image: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d' }
+                ]
+              },
+              heritage: {
+                description: 'Delhi\'s heritage sites include ancient monuments and historical landmarks.',
+                sites: [
+                  { name: 'Red Fort', location: 'Old Delhi', description: 'A historic fort built by Shah Jahan', image: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d' },
+                  { name: 'Qutub Minar', location: 'South Delhi', description: 'A UNESCO World Heritage Site', image: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d' }
+                ]
+              }
+            },
+            {
+              id: 'jammu-and-kashmir',
+              name: 'Jammu and Kashmir',
+              capital: 'Srinagar',
+              population: '13 million',
+              language: 'Kashmiri, Dogri, Hindi',
+              region: 'Northern India',
+              established: '31 October 2019',
+              artForms: 'Kashmiri Music, Pashmina Shawls',
+              cuisineType: 'Mild, Rice-based',
+              description:
+                'Jammu and Kashmir is a union territory located in northern India. Known for its stunning landscapes, including the Himalayas and Dal Lake, it offers a mix of natural beauty and cultural richness.',
+              bannerImage: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d',
+              famousFor: ['Dal Lake', 'Gulmarg Ski Resort', 'Shalimar Bagh'],
+              culture: {
+                description:
+                  'The culture of Jammu and Kashmir is deeply influenced by its geography and history. The region is known for its music, dance, and handicrafts.',
+                traditions: [
+                  'Kashmiri Music - Folk songs sung during festivals',
+                  'Pashmina Shawls - Handwoven woolen shawls'
+                ],
+                images: ['https://i.pinimg.com/736x/7a/1b/2b/7a1b2b4f5f6f6f6f6f6f6f6f6f6f6f6.jpg']
+              },
+              cuisine: {
+                description:
+                  'The cuisine of Jammu and Kashmir is mild and aromatic, with influences from Persian and Central Asian food.',
+                dishes: [
+                  { name: 'Rogan Josh', description: 'A lamb dish cooked with spices', image: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d' },
+                  { name: 'Yakhni', description: 'A yogurt-based curry', image: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d' }
+                ]
+              },
+              festivals: {
+                description: 'The region celebrates a variety of festivals reflecting its cultural heritage.',
+                list: [
+                  { name: 'Bahu Mela', timing: 'March/April', description: 'A fair held at Bahu Fort', image: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d' }
+                ]
+              },
+              heritage: {
+                description: 'Jammu and Kashmir\'s heritage sites include scenic valleys and historic gardens.',
+                sites: [
+                  { name: 'Dal Lake', location: 'Srinagar', description: 'A picturesque lake surrounded by mountains', image: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d' },
+                  { name: 'Shalimar Bagh', location: 'Srinagar', description: 'A Mughal garden built by Emperor Jahangir', image: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d' }
+                ]
+              }
+            },
+            {
+              id: 'ladakh',
+              name: 'Ladakh',
+              capital: 'Leh',
+              population: '300,000',
+              language: 'Ladakhi, Tibetan, Hindi',
+              region: 'Northern India',
+              established: '31 October 2019',
+              artForms: 'Thangka Paintings, Mask Dance',
+              cuisineType: 'Simple, Fermented',
+              description:
+                'Ladakh is a union territory located in the Himalayas. Known for its rugged terrain, Buddhist monasteries, and vibrant culture, it offers a unique blend of traditions and natural beauty.',
+              bannerImage: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d',
+              famousFor: ['Pangong Tso Lake', 'Nubra Valley', 'Hemis Monastery'],
+              culture: {
+                description:
+                  'The culture of Ladakh is deeply influenced by Tibetan Buddhism. The region is known for its art, music, and festivals.',
+                traditions: [
+                  'Mask Dance - A traditional dance performed during festivals',
+                  'Thangka Paintings - Intricate Buddhist paintings'
+                ],
+                images: ['https://i.pinimg.com/736x/7a/1b/2b/7a1b2b4f5f6f6f6f6f6f6f6f6f6f6f6.jpg']
+              },
+              cuisine: {
+                description:
+                  'The cuisine of Ladakh is simple and hearty, with influences from Tibetan food.',
+                dishes: [
+                  { name: 'Thukpa', description: 'A noodle soup with vegetables or meat', image: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d' },
+                  { name: 'Momos', description: 'Steamed dumplings filled with meat or vegetables', image: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d' }
+                ]
+              },
+              festivals: {
+                description: 'Ladakh celebrates a variety of festivals reflecting its Buddhist heritage.',
+                list: [
+                  { name: 'Hemis Festival', timing: 'June/July', description: 'A festival celebrating the birth of Guru Padmasambhava', image: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d' }
+                ]
+              },
+              heritage: {
+                description: 'Ladakh\'s heritage sites include ancient monasteries and scenic valleys.',
+                sites: [
+                  { name: 'Pangong Tso Lake', location: 'Leh', description: 'A high-altitude lake shared with China', image: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d' },
+                  { name: 'Hemis Monastery', location: 'Leh', description: 'A historic monastery housing ancient relics', image: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d' }
+                ]
+              }
+            },
+            {
+              id: 'lakshadweep',
+              name: 'Lakshadweep',
+              capital: 'Kavaratti',
+              population: '70,000',
+              language: 'Malayalam, English',
+              region: 'Arabian Sea',
+              established: '1 November 1956',
+              artForms: 'Traditional Boat Building, Coconut Crafts',
+              cuisineType: 'Seafood-based, Mild',
+              description:
+                'Lakshadweep is a group of islands located in the Arabian Sea. Known for its coral reefs, pristine beaches, and relaxed lifestyle, it offers a tranquil escape.',
+              bannerImage: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d',
+              famousFor: ['Agatti Island', 'Minicoy Island', 'Water Sports'],
+              culture: {
+                description:
+                  'The culture of Lakshadweep is shaped by its maritime environment and Islamic heritage. The islands are known for their traditional crafts and festivals.',
+                traditions: [
+                  'Coconut Crafts - Handicrafts made from coconuts',
+                  'Traditional Boat Building - Crafting wooden boats for fishing'
+                ],
+                images: ['https://i.pinimg.com/736x/7a/1b/2b/7a1b2b4f5f6f6f6f6f6f6f6f6f6f6f6.jpg']
+              },
+              cuisine: {
+                description:
+                  'The cuisine of Lakshadweep is seafood-centric, with mild flavors and influences from Kerala.',
+                dishes: [
+                  { name: 'Fish Curry', description: 'A mild fish curry made with coconut milk', image: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d' },
+                  { name: 'Kappa Meen Curry', description: 'Tapioca served with fish curry', image: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d' }
+                ]
+              },
+              festivals: {
+                description: 'The islands celebrate a variety of festivals reflecting their cultural heritage.',
+                list: [
+                  { name: 'Bakrid', timing: 'Varies', description: 'A festival celebrating the end of Ramadan', image: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d' }
+                ]
+              },
+              heritage: {
+                description: 'Lakshadweep\'s heritage sites include natural landmarks and cultural monuments.',
+                sites: [
+                  { name: 'Agatti Island', location: 'Lakshadweep', description: 'A scenic island with coral reefs', image: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d' },
+                  { name: 'Minicoy Island', location: 'Lakshadweep', description: 'Known for its lighthouse and beaches', image: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d' }
+                ]
+              }
+            },
+            {
+              id: 'puducherry',
+              name: 'Puducherry',
+              capital: 'Puducherry',
+              population: '1.5 million',
+              language: 'Tamil, French, English',
+              region: 'Southern India',
+              established: '16 August 1962',
+              artForms: 'French Architecture, Bharatanatyam Dance',
+              cuisineType: 'Creole, South Indian',
+              description:
+                'Puducherry is a union territory located on the southeastern coast of India. Known for its French colonial heritage, serene beaches, and spiritual retreats, it offers a unique cultural experience.',
+              bannerImage: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d',
+              famousFor: ['Promenade Beach', 'Auroville', 'French Quarter'],
+              culture: {
+                description:
+                  'The culture of Puducherry reflects its French colonial past and South Indian roots. The region is known for its architecture, music, and festivals.',
+                traditions: [
+                  'Bharatanatyam Dance - A classical dance form',
+                  'French Architecture - Buildings with colonial influences'
+                ],
+                images: ['https://i.pinimg.com/736x/7a/1b/2b/7a1b2b4f5f6f6f6f6f6f6f6f6f6f6f6.jpg']
+              },
+              cuisine: {
+                description:
+                  'The cuisine of Puducherry is a fusion of French and South Indian flavors, resulting in unique dishes.',
+                dishes: [
+                  { name: 'Ratatouille', description: 'A vegetable stew with French influences', image: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d' },
+                  { name: 'Idli Sambar', description: 'Steamed rice cakes served with lentil curry', image: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d' }
+                ]
+              },
+              festivals: {
+                description: 'Puducherry celebrates a variety of festivals reflecting its cultural diversity.',
+                list: [
+                  { name: 'Bastille Day', timing: 'July', description: 'A celebration of French heritage', image: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d' }
+                ]
+              },
+              heritage: {
+                description: 'Puducherry\'s heritage sites include colonial buildings and spiritual retreats.',
+                sites: [
+                  { name: 'Promenade Beach', location: 'Puducherry', description: 'A scenic beachfront with colonial architecture', image: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d' },
+                  { name: 'Auroville', location: 'Puducherry', description: 'An experimental township promoting universal peace', image: 'https://images.unsplash.com/photo-1627578842045-9f2a6b4e8c9d' }
+                ]
+              }
+            },
   ];
 

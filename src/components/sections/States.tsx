@@ -27,7 +27,11 @@ const States: React.FC = () => {
   useEffect(() => {
     let filtered = [...stateData];
     
-    if (activeRegionFilter !== 'all') {
+    if (activeRegionFilter === 'all') {
+      // Restrict "All Regions" to specific states
+      const allowedStates = ['rajasthan', 'kerala', 'himachal', 'goa'];
+      filtered = stateData.filter(state => allowedStates.includes(state.id));
+    } else {
       const region = regions.find(r => r.id === activeRegionFilter);
       if (region) {
         filtered = stateData.filter(state => region.states.includes(state.id));
@@ -35,7 +39,7 @@ const States: React.FC = () => {
     }
     
     // Limit to 5 states
-    const limitedStates = filtered.slice(0, 5);
+    const limitedStates = filtered.slice(0, 10);
     setFilteredStates(limitedStates);
     
     // Set active tab to first state in filtered list if not already set or if current state isn't in filtered list
