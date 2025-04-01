@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import ScrollReveal from '../ui/ScrollReveal';
@@ -174,12 +175,12 @@ const Culture: React.FC = () => {
                           <div className="pt-2">
                             <p className="font-medium mb-2">Famous For:</p>
                             <div className="flex flex-wrap gap-2">
-                              {item.famousFor.map((item, index) => (
+                              {item.famousFor.map((tag, index) => (
                                 <span 
                                   key={index} 
                                   className="px-3 py-1 bg-white/40 dark:bg-white/10 backdrop-blur-sm text-foreground/80 rounded-full text-sm"
                                 >
-                                  {item}
+                                  {tag}
                                 </span>
                               ))}
                             </div>
