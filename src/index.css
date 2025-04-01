@@ -227,4 +227,61 @@
   .animate-delay-500 {
     animation-delay: 500ms;
   }
+
+  /* Mobile horizontal scrolling for content sections */
+  .mobile-horizontal-scroll {
+    @apply overflow-x-auto scrollbar-none pb-4 -mx-4 px-4;
+    scroll-snap-type: x mandatory;
+  }
+
+  .mobile-horizontal-scroll > * {
+    scroll-snap-align: start;
+    min-width: 85vw;
+  }
+
+  /* Adjust the existing grid layouts for mobile */
+  .mobile-grid-scroll {
+    @apply md:grid md:grid-cols-2 md:gap-6 lg:grid-cols-3;
+    @apply flex space-x-4 mobile-horizontal-scroll;
+  }
+
+  /* Pagination adjustments for mobile */
+  .pagination-mobile {
+    @apply overflow-x-auto scrollbar-none whitespace-nowrap;
+    @apply py-1 px-2;
+  }
+
+  /* Updated animations for mobile */
+  .animate-float {
+    animation: float 4s ease-in-out infinite;
+  }
+  
+  .animate-pulse-slow {
+    animation: pulse 6s ease-in-out infinite;
+  }
+  
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+  
+  @keyframes pulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 0.7; }
+  }
+
+  /* Adjust card style for horizontal scrolling */
+  .card-scroll {
+    @apply flex-shrink-0 w-[85vw] md:w-auto;
+  }
+}
+
+/* Make sure the scrollbar is hidden on mobile devices */
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
 }

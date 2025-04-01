@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Mail, Lock, ArrowRight, User, Github, Chrome } from 'lucide-react';
@@ -145,13 +144,13 @@ const SignUp = () => {
         </div>
 
         <motion.div 
-          className="backdrop-blur-lg bg-white/5 border border-white/10 rounded-xl p-8 shadow-[0_8px_30px_rgb(0,0,0,0.12)]"
+          className="backdrop-blur-lg bg-white/5 border border-white/10 rounded-xl p-6 md:p-8 shadow-[0_8px_30px_rgb(0,0,0,0.12)]"
           initial={{ scale: 0.95 }}
           animate={{ scale: 1 }}
           transition={{ delay: 0.2, duration: 0.4 }}
         >
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
               <motion.div
                 initial={{ x: -20, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
@@ -300,7 +299,7 @@ const SignUp = () => {
               </div>
             </div>
 
-            <div className="mt-6 grid grid-cols-2 gap-4">
+            <div className="mt-6 grid grid-cols-2 gap-3">
               <motion.button 
                 className="flex items-center justify-center gap-2 px-4 py-3 border border-emerald-500/30 rounded-lg bg-gray-800/30 backdrop-blur-sm hover:bg-gray-700/50 transition-all duration-300"
                 whileHover={{ scale: 1.03 }}
