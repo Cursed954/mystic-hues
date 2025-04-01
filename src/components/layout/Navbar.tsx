@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import { Menu, X, User } from 'lucide-react';
@@ -122,7 +121,7 @@ const Navbar: React.FC = () => {
 
       {isMobile && mobileMenuOpen && (
         <div className="fixed inset-0 top-16 z-50 bg-background/95 backdrop-blur-md">
-          <div className="container mx-auto px-6 py-8 flex flex-col items-center bg-background/95 backdrop-blur-md rounded-xl shadow-lg">
+          <div className="container mx-auto px-6 py-8 flex flex-col items-center">
             {navItems.map((item, index) => (
               <div key={item.name}>
                 <Link

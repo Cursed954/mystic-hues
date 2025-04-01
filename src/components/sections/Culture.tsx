@@ -1,186 +1,209 @@
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import ScrollReveal from '../ui/ScrollReveal';
+import ParallaxSection from '../ui/ParallaxSection';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { MapPin, Users, Calendar, ArrowRight, Globe, Filter, ChevronDown, ChevronUp } from 'lucide-react';
+import { culturalData } from '@/data/culturalData';
+import { regions, getStateRegion } from '@/data/cultural';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Palette, Music, Globe, Book } from 'lucide-react';
-import { regions } from '@/data/cultural/regions';
-import { artForms } from '@/data/cultural/artForms';
-import { festivals } from '@/data/cultural/festivals';
-import { heritageSites } from '@/data/cultural/heritageSites';
-import SectionHeader from '@/components/ui/SectionHeader';
+const Culture: React.FC = () => {
+  // Cultural data
+  const [activeTab, setActiveTab] = useState<string>('');
+  const [activeRegionFilter, setActiveRegionFilter] = useState<string>('all');
+  const [filteredItems, setFilteredItems] = useState(culturalData.slice(0, 5));
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
-const Culture = () => {
-  const [filter, setFilter] = useState<'all' | 'north' | 'south' | 'east' | 'west' | 'central'>('all');
-  const [category, setCategory] = useState<'regions' | 'artforms' | 'festivals' | 'heritage'>('regions');
-  
-  const categoryData = {
-    regions: regions,
-    artforms: artForms,
-    festivals: festivals,
-    heritage: heritageSites
+  // Function to get region name for a cultural item
+  const getRegionName = (itemId: string): string => {
+    const regionId = getStateRegion(itemId);
+    const region = regions.find(r => r.id === regionId);
+    return region ? region.name : "";
   };
 
-  // Fix the filtering to use the id property instead of location
-  const filteredData = category === 'regions' 
-    ? filter === 'all' 
-      ? regions 
-      : regions.filter(region => region.id.includes(filter))
-    : categoryData[category];
+  // Filter cultural items by region
+  useEffect(() => {
+    let filtered = [...culturalData];
+    
+    if (activeRegionFilter !== 'all') {
+      const region = regions.find(r => r.id === activeRegionFilter);
+      if (region) {
+        filtered = culturalData.filter(item => region.items.includes(item.id));
+      }
+    }
+    
+    // Limit to 5 items
+    const limitedItems = filtered.slice(0, 5);
+    setFilteredItems(limitedItems);
+    
+    // Set active tab to first item in filtered list if not already set or if current item isn't in filtered list
+    if (!activeTab || !limitedItems.find(item => item.id === activeTab)) {
+      setActiveTab(limitedItems[0]?.id || '');
+    }
+  }, [activeRegionFilter, activeTab]);
 
   return (
-    <div className="container mx-auto px-4 py-12">
-      <SectionHeader 
-        subtitle="Discover the soul of India"
-        title="Cultural Heritage"
-        description="Immerse yourself in a land where every ritual, dance, and craft tells a story thousands of years in the making."
-      />
-
-      {/* Category Tabs - Horizontal scrolling on mobile */}
-      <div className="mt-8 flex space-x-4 overflow-x-auto pb-2 scrollbar-none">
-        <CategoryTab 
-          icon={<Globe className="w-5 h-5" />}
-          title="Regions"
-          active={category === 'regions'}
-          onClick={() => setCategory('regions')}
-        />
-        <CategoryTab 
-          icon={<Palette className="w-5 h-5" />}
-          title="Art Forms"
-          active={category === 'artforms'}
-          onClick={() => setCategory('artforms')}
-        />
-        <CategoryTab 
-          icon={<Music className="w-5 h-5" />}
-          title="Festivals"
-          active={category === 'festivals'}
-          onClick={() => setCategory('festivals')}
-        />
-        <CategoryTab 
-          icon={<Book className="w-5 h-5" />}
-          title="Heritage Sites"
-          active={category === 'heritage'}
-          onClick={() => setCategory('heritage')}
-        />
-      </div>
-
-      {/* Region Filters - Only show when category is regions */}
-      {category === 'regions' && (
-        <div className="mt-6 flex space-x-2 overflow-x-auto pb-2 scrollbar-none">
-          <FilterButton 
-            label="All Regions" 
-            active={filter === 'all'} 
-            onClick={() => setFilter('all')} 
-          />
-          <FilterButton 
-            label="North India" 
-            active={filter === 'north'} 
-            onClick={() => setFilter('north')} 
-          />
-          <FilterButton 
-            label="South India" 
-            active={filter === 'south'} 
-            onClick={() => setFilter('south')} 
-          />
-          <FilterButton 
-            label="East India" 
-            active={filter === 'east'} 
-            onClick={() => setFilter('east')} 
-          />
-          <FilterButton 
-            label="West India" 
-            active={filter === 'west'} 
-            onClick={() => setFilter('west')} 
-          />
-          <FilterButton 
-            label="Central India" 
-            active={filter === 'central'} 
-            onClick={() => setFilter('central')} 
-          />
-        </div>
-      )}
-
-      {/* Grid Layout - Horizontal scroll on mobile */}
-      <div className="mt-8 mobile-grid-scroll">
-        {filteredData.map((item) => (
-          <div key={item.id} className="card-scroll">
-            <motion.div
-              className="h-full rounded-xl overflow-hidden shadow-lg"
-              whileHover={{ y: -5, scale: 1.02 }}
-              transition={{ duration: 0.3 }}
-            >
-              <div className="relative">
-                <img 
-                  src={item.image} 
-                  alt={item.name} 
-                  className="w-full h-64 object-cover" 
-                />
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/70" />
-                <div className="absolute bottom-0 left-0 p-4 text-white">
-                  <h3 className="text-xl font-serif font-medium">{item.name}</h3>
-                  <p className="text-sm text-white/90 mt-1">{item.description}</p>
-                  
-                  {/* Associated States */}
-                  {item.states && (
-                    <div className="flex flex-wrap gap-1 mt-2">
-                      {item.states.slice(0, 3).map((state, index) => (
-                        <span 
-                          key={index}
-                          className="text-xs px-2 py-0.5 bg-white/20 backdrop-blur-sm rounded-full"
-                        >
-                          {state}
-                        </span>
-                      ))}
-                      {item.states.length > 3 && (
-                        <span className="text-xs px-2 py-0.5 bg-white/20 backdrop-blur-sm rounded-full">
-                          +{item.states.length - 3} more
-                        </span>
-                      )}
-                    </div>
-                  )}
-                </div>
-              </div>
-            </motion.div>
+    <section id="culture" className="py-24 px-6 relative">
+      {/* Translucent Background Layer */}
+      <div className="absolute inset-12 rounded-3xl bg-white/40 dark:bg-white/5 backdrop-blur-sm border border-white/50 dark:border-white/10 z-0"></div>
+      
+      <div className="container mx-auto relative z-10">
+        {/* Section Header */}
+        <ScrollReveal>
+          <div className="text-center mb-16">
+            <p className="subtitle mb-3">Explore Culture</p>
+            <h2 className="section-title after:left-1/2 after:-translate-x-1/2">
+              Discover Indian Culture
+            </h2>
+            <p className="mt-8 max-w-2xl mx-auto text-foreground/70">
+              India's diverse culture offers unique experiences, from traditional dances to vibrant festivals,
+              each with its own distinct heritage, cuisine, and traditions.
+            </p>
           </div>
-        ))}
+        </ScrollReveal>
+
+        {/* Collapsible Region filter */}
+        <ScrollReveal delay={1}>
+          <Collapsible 
+            open={isFilterOpen} 
+            onOpenChange={setIsFilterOpen}
+            className="mb-8 bg-background/80 rounded-lg shadow-sm overflow-hidden border border-border/50"
+          >
+            <CollapsibleTrigger className="flex items-center justify-between w-full p-4 text-left">
+              <div className="flex items-center gap-2">
+                <Filter className="h-4 w-4 text-spice-500" />
+                <span className="text-sm font-medium">Filter by Region</span>
+              </div>
+              {isFilterOpen ? (
+                <ChevronUp className="h-4 w-4 text-muted-foreground" />
+              ) : (
+                <ChevronDown className="h-4 w-4 text-muted-foreground" />
+              )}
+            </CollapsibleTrigger>
+            <CollapsibleContent className="p-4 pt-0 border-t border-border/50">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-2 pt-4">
+                <button
+                  className={`p-2 rounded-md text-sm font-medium transition-colors ${activeRegionFilter === 'all' 
+                    ? 'bg-spice-500 text-white' 
+                    : 'bg-secondary/50 hover:bg-secondary'}`}
+                  onClick={() => setActiveRegionFilter('all')}
+                >
+                  All Regions
+                </button>
+                {regions.map(region => (
+                  <button
+                    key={region.id}
+                    className={`p-2 rounded-md text-sm font-medium transition-colors ${activeRegionFilter === region.id 
+                      ? 'bg-spice-500 text-white' 
+                      : 'bg-secondary/50 hover:bg-secondary'}`}
+                    onClick={() => setActiveRegionFilter(region.id)}
+                  >
+                    {region.name}
+                  </button>
+                ))}
+              </div>
+            </CollapsibleContent>
+          </Collapsible>
+        </ScrollReveal>
+
+        {/* Cultural Tabs - Limited to 5 */}
+        <ScrollReveal delay={2}>
+          {filteredItems.length > 0 ? (
+            <Tabs defaultValue={filteredItems[0]?.id} value={activeTab} onValueChange={setActiveTab} className="w-full">
+              <TabsList className="w-full flex mb-8 bg-transparent p-0 space-x-2 overflow-x-auto">
+                {filteredItems.map((item) => (
+                  <TabsTrigger 
+                    key={item.id} 
+                    value={item.id}
+                    className="px-6 py-3 data-[state=active]:bg-spice-50 data-[state=active]:text-spice-600 data-[state=active]:border-b-2 data-[state=active]:border-spice-500 data-[state=active]:shadow-none rounded-none"
+                  >
+                    {item.name}
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+
+              {filteredItems.map((item) => (
+                <TabsContent key={item.id} value={item.id} className="mt-0">
+                  <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+                    <div className="lg:col-span-3">
+                      <ParallaxSection speed={0.05} className="h-full">
+                        <div className="rounded-xl overflow-hidden h-full shadow-md">
+                          <img 
+                            src={item.bannerImage} 
+                            alt={item.name} 
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      </ParallaxSection>
+                    </div>
+                    
+                    <div className="lg:col-span-2 space-y-6">
+                      <Card>
+                        <CardHeader>
+                          <CardTitle className="flex items-center text-2xl">
+                            <MapPin className="mr-2 text-spice-500" size={20} />
+                            {item.name}
+                          </CardTitle>
+                          <CardDescription>Region: {getRegionName(item.id)}</CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                          <div className="flex flex-wrap gap-4">
+                            <div className="flex items-center text-sm text-muted-foreground">
+                              <Users size={16} className="mr-1" />
+                              {item.population}
+                            </div>
+                            <div className="flex items-center text-sm text-muted-foreground">
+                              <Calendar size={16} className="mr-1" />
+                              {item.language}
+                            </div>
+                            <div className="flex items-center text-sm text-muted-foreground">
+                              <Globe size={16} className="mr-1" />
+                              {getRegionName(item.id)}
+                            </div>
+                          </div>
+                          
+                          <p className="text-foreground/80 leading-relaxed">
+                            {item.description}
+                          </p>
+                          
+                          <div className="pt-2">
+                            <p className="font-medium mb-2">Famous For:</p>
+                            <div className="flex flex-wrap gap-2">
+                              {item.famousFor.map((item, index) => (
+                                <span 
+                                  key={index} 
+                                  className="px-3 py-1 bg-white/40 dark:bg-white/10 backdrop-blur-sm text-foreground/80 rounded-full text-sm"
+                                >
+                                  {item}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                      
+                      <Link 
+                        to={`/culture/${item.id}`} 
+                        className="btn-primary w-full justify-center inline-flex items-center "
+                      >
+                        Explore {item.name} <ArrowRight size={16} className="ml-2" />
+                      </Link>
+                    </div>
+                  </div>
+                </TabsContent>
+              ))}
+            </Tabs>
+          ) : (
+            <div className="text-center py-8">
+              <p className="text-foreground/80">No cultural items found for the selected region.</p>
+            </div>
+          )}
+        </ScrollReveal>
       </div>
-    </div>
+    </section>
   );
 };
-
-// Helper components
-const CategoryTab = ({ icon, title, active, onClick }: { 
-  icon: React.ReactNode; 
-  title: string; 
-  active: boolean; 
-  onClick: () => void 
-}) => (
-  <button
-    onClick={onClick}
-    className={`flex items-center gap-2 px-5 py-2.5 rounded-full transition-all whitespace-nowrap ${
-      active 
-        ? 'bg-spice-500 text-white shadow-md shadow-spice-500/20' 
-        : 'bg-secondary hover:bg-secondary/80 text-foreground'
-    }`}
-  >
-    {icon}
-    <span className="font-medium">{title}</span>
-  </button>
-);
-
-const FilterButton = ({ label, active, onClick }: { 
-  label: string; 
-  active: boolean; 
-  onClick: () => void 
-}) => (
-  <button
-    onClick={onClick}
-    className={`px-4 py-1.5 text-sm font-medium rounded-full transition-all whitespace-nowrap ${
-      active 
-        ? 'bg-spice-500 text-white' 
-        : 'bg-secondary/70 hover:bg-secondary text-foreground'
-    }`}
-  >
-    {label}
-  </button>
-);
 
 export default Culture;
