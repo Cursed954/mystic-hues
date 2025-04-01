@@ -2,7 +2,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { fadeInUp, staggerContainer } from '@/lib/animations';
+import { staggerContainer } from '@/lib/animations';
 import { ArrowRight } from 'lucide-react';
 
 const Hero = () => {
@@ -26,7 +26,9 @@ const Hero = () => {
         >
           {/* Hero Content */}
           <motion.div 
-            variants={fadeInUp}
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
             className="flex-1 text-center md:text-left"
           >
             <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
@@ -67,7 +69,9 @@ const Hero = () => {
           
           {/* Hero Image */}
           <motion.div
-            variants={fadeInUp}
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
             className="flex-1 relative w-full max-w-lg"
           >
             <div className="relative w-full aspect-square">

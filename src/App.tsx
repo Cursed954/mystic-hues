@@ -12,8 +12,7 @@ import NotFound from "./pages/NotFound";
 import AllStates from "./pages/AllStates";
 import Cuisine from "./pages/Cuisine";
 import Culture from "./pages/Culture";
-import Login from "./pages/Login";
-import SignUp from "./pages/SignUp";
+import AuthPage from "./pages/AuthPage";
 import Profile from "./pages/Profile";
 import AccountSettings from "./pages/AccountSettings";
 import JourneyDetail from "./pages/JourneyDetail";
@@ -43,8 +42,8 @@ const App = () => {
                 <Route path="/cuisine" element={<Cuisine />} />
                 <Route path="/culture" element={<Culture />} />
                 <Route path="/journey/:journeyId" element={<JourneyDetail />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/signup" element={<SignUp />} />
+                <Route path="/login" element={<AuthPage />} />
+                <Route path="/signup" element={<AuthPage />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/account-settings" element={<AccountSettings />} />
                 <Route path="/admin" element={<Admin />} />
