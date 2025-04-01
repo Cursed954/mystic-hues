@@ -1,163 +1,107 @@
 
-// Home: Experience the timeless spirit of India
-
-import React, { useRef, useEffect } from 'react';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { fadeInUp, staggerContainer } from '@/lib/animations';
 import { ArrowRight } from 'lucide-react';
-import ParallaxSection from '../ui/ParallaxSection';
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { textVariant, fadeIn, staggerContainer } from '@/lib/animations';
 
-const Hero: React.FC = () => {
-  const targetRef = useRef<HTMLDivElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  
-  const { scrollYProgress } = useScroll({
-    target: targetRef,
-    offset: ["start start", "end start"]
-  });
-
-  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
-  const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.8]);
-  const y = useTransform(scrollYProgress, [0, 0.5], [0, 100]);
-
-  // Ensure video autoplay works properly
-  useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.defaultMuted = true;
-      videoRef.current.muted = true;
-      videoRef.current.autoplay = true;
-      videoRef.current.loop = true;
-      videoRef.current.playsInline = true;
-      
-      // Set the starting time to 18 seconds
-      videoRef.current.currentTime = 18;
-      
-      videoRef.current.play().catch(e => {
-        console.error("Video autoplay failed:", e);
-        // Try again after user interaction
-        document.body.addEventListener('click', () => {
-          if (videoRef.current) {
-            videoRef.current.currentTime = 18;
-            videoRef.current.play().catch(e => console.error("Video play failed after click:", e));
-          }
-        }, { once: true });
-      });
-    }
-  }, []);
+const Hero = () => {
+  const navigate = useNavigate();
 
   return (
-    <section id="home" ref={targetRef} className="relative min-h-screen flex items-center overflow-hidden">
-      {/* Video Background with Overlay */}
-      <div className="absolute inset-0 z-0 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-background z-10"></div>
-        <video
-          ref={videoRef}
-          className="w-full h-full object-cover"
-          autoPlay
-          muted
-          loop
-          playsInline
-        >
-          <source 
-            src="https://player.vimeo.com/progressive_redirect/playback/921376317/rendition/1080p/file.mp4?loc=external&oauth2_token_id=1747418641&signature=81fe3100ce7a792e4a2487a6a6a26a72df29adc0cfe19bf09dcae05be11dce97" 
-            type="video/mp4" 
-          />
-          Your browser does not support the video tag.
-        </video>
+    <section className="min-h-screen flex items-center justify-center px-4 relative">
+      {/* Background Elements */}
+      <div className="absolute inset-0 overflow-hidden -z-10">
+        <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-spice-500/20 rounded-full filter blur-3xl opacity-20 animate-pulse-slow" />
+        <div className="absolute bottom-1/4 left-1/4 w-96 h-96 bg-indigo-500/20 rounded-full filter blur-3xl opacity-20 animate-float" />
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[url('/src/assets/india-map-outline.svg')] bg-no-repeat bg-center opacity-5" />
       </div>
 
-      {/* Abstract Pattern Overlay */}
-      <div className="absolute inset-0 bg-repeat opacity-15 z-[1] mix-blend-soft-light" 
-           style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/oriental-tiles.png")' }}>
-      </div>
-
-      {/* Content */}
-      <motion.div 
-        style={{ opacity, scale, y }}
-        className="container mx-auto px-6 z-10 mt-16 relative"
-      >
+      <div className="container mx-auto">
         <motion.div 
           variants={staggerContainer}
           initial="hidden"
-          animate="visible"
-          className="max-w-3xl"
+          animate="show"
+          className="flex flex-col md:flex-row items-center gap-12 md:gap-20"
         >
-          <motion.p 
-            variants={textVariant(0.1)}
-            className="subtitle mb-3 text-white"
-          >
-            Experience the timeless spirit of India
-          </motion.p>
-          
-          <motion.h1 
-            variants={textVariant(0.2)}
-            className="text-4xl md:text-5xl lg:text-7xl font-serif font-medium leading-tight mb-6 text-white"
-          >
-            Journey Through India's <span className="text-spice-400">Rich</span> Cultural Heritage
-          </motion.h1>
-          
-          <motion.p 
-            variants={textVariant(0.3)}
-            className="text-lg text-white/90 mb-8 max-w-2xl"
-          >
-            Explore the vibrant tapestry of traditions, art forms, and cuisines that make up India's diverse cultural landscape, from ancient temples to living traditions passed down through generations.
-          </motion.p>
-          
+          {/* Hero Content */}
           <motion.div 
-            variants={fadeIn("up", 0.3)}
-            className="flex flex-wrap gap-4"
+            variants={fadeInUp}
+            className="flex-1 text-center md:text-left"
           >
-            <a href="#states" className="btn-primary flex items-center group">
-              Explore States <ArrowRight size={16} className="ml-2 group-hover:translate-x-1 transition-transform" />
-            </a>
-            <a href="#about" className="btn-outline bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 transition-colors">
-              Learn More
-            </a>
+            <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
+              Discover the <span className="text-transparent bg-clip-text bg-gradient-to-r from-spice-500 to-spice-600">Magic</span> of India
+            </h1>
+            
+            <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-xl leading-relaxed">
+              Embark on a virtual journey through India's vibrant culture, stunning landscapes, and ancient traditions.
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+              <motion.button
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.98 }}
+                className="group relative px-8 py-4 bg-spice-500 hover:bg-spice-600 text-white rounded-full font-semibold text-lg flex items-center justify-center overflow-hidden transition-all duration-300 shadow-lg shadow-spice-500/20"
+                onClick={() => navigate('/signup')}
+                initial={{ boxShadow: '0 10px 15px -3px rgba(239, 68, 68, 0.1), 0 4px 6px -2px rgba(239, 68, 68, 0.05)' }}
+                key="signup-button" // Add a key to force re-rendering
+              >
+                <span className="relative z-10 flex items-center">
+                  Sign up for free
+                  <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+                </span>
+                <div className="absolute inset-0 bg-gradient-to-r from-spice-600 to-spice-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              </motion.button>
+              
+              <motion.button
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.98 }}
+                className="px-8 py-4 border-2 border-spice-500 dark:border-spice-400 hover:bg-spice-500/10 text-spice-500 dark:text-spice-400 rounded-full font-semibold text-lg transition-all duration-300"
+                onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })}
+                key="learn-more-button" // Add a key to force re-rendering
+              >
+                Learn more
+              </motion.button>
+            </div>
           </motion.div>
           
-          {/* Stats */}
-          <motion.div 
-            variants={staggerContainer}
-            initial="hidden"
-            animate="visible"
-            className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6"
+          {/* Hero Image */}
+          <motion.div
+            variants={fadeInUp}
+            className="flex-1 relative w-full max-w-lg"
           >
-            {[
-              { number: "28+", label: "States" },
-              { number: "1000+", label: "Cultural Traditions" },
-              { number: "22+", label: "Official Languages" },
-              { number: "5000+", label: "Years of History" }
-            ].map((stat, index) => (
+            <div className="relative w-full aspect-square">
+              {/* Main Hero Image */}
+              <img 
+                src="/images/hero-image.jpg" 
+                alt="Traditional Indian Architecture" 
+                className="rounded-2xl object-cover shadow-2xl shadow-spice-500/10 w-full h-full"
+              />
+              
+              {/* Decorative Elements */}
+              <div className="absolute -bottom-6 -right-6 w-40 h-40 bg-indigo-500/10 rounded-full"></div>
+              <div className="absolute -top-6 -left-6 w-24 h-24 bg-spice-500/10 rounded-full"></div>
+              
+              {/* Floating Elements */}
               <motion.div 
-                key={index}
-                variants={fadeIn("up", 0.5 + index * 0.1)}
-                className="glass-panel p-4 rounded-lg bg-white/10 backdrop-blur-md border border-white/20"
-                whileHover={{ y: -5, transition: { duration: 0.2 } }}
+                className="absolute -top-8 right-10 p-2 bg-white/90 dark:bg-gray-900/90 rounded-xl shadow-lg"
+                animate={{ y: [0, -10, 0] }}
+                transition={{ duration: 4, repeat: Infinity, repeatType: "reverse" }}
               >
-                <h3 className="text-3xl font-medium text-spice-400 mb-1">{stat.number}</h3>
-                <p className="text-sm text-white/80">{stat.label}</p>
+                <img src="/images/taj-mahal-icon.png" alt="Taj Mahal" className="w-10 h-10" />
               </motion.div>
-            ))}
+              
+              <motion.div 
+                className="absolute -bottom-4 left-10 p-2 bg-white/90 dark:bg-gray-900/90 rounded-xl shadow-lg"
+                animate={{ y: [0, 10, 0] }}
+                transition={{ duration: 5, repeat: Infinity, repeatType: "reverse", delay: 1 }}
+              >
+                <img src="/images/india-food-icon.png" alt="Indian Cuisine" className="w-10 h-10" />
+              </motion.div>
+            </div>
           </motion.div>
         </motion.div>
-      </motion.div>
-      
-      {/* Scroll Indicator */}
-      <motion.div 
-        className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.6, delay: 1 }}
-      >
-        <div className="w-[30px] h-[50px] rounded-full border-2 border-spice-400 mb-2 flex justify-center">
-          <motion.div 
-            className="w-1.5 h-3 bg-spice-400 rounded-full mt-2"
-            animate={{ y: [0, 15, 0] }}
-            transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
-          ></motion.div>
-        </div>
-        <p className="text-xs uppercase tracking-widest text-white/80 font-light">Scroll Down</p>
-      </motion.div>
+      </div>
     </section>
   );
 };
