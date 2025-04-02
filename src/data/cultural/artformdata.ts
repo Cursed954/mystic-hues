@@ -1,4 +1,3 @@
-
 // Art forms detailed information with descriptions, history and images
 
 export type ArtFormDetails = {
@@ -13,6 +12,7 @@ export type ArtFormDetails = {
   image: string;
   additionalImages: string[];
   states: string[]; // States where this art form is practiced
+  regions: string[]; // Regions where this art form is practiced
 };
 
 // Mapping art forms to specific information
@@ -32,7 +32,8 @@ export const artFormDetailsMap: Record<string, ArtFormDetails> = {
       "https://thumbs.dreamstime.com/b/rajasthani-puppets-sale-3956219.jpg",
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJLrNAoUejJj-JNRXOUjm54BQz0x39XrgXmkvRCnt423i_8sh5vLo7dNDoPrVWCde33vI&usqp=CAU"
     ],
-    states: ["rajasthan"]
+    states: ["rajasthan"],
+    regions: ["Northern India"]
   },
   "ghoomar": {
     id: "ghoomar",
@@ -49,7 +50,8 @@ export const artFormDetailsMap: Record<string, ArtFormDetails> = {
       "https://cdn.shopify.com/s/files/1/0562/8792/0217/t/7/assets/27464776076_6152cf2606_z.jpg?v=1655289702",
       "https://i0.wp.com/www.sayeridiary.com/wp-content/uploads/2018/04/Original-Rajasthani-Ghoomar-Dance-Song-660x330.jpg?fit=660%2C330&ssl=1"
     ],
-    states: ["rajasthan"]
+    states: ["rajasthan"],
+    regions: ["Northern India"]
   },
   "kalbeliya": {
     id: "kalbeliya",
@@ -66,7 +68,8 @@ export const artFormDetailsMap: Record<string, ArtFormDetails> = {
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTk_BjCYnKbW-VqGa8jlj2vU5-FNQwUL-rIsiISuWehiyEwsTjzYfNBSIT3JhJD_G6EZUU&usqp=CAU",
       "https://i.pinimg.com/736x/85/a0/69/85a069edcb956f85470429cf8d01d6f7.jpg"
     ],
-    states: ["rajasthan"]
+    states: ["rajasthan"],
+    regions: ["Northern India"]
   },
   "kathakali": {
     id: "kathakali",
@@ -83,7 +86,8 @@ export const artFormDetailsMap: Record<string, ArtFormDetails> = {
       "https://mapacademy.io/wp-content/uploads/2022/04/kathakali-1m.jpg",
       "https://mediaim.expedia.com/localexpert/213788/532e75b6-04d7-4b01-9a0c-0a41fcd3094c.jpg"
     ],
-    states: ["kerala"]
+    states: ["kerala"],
+    regions: ["South India"]
   },
   "mohiniyattam": {
     id: "mohiniyattam",
@@ -100,7 +104,8 @@ export const artFormDetailsMap: Record<string, ArtFormDetails> = {
       "https://www.civilsdaily.com/wp-content/uploads/2024/06/mohini.jpg",
       "https://www.insightsonindia.com/wp-content/uploads/2021/09/Mohiniattam.jpg"
     ],
-    states: ["kerala"]
+    states: ["kerala"],
+    regions: ["South India"]
   },
   "kalaripayattu": {
     id: "kalaripayattu",
@@ -117,7 +122,8 @@ export const artFormDetailsMap: Record<string, ArtFormDetails> = {
       "https://www.keralatourism.org/images/kalari/static-banner/large/Vadivu_-12022020151336.jpg",
       "https://www.rishikulyogshala.org/assets/images/kalaripayattu/kalaripayattu-img1.jpg"
     ],
-    states: ["kerala"]
+    states: ["kerala"],
+    regions: ["South India"]
   },
   "bharatanatyam": {
     id: "bharatanatyam",
@@ -134,7 +140,8 @@ export const artFormDetailsMap: Record<string, ArtFormDetails> = {
       "https://karnatakatourism.org/wp-content/uploads/2020/05/Dane.jpg",
       "https://images.squarespace-cdn.com/content/v1/60c7105b70fe8d18bb55fa5c/1624000918568-56FS9SI40BU7HCROUYO0/13123030_993619280706392_1702075096596948457_o.jpg"
     ],
-    states: ["tamil-nadu"]
+    states: ["tamil-nadu"],
+    regions: ["South India"]
   },
   "carnatic-music": {
     id: "carnatic-music",
@@ -151,7 +158,8 @@ export const artFormDetailsMap: Record<string, ArtFormDetails> = {
       "https://media.licdn.com/dms/image/v2/C5112AQESeCzBXl8Y7A/article-cover_image-shrink_720_1280/article-cover_image-shrink_720_1280/0/1572354781329?e=2147483647&v=beta&t=58Nls7E8hHHKHUmyiWaFKEWTgJngNcwL82WaQgpLkDA",
       "https://images.livemint.com/img/2024/01/19/original/carnatic_1705643562430.jpg"
     ],
-    states: ["tamil-nadu", "kerala", "karnataka", "andhra-pradesh"]
+    states: ["tamil-nadu", "kerala", "karnataka", "andhra-pradesh"],
+    regions: ["South India"]
   },
   "tanjore-paintings": {
     id: "tanjore-paintings",
@@ -168,7 +176,8 @@ export const artFormDetailsMap: Record<string, ArtFormDetails> = {
       "https://4.imimg.com/data4/KY/YL/MY-3723800/tanjore-paintings.jpg",
       "https://c9admin.cottage9.com/uploads/1945/tanjore-paintings_1.jpg"
     ],
-    states: ["tamil-nadu"]
+    states: ["tamil-nadu"],
+    regions: ["South India"]
   },
   "nati-dance": {
     id: "nati-dance",
@@ -185,7 +194,8 @@ export const artFormDetailsMap: Record<string, ArtFormDetails> = {
       "https://64.media.tumblr.com/e8c0250f9677e6f85cd1bf7b8b70131f/9b69d77883e821ae-c9/s1280x1920/063171053d2b926d236f8364c3e7ab1561aa2cd4.jpg",
       "https://thumbs.dreamstime.com/z/kullu-himachal-pradesh-india-st-july-group-himachali-women-dancing-nati-dance-traditional-folk-dance-upper-himachal-259961182.jpg"
     ],
-    states: ["himachal-pradesh"]
+    states: ["himachal-pradesh"],
+    regions: ["Northern India"]
   },
   "thangka-paintings": {
     id: "thangka-paintings",
@@ -202,7 +212,8 @@ export const artFormDetailsMap: Record<string, ArtFormDetails> = {
       "https://i1.himalayas.life/c/u/f67894297b6134a6b759b3a9ec15b6cb/2018/04/26054954/26-e1522558104714.jpeg",
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSVX92htoKwCc4tDToVkM1jB4uN3Fym2-8zAA&s"
     ],
-    states: ["himachal-pradesh", "sikkim", "arunachal-pradesh"]
+    states: ["himachal-pradesh", "sikkim", "arunachal-pradesh"],
+    regions: ["Northern India", "Northeast India"]
   },
   "chamba-rumal": {
     id: "chamba-rumal",
@@ -219,7 +230,8 @@ export const artFormDetailsMap: Record<string, ArtFormDetails> = {
       "https://indiacurrents.com/wp-content/uploads/2021/05/Chamba-Rumal-art-work-1.jpg",
       "https://www.bridgebharat.com/cdn/shop/files/BBP0050SCR00008_1_533x.jpg?v=1707767544"
     ],
-    states: ["himachal-pradesh"]
+    states: ["himachal-pradesh"],
+    regions: ["Northern India"]
   },
   "fado-music": {
     id: "fado-music",
@@ -236,7 +248,8 @@ export const artFormDetailsMap: Record<string, ArtFormDetails> = {
       "https://media-cdn.tripadvisor.com/media/attractions-splice-spp-720x480/15/55/58/2a.jpg",
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfkxKBlFqUttS-obx47fBtysj9tSqS2xuuWE67cbznchHn97aIwlYzicSp884zYcHITqI&usqp=CAU"
     ],
-    states: ["goa"]
+    states: ["goa"],
+    regions: ["West India"]
   },
   "goan-carnival": {
     id: "goan-carnival",
@@ -253,7 +266,8 @@ export const artFormDetailsMap: Record<string, ArtFormDetails> = {
       "https://i0.wp.com/www.easeindiatrip.com/blog/wp-content/uploads/2025/02/Goa-Goa-Carnival-festival.jpg?fit=1024%2C630&ssl=1",
       "https://traveltradejournal.com/wp-content/uploads/2023/02/Goa-Carnival.jpg"
     ],
-    states: ["goa"]
+    states: ["goa"],
+    regions: ["West India"]
   },
   "traditional-pottery": {
     id: "traditional-pottery",
@@ -270,7 +284,8 @@ export const artFormDetailsMap: Record<string, ArtFormDetails> = {
       "https://poothali.com/wp-content/uploads/2023/08/Traditional-Pottery-in-Erikkulam.jpg",
       "https://images.indianexpress.com/2019/11/pottery759.jpeg"
     ],
-    states: ["gujarat", "rajasthan", "tamil-nadu", "uttar-pradesh", "west-bengal"]
+    states: ["gujarat", "rajasthan", "tamil-nadu", "uttar-pradesh", "west-bengal"],
+    regions: ["West India", "Northern India", "South India", "East India"]
   }
 };
 
@@ -290,7 +305,8 @@ export const defaultArtFormDetails: ArtFormDetails = {
     "https://blogs.penkraft.in/wp-content/uploads/2021/06/Add-a-subheading-735x400.png",
     "https://blogs.penkraft.in/wp-content/uploads/2021/06/Add-a-subheading-735x400.png"
   ],
-  states: []
+  states: [],
+  regions: []
 };
 
 // Get details for a specific art form, falling back to default if not found

@@ -32,7 +32,7 @@ const getRegionId = (regionName: string): string => {
   return regionMap[regionName] || "other";
 };
 
-// Map of state IDs to state names
+// Map of state IDs to state names - self-contained within this file
 const stateNames: Record<string, string> = {
   "rajasthan": "Rajasthan",
   "kerala": "Kerala",
@@ -48,7 +48,7 @@ const stateNames: Record<string, string> = {
   "arunachal-pradesh": "Arunachal Pradesh"
 };
 
-// Map of state IDs to region names
+// Map of state IDs to region names - self-contained within this file
 const stateRegions: Record<string, string> = {
   "rajasthan": "Northern India",
   "kerala": "South India",
