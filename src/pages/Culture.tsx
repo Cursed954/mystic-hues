@@ -42,8 +42,8 @@ const Culture = () => {
 
     filteredArts = filteredArts.filter(art => {
       const matchesSearch = art.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                            art.stateNames.some(state => state.toLowerCase().includes(searchTerm.toLowerCase()));
-      const matchesState = activeStateFilter === 'All' || art.stateNames.includes(activeStateFilter);
+                            art.stateName.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesState = activeStateFilter === 'All' || art.stateName === activeStateFilter;
       return matchesSearch && matchesState;
     });
 
@@ -179,7 +179,7 @@ const Culture = () => {
                               <h3 className="text-xl font-medium mb-3">{art.name}</h3>
                               <div className="flex items-center text-sm text-muted-foreground">
                                 <MapPin size={16} className="mr-1" />
-                                <span>{art.stateNames.join(', ')}</span>
+                                <span>{art.stateName}</span>
                               </div>
                               {art.regionName && (
                                 <div className="flex items-center text-sm text-muted-foreground mt-1">
@@ -324,7 +324,7 @@ const Culture = () => {
                   <h2 className="text-3xl font-serif text-white">{selectedArtForm.name}</h2>
                   <p className="text-white/80 flex items-center">
                     <MapPin size={16} className="mr-1" />
-                    {selectedArtForm.stateNames.join(', ')}
+                    {selectedArtForm.stateName}
                   </p>
                   {selectedArtForm.regionName && (
                     <p className="text-white/80 flex items-center mt-1">
