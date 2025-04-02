@@ -5,8 +5,10 @@ import { getArtFormDetails } from './artformdata';
 export type ArtForm = {
   id: string;
   name: string;
-  stateId: string;
-  stateName: string;
+  stateId: string; // Primary state ID
+  stateName: string; // Primary state name
+  stateIds: string[]; // All states where this art form is practiced
+  stateNames: string[]; // All state names where this art form is practiced
   regionId: string;
   regionName: string;
   image: string;
@@ -64,52 +66,104 @@ const stateRegions: Record<string, string> = {
   "arunachal-pradesh": "Northeast India"
 };
 
-// List of art forms with their respective state IDs
-const artFormsList = [
-  { name: "Kathputli", stateIds: ["rajasthan"] },
-  { name: "Ghoomar", stateIds: ["rajasthan"] },
-  { name: "Kalbeliya", stateIds: ["rajasthan"] },
-  { name: "Kathakali", stateIds: ["kerala"] },
-  { name: "Mohiniyattam", stateIds: ["kerala"] },
-  { name: "Kalaripayattu", stateIds: ["kerala"] },
-  { name: "Bharatanatyam", stateIds: ["tamil-nadu"] },
-  { name: "Carnatic Music", stateIds: ["tamil-nadu", "kerala", "karnataka", "andhra-pradesh"] },
-  { name: "Tanjore Paintings", stateIds: ["tamil-nadu"] },
-  { name: "Nati Dance", stateIds: ["himachal-pradesh"] },
-  { name: "Thangka Paintings", stateIds: ["himachal-pradesh", "sikkim", "arunachal-pradesh"] },
-  { name: "Chamba Rumal", stateIds: ["himachal-pradesh"] },
-  { name: "Fado Music", stateIds: ["goa"] },
-  { name: "Goan Carnival", stateIds: ["goa"] },
-  { name: "Traditional Pottery", stateIds: ["gujarat", "rajasthan", "tamil-nadu", "uttar-pradesh", "west-bengal"] }
+// Define unique art forms with all their states
+const uniqueArtFormsList = [
+  { 
+    name: "Kathputli", 
+    stateIds: ["rajasthan"] 
+  },
+  { 
+    name: "Ghoomar", 
+    stateIds: ["rajasthan"] 
+  },
+  { 
+    name: "Kalbeliya", 
+    stateIds: ["rajasthan"] 
+  },
+  { 
+    name: "Kathakali", 
+    stateIds: ["kerala"] 
+  },
+  { 
+    name: "Mohiniyattam", 
+    stateIds: ["kerala"] 
+  },
+  { 
+    name: "Kalaripayattu", 
+    stateIds: ["kerala"] 
+  },
+  { 
+    name: "Bharatanatyam", 
+    stateIds: ["tamil-nadu"] 
+  },
+  { 
+    name: "Carnatic Music", 
+    stateIds: ["tamil-nadu", "kerala", "karnataka", "andhra-pradesh"] 
+  },
+  { 
+    name: "Tanjore Paintings", 
+    stateIds: ["tamil-nadu"] 
+  },
+  { 
+    name: "Nati Dance", 
+    stateIds: ["himachal-pradesh"] 
+  },
+  { 
+    name: "Thangka Paintings", 
+    stateIds: ["himachal-pradesh", "sikkim", "arunachal-pradesh"] 
+  },
+  { 
+    name: "Chamba Rumal", 
+    stateIds: ["himachal-pradesh"] 
+  },
+  { 
+    name: "Fado Music", 
+    stateIds: ["goa"] 
+  },
+  { 
+    name: "Goan Carnival", 
+    stateIds: ["goa"] 
+  },
+  { 
+    name: "Traditional Pottery", 
+    stateIds: ["gujarat", "rajasthan", "tamil-nadu", "uttar-pradesh", "west-bengal"] 
+  }
 ];
 
-// Create art form objects for each art form in each state
-export const artForms: ArtForm[] = artFormsList.flatMap(artForm => 
-  artForm.stateIds.map(stateId => {
-    const stateName = stateNames[stateId] || stateId;
-    const regionName = stateRegions[stateId] || "Other Region";
-    const regionId = getRegionId(regionName);
-    
-    // Create slug for the ID
-    const artId = artForm.name.toLowerCase().replace(/\s+/g, '-');
-    
-    // Get art form details from the detailed data source
-    const artDetails = getArtFormDetails(artForm.name);
-    
-    return {
-      id: `${stateId}-${artId}`,
-      name: artForm.name,
-      stateId: stateId,
-      stateName: stateName,
-      regionId: regionId,
-      regionName: regionName,
-      image: artDetails.image,
-      description: artDetails.description,
-      history: artDetails.history,
-      additionalImages: artDetails.additionalImages
-    };
-  })
-);
+// Create unique art form objects
+export const artForms: ArtForm[] = uniqueArtFormsList.map(artForm => {
+  // Create slug for the ID
+  const artId = artForm.name.toLowerCase().replace(/\s+/g, '-');
+  
+  // Primary state (first in the list)
+  const primaryStateId = artForm.stateIds[0];
+  const primaryStateName = stateNames[primaryStateId] || primaryStateId;
+  
+  // Get all state names
+  const allStateNames = artForm.stateIds.map(id => stateNames[id] || id);
+  
+  // Region is based on the primary state
+  const regionName = stateRegions[primaryStateId] || "Other Region";
+  const regionId = getRegionId(regionName);
+  
+  // Get art form details from the detailed data source
+  const artDetails = getArtFormDetails(artForm.name);
+  
+  return {
+    id: artId,
+    name: artForm.name,
+    stateId: primaryStateId,
+    stateName: primaryStateName,
+    stateIds: artForm.stateIds,
+    stateNames: allStateNames,
+    regionId: regionId,
+    regionName: regionName,
+    image: artDetails.image,
+    description: artDetails.description,
+    history: artDetails.history,
+    additionalImages: artDetails.additionalImages
+  };
+});
 
 // Function to get artforms by region
 export const getArtFormsByRegion = (regionId: string): ArtForm[] => {
@@ -119,7 +173,7 @@ export const getArtFormsByRegion = (regionId: string): ArtForm[] => {
 
 // Function to get artforms by state
 export const getArtFormsByState = (stateId: string): ArtForm[] => {
-  return artForms.filter(art => art.stateId === stateId);
+  return artForms.filter(art => art.stateIds.includes(stateId));
 };
 
 // Function to get a specific artform by ID
