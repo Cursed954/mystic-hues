@@ -105,17 +105,22 @@ const SignUp = () => {
     }
   };
 
+  const navigateToLogin = (e: React.MouseEvent) => {
+    e.preventDefault();
+    navigate('/login');
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center px-4 relative overflow-hidden">
       <div className="absolute inset-0 -z-10">
-        <div className="absolute top-0 right-0 w-2/3 h-2/3 bg-emerald-600/30 rounded-full filter blur-3xl opacity-40 animate-float" />
-        <div className="absolute bottom-0 left-0 w-2/3 h-2/3 bg-teal-600/20 rounded-full filter blur-3xl opacity-40 animate-pulse-slow" />
+        <div className="absolute top-0 right-0 w-2/3 h-2/3 bg-violet-600/30 rounded-full filter blur-3xl opacity-40 animate-float" />
+        <div className="absolute bottom-0 left-0 w-2/3 h-2/3 bg-indigo-600/20 rounded-full filter blur-3xl opacity-40 animate-pulse-slow" />
       </div>
 
       <div className="absolute inset-0 -z-5">
-        <div className="absolute top-1/4 right-1/4 w-32 h-32 border border-emerald-500/20 rounded-full" />
-        <div className="absolute bottom-1/4 left-1/4 w-48 h-48 border border-teal-500/20 rounded-full" />
-        <div className="absolute top-1/3 left-1/3 w-24 h-24 border border-emerald-500/30 rounded-full" />
+        <div className="absolute top-1/4 right-1/4 w-32 h-32 border border-violet-500/20 rounded-full" />
+        <div className="absolute bottom-1/4 left-1/4 w-48 h-48 border border-violet-500/20 rounded-full" />
+        <div className="absolute top-1/3 left-1/3 w-24 h-24 border border-violet-500/30 rounded-full" />
         <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(to_bottom,transparent,white,transparent)]" />
       </div>
 
@@ -126,7 +131,7 @@ const SignUp = () => {
         transition={{ duration: 0.6 }}
       >
         <div className="text-center mb-10">
-          <h1 className="text-4xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-600">
+          <h1 className="text-4xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-indigo-600">
             Create Account
           </h1>
           <p className="text-gray-400">Sign up to start your journey through India</p>
@@ -148,13 +153,13 @@ const SignUp = () => {
                 Full Name
               </label>
               <div className="relative group">
-                <User className="absolute left-4 top-1/2 transform -translate-y-1/2 text-emerald-400 w-5 h-5" />
+                <User className="absolute left-4 top-1/2 transform -translate-y-1/2 text-violet-400 w-5 h-5" />
                 <input
                   id="name"
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full bg-gray-800/50 backdrop-blur-sm text-white pl-12 pr-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 border border-emerald-500/30 transition-all duration-300"
+                  className="w-full bg-gray-800/50 backdrop-blur-sm text-white pl-12 pr-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500 border border-violet-500/30 transition-all duration-300"
                   placeholder="Enter your full name"
                   required
                 />
@@ -170,13 +175,13 @@ const SignUp = () => {
                 Email Address
               </label>
               <div className="relative group">
-                <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 text-emerald-400 w-5 h-5" />
+                <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 text-violet-400 w-5 h-5" />
                 <input
                   id="email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-gray-800/50 backdrop-blur-sm text-white pl-12 pr-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 border border-emerald-500/30 transition-all duration-300"
+                  className="w-full bg-gray-800/50 backdrop-blur-sm text-white pl-12 pr-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500 border border-violet-500/30 transition-all duration-300"
                   placeholder="Enter your email"
                   required
                 />
@@ -192,13 +197,13 @@ const SignUp = () => {
                 Password
               </label>
               <div className="relative group">
-                <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-emerald-400 w-5 h-5" />
+                <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-violet-400 w-5 h-5" />
                 <input
                   id="password"
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-gray-800/50 backdrop-blur-sm text-white pl-12 pr-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 border border-emerald-500/30 transition-all duration-300"
+                  className="w-full bg-gray-800/50 backdrop-blur-sm text-white pl-12 pr-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500 border border-violet-500/30 transition-all duration-300"
                   placeholder="Create a password"
                   required
                 />
@@ -214,13 +219,13 @@ const SignUp = () => {
                 Confirm Password
               </label>
               <div className="relative group">
-                <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-emerald-400 w-5 h-5" />
+                <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-violet-400 w-5 h-5" />
                 <input
                   id="confirmPassword"
                   type="password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="w-full bg-gray-800/50 backdrop-blur-sm text-white pl-12 pr-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 border border-emerald-500/30 transition-all duration-300"
+                  className="w-full bg-gray-800/50 backdrop-blur-sm text-white pl-12 pr-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500 border border-violet-500/30 transition-all duration-300"
                   placeholder="Confirm your password"
                   required
                 />
@@ -230,7 +235,7 @@ const SignUp = () => {
             <motion.button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white py-3 rounded-lg font-semibold flex items-center justify-center gap-2 transition-all duration-300 relative overflow-hidden group shadow-lg shadow-emerald-900/30"
+              className="w-full bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white py-3 rounded-lg font-semibold flex items-center justify-center gap-2 transition-all duration-300 relative overflow-hidden group shadow-lg shadow-violet-900/30"
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.7, duration: 0.4 }}
@@ -265,7 +270,7 @@ const SignUp = () => {
 
             <div className="mt-6 grid grid-cols-2 gap-4">
               <motion.button 
-                className="flex items-center justify-center gap-2 px-4 py-3 border border-emerald-500/30 rounded-lg bg-gray-800/30 backdrop-blur-sm hover:bg-gray-700/50 transition-all duration-300"
+                className="flex items-center justify-center gap-2 px-4 py-3 border border-violet-500/30 rounded-lg bg-gray-800/30 backdrop-blur-sm hover:bg-gray-700/50 transition-all duration-300"
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
                 onClick={() => handleSocialLogin('google')}
@@ -281,7 +286,7 @@ const SignUp = () => {
                 )}
               </motion.button>
               <motion.button 
-                className="flex items-center justify-center gap-2 px-4 py-3 border border-emerald-500/30 rounded-lg bg-gray-800/30 backdrop-blur-sm hover:bg-gray-700/50 transition-all duration-300"
+                className="flex items-center justify-center gap-2 px-4 py-3 border border-violet-500/30 rounded-lg bg-gray-800/30 backdrop-blur-sm hover:bg-gray-700/50 transition-all duration-300"
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
                 onClick={() => handleSocialLogin('github')}
@@ -307,12 +312,15 @@ const SignUp = () => {
           transition={{ delay: 0.9, duration: 0.6 }}
         >
           Already have an account?{' '}
-          <button 
-            onClick={() => navigate('/login')}
-            className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-500 hover:from-emerald-500 hover:to-teal-600 font-medium transition-all duration-300 hover:scale-105 inline-block"
+          <motion.button 
+            onClick={navigateToLogin}
+            className="relative text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-indigo-500 font-medium inline-block"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
-            Sign in
-          </button>
+            <span className="relative z-10">Sign in</span>
+            <span className="absolute inset-0 bg-gradient-to-r from-violet-400/20 to-indigo-500/20 rounded-md -z-10 opacity-0 hover:opacity-100 transition-opacity duration-300"></span>
+          </motion.button>
         </motion.p>
       </motion.div>
     </div>

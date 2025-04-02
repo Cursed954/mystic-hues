@@ -84,6 +84,11 @@ const Login = () => {
     }
   };
 
+  const navigateToSignUp = (e: React.MouseEvent) => {
+    e.preventDefault();
+    navigate('/signup');
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center px-4 relative overflow-hidden">
       <div className="absolute inset-0 -z-10">
@@ -263,12 +268,15 @@ const Login = () => {
           transition={{ delay: 0.8, duration: 0.6 }}
         >
           Don't have an account?{' '}
-          <button
-            onClick={() => navigate('/signup')}
-            className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-indigo-500 hover:from-violet-500 hover:to-indigo-600 font-medium transition-all duration-300 hover:scale-105 inline-block"
+          <motion.button
+            onClick={navigateToSignUp}
+            className="relative text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-indigo-500 font-medium inline-block"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
-            Sign up for free
-          </button>
+            <span className="relative z-10">Sign up for free</span>
+            <span className="absolute inset-0 bg-gradient-to-r from-violet-400/20 to-indigo-500/20 rounded-md -z-10 opacity-0 hover:opacity-100 transition-opacity duration-300"></span>
+          </motion.button>
         </motion.p>
       </motion.div>
     </div>
