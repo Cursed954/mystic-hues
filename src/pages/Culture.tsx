@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
@@ -20,7 +21,8 @@ const Culture = () => {
   const [selectedFestival, setSelectedFestival] = useState<Festival | null>(null);
   const [selectedHeritageSite, setSelectedHeritageSite] = useState<HeritageSite | null>(null);
 
-  const states = ['All', ...new Set(artForms.map(art => art.stateName))];
+  // Get unique list of states from all art forms
+  const states = ['All', ...new Set(artForms.flatMap(art => art.stateNames))];
 
   const [filteredArtForms, setFilteredArtForms] = useState<ArtForm[]>([]);
   const [filteredFestivals, setFilteredFestivals] = useState(festivals);
@@ -34,7 +36,8 @@ const Culture = () => {
     if (activeRegionFilter !== 'All') {
       const region = regions.find(r => r.name.toLowerCase() === activeRegionFilter.toLowerCase());
       if (region) {
-        filteredArts = filteredArts.filter(art => region.states.includes(art.stateId));
+        filteredArts = filteredArts.filter(art => art.regionName.toLowerCase() === activeRegionFilter.toLowerCase() || 
+                                                 art.regionId === 'all-india');
         filteredFests = filteredFests.filter(festival => region.states.includes(festival.stateId));
         filteredSites = filteredSites.filter(site => region.states.includes(site.stateId));
       }
@@ -42,8 +45,8 @@ const Culture = () => {
 
     filteredArts = filteredArts.filter(art => {
       const matchesSearch = art.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                            art.stateName.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesState = activeStateFilter === 'All' || art.stateName === activeStateFilter;
+                            art.stateNames.some(state => state.toLowerCase().includes(searchTerm.toLowerCase()));
+      const matchesState = activeStateFilter === 'All' || art.stateNames.includes(activeStateFilter);
       return matchesSearch && matchesState;
     });
 
@@ -70,7 +73,7 @@ const Culture = () => {
     setFilteredArtForms(filteredArts);
     setFilteredFestivals(filteredFests);
     setFilteredHeritageSites(filteredSites);
-  }, [searchTerm, activeStateFilter, activeRegionFilter]); // Add activeRegionFilter to dependencies
+  }, [searchTerm, activeStateFilter, activeRegionFilter]); 
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -179,7 +182,11 @@ const Culture = () => {
                               <h3 className="text-xl font-medium mb-3">{art.name}</h3>
                               <div className="flex items-center text-sm text-muted-foreground">
                                 <MapPin size={16} className="mr-1" />
-                                <span>{art.stateName}</span>
+                                <span>
+                                  {art.stateNames.length > 1 
+                                    ? `${art.stateNames[0]} and ${art.stateNames.length - 1} more` 
+                                    : art.stateNames[0]}
+                                </span>
                               </div>
                               {art.regionName && (
                                 <div className="flex items-center text-sm text-muted-foreground mt-1">
@@ -324,7 +331,7 @@ const Culture = () => {
                   <h2 className="text-3xl font-serif text-white">{selectedArtForm.name}</h2>
                   <p className="text-white/80 flex items-center">
                     <MapPin size={16} className="mr-1" />
-                    {selectedArtForm.stateName}
+                    {selectedArtForm.stateNames.join(', ')}
                   </p>
                   {selectedArtForm.regionName && (
                     <p className="text-white/80 flex items-center mt-1">
