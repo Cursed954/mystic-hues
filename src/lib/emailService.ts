@@ -1,7 +1,10 @@
 
 /**
  * Email service for handling contact form submissions
+ * Enhanced with improved email formatting and delivery
  */
+
+import { stateData } from '@/data/stateData';
 
 // In a real implementation, this would connect to a backend service
 
@@ -35,23 +38,86 @@ export const emailService = {
       // Simulate network delay for realism
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // In a real implementation with Supabase, this would:
-      // 1. Call a Supabase Edge Function that sends emails
-      // 2. Store the message in a Supabase table for reference
+      // Get destination details if selected
+      let destinationInfo = "Not specified";
+      if (data.destination) {
+        const selectedState = stateData.find(state => state.id === data.destination);
+        if (selectedState) {
+          destinationInfo = `${selectedState.name} (${selectedState.region})`;
+        }
+      }
       
-      // For demonstration purposes, log what would be sent in a real app
-      console.log("Email would be sent with the following data:");
-      console.log({
-        to: ["adhirajpundir783@gmail.com", "deepanshu95488@gmail.com"],
-        subject: `New Contact Form Submission from ${data.name}`,
-        html: `
-          <h1>New Message from Contact Form</h1>
-          <p><strong>Name:</strong> ${data.name}</p>
-          <p><strong>Email:</strong> ${data.email}</p>
-          <p><strong>Destination:</strong> ${data.destination || 'Not specified'}</p>
-          <p><strong>Message:</strong> ${data.message}</p>
-        `
+      // Format current date and time
+      const currentDate = new Date();
+      const formattedDate = currentDate.toLocaleDateString('en-US', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
       });
+      const formattedTime = currentDate.toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+      
+      // In a real implementation with backend, this would send the email
+      console.log("======= EMAIL CONTENT =======");
+      console.log(`
+        To: adhirajpundir783@gmail.com, deepanshu95488@gmail.com
+        Subject: New Travel Inquiry from ${data.name}
+        
+        ---------- MYSTIC INDIA TRAVEL INQUIRY ----------
+        
+        CONTACT DETAILS:
+        Name: ${data.name}
+        Email: ${data.email}
+        Submitted on: ${formattedDate} at ${formattedTime}
+        
+        TRAVEL DETAILS:
+        Interested Destination: ${destinationInfo}
+        
+        MESSAGE:
+        ${data.message}
+        
+        -------------------------------------------
+        
+        This inquiry was submitted through the Mystic India website contact form.
+        Please respond to the customer within 24 hours.
+      `);
+      console.log("==============================");
+      
+      // Email confirmation to user (in a real implementation)
+      console.log("======= USER CONFIRMATION EMAIL =======");
+      console.log(`
+        To: ${data.email}
+        Subject: We've Received Your Mystic India Travel Inquiry
+        
+        Dear ${data.name},
+        
+        Thank you for your interest in exploring India with us!
+        
+        We have received your inquiry and one of our travel experts will get back to you shortly to discuss your journey to ${destinationInfo}.
+        
+        Here's a summary of your message:
+        
+        ${data.message}
+        
+        If you have any immediate questions, please feel free to call us at +91 63961 44121.
+        
+        Warm regards,
+        The Mystic India Team
+      `);
+      console.log("==============================");
+      
+      // Store submission in local storage for demo purposes
+      // In a real implementation, this would be stored in a database
+      const contactSubmissions = JSON.parse(localStorage.getItem('contactSubmissions') || '[]');
+      contactSubmissions.push({
+        id: Date.now(),
+        ...data,
+        submittedAt: new Date().toISOString()
+      });
+      localStorage.setItem('contactSubmissions', JSON.stringify(contactSubmissions));
       
       return {
         success: true,

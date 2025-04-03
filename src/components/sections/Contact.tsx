@@ -1,8 +1,10 @@
+
 import React, { useState } from 'react';
 import ScrollReveal from '../ui/ScrollReveal';
 import { Send, Mail, Phone, MapPin } from 'lucide-react';
 import { emailService, ContactFormData } from '@/lib/emailService';
 import { useToast } from '@/hooks/use-toast';
+import { stateData } from '@/data/stateData';
 
 const Contact: React.FC = () => {
   const [formState, setFormState] = useState<ContactFormData>({
@@ -78,9 +80,22 @@ const Contact: React.FC = () => {
     }
   };
 
+  // Group states by region for better organization in the dropdown
+  const statesByRegion = stateData.reduce((acc, state) => {
+    const region = state.region || 'Other';
+    if (!acc[region]) {
+      acc[region] = [];
+    }
+    acc[region].push(state);
+    return acc;
+  }, {} as Record<string, typeof stateData>);
+  
+  // Get unique regions
+  const regions = Object.keys(statesByRegion).sort();
+
   return (
     <section id="contact" className="relative py-24 px-6 overflow-hidden">
-  <div className="absolute inset-12 rounded-3xl bg-white/40 dark:bg-white/5 backdrop-blur-sm border border-white/50 dark:border-white/20 z-0"></div>
+      <div className="absolute inset-12 rounded-3xl bg-white/40 dark:bg-white/5 backdrop-blur-sm border border-white/50 dark:border-white/20 z-0"></div>
       {/* Background Elements */}
       <div className="absolute top-20 right-0 w-64 h-64 bg-spice-100 rounded-full blur-3xl opacity-30"></div>
       <div className="absolute bottom-10 left-10 w-72 h-72 bg-indigo-100 rounded-full blur-3xl opacity-30"></div>
@@ -201,12 +216,15 @@ const Contact: React.FC = () => {
                       className="w-full px-4 py-3 rounded-md border border-mystic-200 focus:border-spice-400 focus:ring focus:ring-spice-100 transition-colors text-black"
                     >
                       <option value="">Select destination</option>
-                      <option value="rajasthan">Rajasthan</option>
-                      <option value="kerala">Kerala</option>
-                      <option value="himalayas">Himalayas</option>
-                      <option value="goa">Goa</option>
-                      <option value="varanasi">Varanasi</option>
-                      <option value="other">Other</option>
+                      {regions.map(region => (
+                        <optgroup key={region} label={region}>
+                          {statesByRegion[region].map(state => (
+                            <option key={state.id} value={state.id}>
+                              {state.name}
+                            </option>
+                          ))}
+                        </optgroup>
+                      ))}
                     </select>
                   </div>
                   
