@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import ScrollReveal from '../ui/ScrollReveal';
@@ -31,7 +30,7 @@ const Culture: React.FC = () => {
     if (activeRegionFilter !== 'all') {
       const region = regions.find(r => r.id === activeRegionFilter);
       if (region) {
-        filtered = culturalData.filter(item => region.states.includes(item.id));
+        filtered = culturalData.filter(item => region.items.includes(item.id));
       }
     }
     
