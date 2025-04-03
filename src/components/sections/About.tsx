@@ -4,6 +4,7 @@ import { MapPin, Users, Compass, Clock } from 'lucide-react';
 import ScrollReveal from '../ui/ScrollReveal';
 import SectionHeader from '../ui/SectionHeader';
 import { motion, AnimatePresence } from 'framer-motion';
+import useMobile from '@/hooks/use-mobile';
 
 // Cultural images from the Culture page
 const culturalImages = [
@@ -40,6 +41,7 @@ const FeatureItem: React.FC<{
 
 const About: React.FC = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const isMobile = useMobile();
 
   useEffect(() => {
     // Change image every 5 seconds
@@ -51,6 +53,33 @@ const About: React.FC = () => {
 
     return () => clearInterval(interval);
   }, []);
+
+  const featureItems = [
+    {
+      icon: <MapPin className="text-spice-500" size={22} />,
+      title: "Curated Destinations",
+      description: "Handpicked locations that showcase India's diversity",
+      delay: 10
+    },
+    {
+      icon: <Users className="text-spice-500" size={22} />,
+      title: "Local Experiences",
+      description: "Connect with communities and traditional cultures",
+      delay: 20
+    },
+    {
+      icon: <Compass className="text-spice-500" size={22} />,
+      title: "Expert Guidance",
+      description: "Knowledgeable guides who bring stories to life",
+      delay: 30
+    },
+    {
+      icon: <Clock className="text-spice-500" size={22} />,
+      title: "Mindful Travel",
+      description: "Sustainable practices that respect people and places",
+      delay: 40
+    }
+  ];
 
   return (
     <section id="about" className="py-24 px-6">
@@ -126,35 +155,45 @@ const About: React.FC = () => {
             </ScrollReveal>
 
             {/* Features */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-8">
-              <FeatureItem 
-                icon={<MapPin className="text-spice-500" size={22} />}
-                title="Curated Destinations"
-                description="Handpicked locations that showcase India's diversity"
-                delay={10}
-              />
-              
-              <FeatureItem 
-                icon={<Users className="text-spice-500" size={22} />}
-                title="Local Experiences"
-                description="Connect with communities and traditional cultures"
-                delay={20}
-              />
-              
-              <FeatureItem 
-                icon={<Compass className="text-spice-500" size={22} />}
-                title="Expert Guidance"
-                description="Knowledgeable guides who bring stories to life"
-                delay={30}
-              />
-              
-              <FeatureItem 
-                icon={<Clock className="text-spice-500" size={22} />}
-                title="Mindful Travel"
-                description="Sustainable practices that respect people and places"
-                delay={40}
-              />
-            </div>
+            {isMobile ? (
+              <div className="space-y-6 mt-8">
+                {/* In mobile, show only first feature item by default */}
+                <FeatureItem 
+                  icon={featureItems[0].icon}
+                  title={featureItems[0].title}
+                  description={featureItems[0].description}
+                />
+                
+                {/* Add a "view more" toggle for mobile */}
+                <details className="mt-4">
+                  <summary className="cursor-pointer text-spice-500 font-medium">
+                    View more features
+                  </summary>
+                  <div className="space-y-6 mt-4">
+                    {featureItems.slice(1).map((item, index) => (
+                      <FeatureItem 
+                        key={index}
+                        icon={item.icon}
+                        title={item.title}
+                        description={item.description}
+                      />
+                    ))}
+                  </div>
+                </details>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-8">
+                {featureItems.map((item, index) => (
+                  <FeatureItem 
+                    key={index}
+                    icon={item.icon}
+                    title={item.title}
+                    description={item.description}
+                    delay={item.delay}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>

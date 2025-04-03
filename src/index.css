@@ -78,6 +78,7 @@
   body {
     @apply bg-background text-foreground font-sans;
     overflow-x: hidden;
+    font-feature-settings: "rlig" 1, "calt" 1;
   }
 
   .light body {
@@ -226,5 +227,25 @@
   
   .animate-delay-500 {
     animation-delay: 500ms;
+  }
+}
+
+@layer utilities {
+  .scrollbar-hide {
+    /* For Chrome, Safari and Opera */
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .snap-x {
+    scroll-snap-type: x mandatory;
+  }
+  
+  .snap-start {
+    scroll-snap-align: start;
   }
 }

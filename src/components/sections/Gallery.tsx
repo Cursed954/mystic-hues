@@ -3,6 +3,8 @@ import ScrollReveal from '../ui/ScrollReveal';
 import { ChevronLeft, ChevronRight, X, Download } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../theme/ThemeProvider';
+import HorizontalScroll from '../ui/horizontal-scroll';
+import useMobile from '@/hooks/use-mobile';
 
 type ImageType = {
   id: number;
@@ -14,6 +16,7 @@ type ImageType = {
 const Gallery: React.FC = () => {
   const [selectedImage, setSelectedImage] = useState<ImageType | null>(null);
   const { theme } = useTheme();
+  const isMobile = useMobile();
 
   const images: ImageType[] = [
     {
@@ -118,34 +121,31 @@ const Gallery: React.FC = () => {
         </ScrollReveal>
 
         {/* Gallery Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
-          {images.map((image, index) => (
-            <ScrollReveal key={image.id} delay={(index % 3) * 0.1} className="h-full">
-              <motion.div 
-                className={`image-card h-full ${theme === 'dark' ? 'bg-black/10 shadow-lg dark:shadow-black/50 border border-white/5' : 'bg-white shadow-md border border-mystic-100'} rounded-lg overflow-hidden cursor-pointer`}
-                onClick={() => openLightbox(image)}
-                whileHover={{ y: -5, scale: 1.02, transition: { duration: 0.2 } }}
-              >
-                <div className="relative h-64 overflow-hidden">
-                  <img 
-                    src={image.url} 
-                    alt={image.alt} 
-                    className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 hover:opacity-100 transition-opacity flex items-end p-4">
-                    <span className="text-white font-medium">{image.location}</span>
-                  </div>
-                </div>
-                <div className="p-4">
-                  <span className="text-xs uppercase tracking-wider font-medium text-foreground dark:text-gray-300">
-                    {image.location}
-                  </span>
-                  <h3 className="text-lg font-medium mt-1">{image.alt}</h3>
-                </div>
-              </motion.div>
-            </ScrollReveal>
-          ))}
-        </div>
+        {isMobile ? (
+          <HorizontalScroll>
+            {images.map((image) => (
+              <div key={image.id} className="min-w-[90%] snap-start">
+                <ImageCard 
+                  image={image} 
+                  theme={theme} 
+                  openLightbox={openLightbox} 
+                />
+              </div>
+            ))}
+          </HorizontalScroll>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
+            {images.map((image, index) => (
+              <ScrollReveal key={image.id} delay={(index % 3) * 0.1} className="h-full">
+                <ImageCard 
+                  image={image} 
+                  theme={theme} 
+                  openLightbox={openLightbox} 
+                />
+              </ScrollReveal>
+            ))}
+          </div>
+        )}
 
         {/* Lightbox */}
         <AnimatePresence>
@@ -211,6 +211,41 @@ const Gallery: React.FC = () => {
         </AnimatePresence>
       </div>
     </section>
+  );
+};
+
+const ImageCard = ({ 
+  image, 
+  theme, 
+  openLightbox 
+}: { 
+  image: ImageType; 
+  theme: string;
+  openLightbox: (image: ImageType) => void;
+}) => {
+  return (
+    <motion.div 
+      className={`image-card h-full ${theme === 'dark' ? 'bg-black/10 shadow-lg dark:shadow-black/50 border border-white/5' : 'bg-white shadow-md border border-mystic-100'} rounded-lg overflow-hidden cursor-pointer`}
+      onClick={() => openLightbox(image)}
+      whileHover={{ y: -5, scale: 1.02, transition: { duration: 0.2 } }}
+    >
+      <div className="relative h-64 overflow-hidden">
+        <img 
+          src={image.url} 
+          alt={image.alt} 
+          className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 hover:opacity-100 transition-opacity flex items-end p-4">
+          <span className="text-white font-medium">{image.location}</span>
+        </div>
+      </div>
+      <div className="p-4">
+        <span className="text-xs uppercase tracking-wider font-medium text-foreground dark:text-gray-300">
+          {image.location}
+        </span>
+        <h3 className="text-lg font-medium mt-1">{image.alt}</h3>
+      </div>
+    </motion.div>
   );
 };
 

@@ -11,9 +11,11 @@ import States from '@/components/sections/States';
 import Cuisine from '@/components/sections/Cuisine';
 import Reviews from '@/components/sections/Reviews';
 import { useTheme } from '@/components/theme/ThemeProvider';
+import useMobile from '@/hooks/use-mobile';
 
 const Index = () => {
   const { theme } = useTheme();
+  const isMobile = useMobile();
   
   useEffect(() => {
     // Smooth scroll to hash on page load
@@ -28,7 +30,7 @@ const Index = () => {
   }, []);
 
   return (
-    <div className="min-h-screen relative">
+    <div className={`min-h-screen relative ${isMobile ? 'mobile-view' : ''}`}>
       {/* Abstract backgrounds for light mode only */}
       {theme === 'light' && (
         <>
@@ -64,6 +66,34 @@ const Index = () => {
         </div>
       </main>
       <Footer />
+
+      {/* Add custom CSS for mobile view */}
+      <style jsx global>{`
+        @media (max-width: 768px) {
+          .mobile-view section {
+            scroll-snap-align: start;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+          }
+          
+          .mobile-view main {
+            scroll-snap-type: y mandatory;
+            overflow-y: scroll;
+            height: calc(100vh - 64px); /* Adjust based on your navbar height */
+          }
+        }
+        
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+        
+        .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      `}</style>
     </div>
   );
 };

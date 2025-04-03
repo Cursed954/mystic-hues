@@ -9,6 +9,7 @@ import { MapPin, Users, Calendar, ArrowRight, Globe, Filter, ChevronDown, Chevro
 import { culturalData } from '@/data/culturalData';
 import { regions, getStateRegion } from '@/data/cultural';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import useMobile from '@/hooks/use-mobile';
 
 const Culture: React.FC = () => {
   // Cultural data
@@ -16,6 +17,7 @@ const Culture: React.FC = () => {
   const [activeRegionFilter, setActiveRegionFilter] = useState<string>('all');
   const [filteredItems, setFilteredItems] = useState(culturalData.slice(0, 5));
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const isMobile = useMobile();
 
   // Function to get region name for a cultural item
   const getRegionName = (itemId: string): string => {
@@ -35,15 +37,15 @@ const Culture: React.FC = () => {
       }
     }
     
-    // Limit to 5 items
-    const limitedItems = filtered.slice(0, 5);
+    // Limit to 5 items for desktop, 1 for mobile
+    const limitedItems = filtered.slice(0, isMobile ? 1 : 5);
     setFilteredItems(limitedItems);
     
     // Set active tab to first item in filtered list if not already set or if current item isn't in filtered list
     if (!activeTab || !limitedItems.find(item => item.id === activeTab)) {
       setActiveTab(limitedItems[0]?.id || '');
     }
-  }, [activeRegionFilter, activeTab]);
+  }, [activeRegionFilter, activeTab, isMobile]);
 
   return (
     <section id="culture" className="py-24 px-6 relative">
@@ -65,51 +67,7 @@ const Culture: React.FC = () => {
           </div>
         </ScrollReveal>
 
-        {/* Collapsible Region filter */}
-        <ScrollReveal delay={1}>
-          <Collapsible 
-            open={isFilterOpen} 
-            onOpenChange={setIsFilterOpen}
-            className="mb-8 bg-background/80 rounded-lg shadow-sm overflow-hidden border border-border/50"
-          >
-            <CollapsibleTrigger className="flex items-center justify-between w-full p-4 text-left">
-              <div className="flex items-center gap-2">
-                <Filter className="h-4 w-4 text-spice-500" />
-                <span className="text-sm font-medium">Filter by Region</span>
-              </div>
-              {isFilterOpen ? (
-                <ChevronUp className="h-4 w-4 text-muted-foreground" />
-              ) : (
-                <ChevronDown className="h-4 w-4 text-muted-foreground" />
-              )}
-            </CollapsibleTrigger>
-            <CollapsibleContent className="p-4 pt-0 border-t border-border/50">
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-2 pt-4">
-                <button
-                  className={`p-2 rounded-md text-sm font-medium transition-colors ${activeRegionFilter === 'all' 
-                    ? 'bg-spice-500 text-white' 
-                    : 'bg-secondary/50 hover:bg-secondary'}`}
-                  onClick={() => setActiveRegionFilter('all')}
-                >
-                  All Regions
-                </button>
-                {regions.map(region => (
-                  <button
-                    key={region.id}
-                    className={`p-2 rounded-md text-sm font-medium transition-colors ${activeRegionFilter === region.id 
-                      ? 'bg-spice-500 text-white' 
-                      : 'bg-secondary/50 hover:bg-secondary'}`}
-                    onClick={() => setActiveRegionFilter(region.id)}
-                  >
-                    {region.name}
-                  </button>
-                ))}
-              </div>
-            </CollapsibleContent>
-          </Collapsible>
-        </ScrollReveal>
-
-        {/* Cultural Tabs - Limited to 5 */}
+        {/* Cultural Tabs - Limited based on device */}
         <ScrollReveal delay={2}>
           {filteredItems.length > 0 ? (
             <Tabs defaultValue={filteredItems[0]?.id} value={activeTab} onValueChange={setActiveTab} className="w-full">
@@ -118,11 +76,17 @@ const Culture: React.FC = () => {
                   <TabsTrigger 
                     key={item.id} 
                     value={item.id}
-                    className="px-6 py-3 data-[state=active]:bg-spice-50 data-[state=active]:text-spice-600 data-[state=active]:border-b-2 data-[state=active]:border-spice-500 data-[state=active]:shadow-none rounded-none"
+                    className="px-6 py-3 data-[state=active]:bg-spice-50 data-[state=active]:text-spice-600 data-[state=active]:border-b-2 data-[state=active]:border-spice-500 data-[state=active]:shadow-none rounded-none whitespace-nowrap"
                   >
                     {item.name}
                   </TabsTrigger>
                 ))}
+                
+                {isMobile && (
+                  <Link to="/culture" className="px-6 py-3 text-spice-500 whitespace-nowrap flex items-center">
+                    More <ArrowRight size={14} className="ml-1" />
+                  </Link>
+                )}
               </TabsList>
 
               {filteredItems.map((item) => (
@@ -172,12 +136,12 @@ const Culture: React.FC = () => {
                           <div className="pt-2">
                             <p className="font-medium mb-2">Famous For:</p>
                             <div className="flex flex-wrap gap-2">
-                              {item.famousFor.map((item, index) => (
+                              {item.famousFor.map((feature, index) => (
                                 <span 
                                   key={index} 
                                   className="px-3 py-1 bg-white/40 dark:bg-white/10 backdrop-blur-sm text-foreground/80 rounded-full text-sm"
                                 >
-                                  {item}
+                                  {feature}
                                 </span>
                               ))}
                             </div>
@@ -187,7 +151,7 @@ const Culture: React.FC = () => {
                       
                       <Link 
                         to={`/culture/${item.id}`} 
-                        className="btn-primary w-full justify-center inline-flex items-center "
+                        className="btn-primary w-full justify-center inline-flex items-center"
                       >
                         Explore {item.name} <ArrowRight size={16} className="ml-2" />
                       </Link>

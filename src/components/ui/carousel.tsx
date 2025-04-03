@@ -1,3 +1,4 @@
+
 import * as React from "react"
 import useEmblaCarousel, {
   type UseEmblaCarouselType,
@@ -6,6 +7,7 @@ import { ArrowLeft, ArrowRight } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import useMobile from "@/hooks/use-mobile"
 
 type CarouselApi = UseEmblaCarouselType[1]
 type UseCarouselParameters = Parameters<typeof useEmblaCarousel>
@@ -56,9 +58,19 @@ const Carousel = React.forwardRef<
     },
     ref
   ) => {
+    const isMobile = useMobile()
+    
+    // Default to different settings on mobile
+    const defaultOpts = {
+      ...opts,
+      align: isMobile ? "start" : (opts?.align || "center"),
+      slidesToScroll: isMobile ? 1 : (opts?.slidesToScroll || 1),
+      dragFree: isMobile,
+    }
+    
     const [carouselRef, api] = useEmblaCarousel(
       {
-        ...opts,
+        ...defaultOpts,
         axis: orientation === "horizontal" ? "x" : "y",
       },
       plugins
@@ -123,9 +135,9 @@ const Carousel = React.forwardRef<
         value={{
           carouselRef,
           api: api,
-          opts,
+          opts: defaultOpts,
           orientation:
-            orientation || (opts?.axis === "y" ? "vertical" : "horizontal"),
+            orientation || (defaultOpts?.axis === "y" ? "vertical" : "horizontal"),
           scrollPrev,
           scrollNext,
           canScrollPrev,
@@ -153,9 +165,10 @@ const CarouselContent = React.forwardRef<
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => {
   const { carouselRef, orientation } = useCarousel()
+  const isMobile = useMobile()
 
   return (
-    <div ref={carouselRef} className="overflow-hidden">
+    <div ref={carouselRef} className={cn("overflow-hidden", isMobile ? "scrollbar-hide" : "")}>
       <div
         ref={ref}
         className={cn(
@@ -175,6 +188,7 @@ const CarouselItem = React.forwardRef<
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => {
   const { orientation } = useCarousel()
+  const isMobile = useMobile()
 
   return (
     <div
@@ -182,7 +196,8 @@ const CarouselItem = React.forwardRef<
       role="group"
       aria-roledescription="slide"
       className={cn(
-        "min-w-0 shrink-0 grow-0 basis-full",
+        "min-w-0 shrink-0 grow-0",
+        isMobile ? "basis-[90%] snap-start" : "basis-full",
         orientation === "horizontal" ? "pl-4" : "pt-4",
         className
       )}
@@ -197,6 +212,10 @@ const CarouselPrevious = React.forwardRef<
   React.ComponentProps<typeof Button>
 >(({ className, variant = "outline", size = "icon", ...props }, ref) => {
   const { orientation, scrollPrev, canScrollPrev } = useCarousel()
+  const isMobile = useMobile()
+
+  // Don't show controls on mobile
+  if (isMobile) return null;
 
   return (
     <Button
@@ -204,7 +223,7 @@ const CarouselPrevious = React.forwardRef<
       variant={variant}
       size={size}
       className={cn(
-        "absolute  h-8 w-8 rounded-full",
+        "absolute h-8 w-8 rounded-full",
         orientation === "horizontal"
           ? "-left-12 top-1/2 -translate-y-1/2"
           : "-top-12 left-1/2 -translate-x-1/2 rotate-90",
@@ -226,6 +245,10 @@ const CarouselNext = React.forwardRef<
   React.ComponentProps<typeof Button>
 >(({ className, variant = "outline", size = "icon", ...props }, ref) => {
   const { orientation, scrollNext, canScrollNext } = useCarousel()
+  const isMobile = useMobile()
+  
+  // Don't show controls on mobile
+  if (isMobile) return null;
 
   return (
     <Button

@@ -4,6 +4,8 @@ import ParallaxSection from '../ui/ParallaxSection';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { MapPin, Utensils, Clock, Star, ChevronDown, ChevronUp, Filter } from 'lucide-react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import useMobile from '@/hooks/use-mobile';
+import HorizontalScroll from '../ui/horizontal-scroll';
 
 type DishType = {
   id: number;
@@ -20,6 +22,7 @@ const Cuisine: React.FC = () => {
   const [selectedDish, setSelectedDish] = useState<DishType | null>(null);
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const [activeRegionFilter, setActiveRegionFilter] = useState('all');
+  const isMobile = useMobile();
 
   // Regions for filtering
   const regions = [
@@ -98,7 +101,6 @@ const Cuisine: React.FC = () => {
   const filteredDishes = activeRegionFilter === 'all' 
     ? dishes 
     : dishes.filter(dish => {
-        // Map origins to regions (simplified)
         const regionMap: Record<string, string> = {
           'Punjab': 'north',
           'South India': 'south',
@@ -120,23 +122,6 @@ const Cuisine: React.FC = () => {
     document.body.style.overflow = 'auto';
   };
 
-  const SpiceLevelIndicator = ({ level }: { level: number }) => {
-    return (
-      <div className="flex items-center">
-        {[...Array(5)].map((_, index) => (
-          <div 
-            key={index} 
-            className={`w-2 h-2 rounded-full mx-0.5 ${
-              index < level 
-                ? 'bg-spice-500' 
-                : 'bg-gray-200'
-            }`}
-          />
-        ))}
-      </div>
-    );
-  };
-
   return (
     <section id="cuisine" className="py-24 px-6 relative">
       <div className="absolute inset-12 rounded-3xl bg-white/40 dark:bg-white/10 backdrop-blur-sm border border-white/50 dark:border-white/30 z-0"></div>
@@ -156,50 +141,24 @@ const Cuisine: React.FC = () => {
           </div>
         </ScrollReveal>
 
-
         {/* Cuisine Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredDishes.map((dish, index) => (
-            <ScrollReveal key={dish.id} delay={index % 3}>
-              <Card className="overflow-hidden cursor-pointer hover:shadow-md transition-shadow h-full flex flex-col" onClick={() => openDishDetails(dish)}>
-                <div className="h-56 overflow-hidden">
-                  <img 
-                    src={dish.imageUrl} 
-                    alt={dish.name} 
-                    className="w-full h-full object-cover transition-transform duration-700 hover:scale-110"
-                  />
-                </div>
-                <CardHeader className="pb-2">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <CardTitle>{dish.name}</CardTitle>
-                      <CardDescription className="flex items-center mt-1">
-                        <MapPin size={14} className="mr-1" />
-                        {dish.origin}
-                      </CardDescription>
-                    </div>
-                    <div className="flex items-center">
-                      <Clock size={14} className="mr-1 text-muted-foreground" />
-                      <span className="text-xs text-muted-foreground">{dish.prepTime}</span>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="flex-grow">
-                  <p className="text-foreground dark:text-gray-300 line-clamp-3">
-                    {dish.description}
-                  </p>
-                </CardContent>
-                <CardFooter className="flex justify-between pt-0">
-                  <div className="flex items-center">
-                    <span className="text-xs mr-2">Spice Level:</span>
-                    <SpiceLevelIndicator level={dish.spiceLevel} />
-                  </div>
-                  <button className="text-spice-500 text-sm font-medium">View Details</button>
-                </CardFooter>
-              </Card>
-            </ScrollReveal>
-          ))}
-        </div>
+        {isMobile ? (
+          <HorizontalScroll>
+            {filteredDishes.map((dish) => (
+              <div key={dish.id} className="min-w-[90%] snap-start">
+                <DishCard dish={dish} onClick={openDishDetails} />
+              </div>
+            ))}
+          </HorizontalScroll>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredDishes.map((dish, index) => (
+              <ScrollReveal key={dish.id} delay={index % 3}>
+                <DishCard dish={dish} onClick={openDishDetails} />
+              </ScrollReveal>
+            ))}
+          </div>
+        )}
 
         {/* Dish Detail Modal */}
         {selectedDish && (
@@ -279,6 +238,64 @@ const Cuisine: React.FC = () => {
         )}
       </div>
     </section>
+  );
+};
+
+const SpiceLevelIndicator = ({ level }: { level: number }) => {
+  return (
+    <div className="flex items-center">
+      {[...Array(5)].map((_, index) => (
+        <div 
+          key={index} 
+          className={`w-2 h-2 rounded-full mx-0.5 ${
+            index < level 
+              ? 'bg-spice-500' 
+              : 'bg-gray-200'
+          }`}
+        />
+      ))}
+    </div>
+  );
+};
+
+const DishCard = ({ dish, onClick }: { dish: DishType; onClick: (dish: DishType) => void }) => {
+  return (
+    <Card className="overflow-hidden cursor-pointer hover:shadow-md transition-shadow h-full flex flex-col" onClick={() => onClick(dish)}>
+      <div className="h-56 overflow-hidden">
+        <img 
+          src={dish.imageUrl} 
+          alt={dish.name} 
+          className="w-full h-full object-cover transition-transform duration-700 hover:scale-110"
+        />
+      </div>
+      <CardHeader className="pb-2">
+        <div className="flex justify-between items-start">
+          <div>
+            <CardTitle>{dish.name}</CardTitle>
+            <CardDescription className="flex items-center mt-1">
+              <MapPin size={14} className="mr-1" />
+              {dish.origin}
+            </CardDescription>
+          </div>
+          <div className="flex items-center">
+            <Clock size={14} className="mr-1 text-muted-foreground" />
+            <span className="text-xs text-muted-foreground">{dish.prepTime}</span>
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent className="flex-grow">
+        <p className="text-foreground dark:text-gray-300 line-clamp-3">
+          {dish.description}
+        </p>
+      </CardContent>
+      <CardFooter className="flex justify-between pt-0">
+        <div className="flex items-center">
+          <span className="text-xs mr-2">Spice Level:</span>
+          <SpiceLevelIndicator level={dish.spiceLevel} />
+        </div>
+        <button className="text-spice-500 text-sm font-medium">View Details</button>
+      </CardFooter>
+    </Card>
   );
 };
 
