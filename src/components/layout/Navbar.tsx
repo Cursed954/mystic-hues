@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+
+import React, { useState, useEffect, useCallback } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import { Menu, X, User } from 'lucide-react';
 import { Logo } from '../ui/Logo';
@@ -6,6 +7,7 @@ import { ThemeToggle } from '../theme/ThemeToggle';
 import useMobile from '@/hooks/use-mobile';
 import { useAuth } from '@/context/AuthContext';
 import { useScrollToTop } from '@/hooks/useScrollToTop';
+import { motion, AnimatePresence } from 'framer-motion';
 
 type BaseNavItem = {
   name: string;
@@ -31,22 +33,22 @@ const Navbar: React.FC = () => {
   const { isAuthenticated } = useAuth();
   const scrollToTop = useScrollToTop();
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+  const handleScroll = useCallback(() => {
+    setIsScrolled(window.scrollY > 20);
   }, []);
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [handleScroll]);
 
   useEffect(() => {
     setMobileMenuOpen(false);
   }, [location.pathname]);
 
-  const toggleMobileMenu = () => {
+  const toggleMobileMenu = useCallback(() => {
     setMobileMenuOpen(!mobileMenuOpen);
-  };
+  }, [mobileMenuOpen]);
 
   const getNavItems = (): NavItem[] => {
     const baseItems: NavItem[] = [
@@ -64,14 +66,14 @@ const Navbar: React.FC = () => {
 
   const navItems = getNavItems();
 
-  const handleNavigation = () => {
+  const handleNavigation = useCallback(() => {
     setMobileMenuOpen(false);
     scrollToTop();
-  };
+  }, [scrollToTop]);
 
   return (
     <header
-      className={`fixed top-4 left-0 right-0 flex justify-center items-center z-40 transition-all duration-700 ease-out rounded-full shadow-lg backdrop-blur-md border border-white/30 dark:border-white/30 ${
+      className={`fixed top-4 left-0 right-0 flex justify-center items-center z-40 transition-all duration-700 ease-out rounded-full shadow-lg backdrop-blur-md border border-white/30 dark:border-white/30 hardware-accelerated ${
         isScrolled || !isHome
           ? 'py-2.5 bg-white/60 dark:bg-black/60 md:w-[50%] mx-auto'
           : 'py-4 bg-transparent md:w-[90%] mx-auto'
@@ -84,7 +86,7 @@ const Navbar: React.FC = () => {
 
         {!isMobile && (
           <div className="flex items-center space-x-1">
-            {navItems.map((item, index) => (
+            {navItems.map((item) => (
               <div key={item.name}>
                 <Link
                   to={item.path}
@@ -119,26 +121,39 @@ const Navbar: React.FC = () => {
         )}
       </nav>
 
-      {isMobile && mobileMenuOpen && (
-        <div className="fixed inset-0 top-16 z-50 bg-background/95 backdrop-blur-md">
-          <div className="container mx-auto px-6 py-8 flex flex-col items-center">
-            {navItems.map((item, index) => (
-              <div key={item.name}>
-                <Link
-                  to={item.path}
-                  onClick={handleNavigation}
-                  className={`py-3 text-lg font-medium hover:text-spice-500 transition-colors flex items-center ${
-                    location.pathname === item.path ? 'text-spice-500' : 'text-foreground'
-                  }`}
+      <AnimatePresence>
+        {isMobile && mobileMenuOpen && (
+          <motion.div 
+            className="fixed inset-0 top-16 z-50 bg-background/95 backdrop-blur-md"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.2 }}
+          >
+            <div className="container mx-auto px-6 py-8 flex flex-col items-center">
+              {navItems.map((item) => (
+                <motion.div 
+                  key={item.name}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1 }}
                 >
-                  {hasIcon(item) && <item.icon className="mr-2 h-5 w-5" />}
-                  {item.name}
-                </Link>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+                  <Link
+                    to={item.path}
+                    onClick={handleNavigation}
+                    className={`py-3 text-lg font-medium hover:text-spice-500 transition-colors flex items-center ${
+                      location.pathname === item.path ? 'text-spice-500' : 'text-foreground'
+                    }`}
+                  >
+                    {hasIcon(item) && <item.icon className="mr-2 h-5 w-5" />}
+                    {item.name}
+                  </Link>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 };

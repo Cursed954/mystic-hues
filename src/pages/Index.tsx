@@ -27,7 +27,13 @@ const Index = () => {
         }, 100);
       }
     }
-  }, []);
+    
+    // Disable overscroll on mobile
+    if (isMobile) {
+      document.body.classList.add('overflow-hidden');
+      return () => document.body.classList.remove('overflow-hidden');
+    }
+  }, [isMobile]);
 
   return (
     <div className={`min-h-screen relative ${isMobile ? 'mobile-view' : ''}`}>
@@ -49,52 +55,40 @@ const Index = () => {
       )}
       
       <Navbar />
-      <main>
-        <Hero />
+      <main className={isMobile ? "mobile-snap-container hardware-accelerated" : ""}>
+        <div className={isMobile ? "mobile-snap-item" : ""}>
+          <Hero />
+        </div>
+        
         {/* Add translucent background layer to content sections */}
         <div className="relative">
           <div className="absolute inset-0 bg-white/70 dark:bg-black/50 backdrop-blur-sm"></div>
           <div className="relative z-10">
-            <About />
-            <States />
-            <Gallery />
-            <Cuisine />
-            <Experience />
-            <Reviews />
-            <Contact />
+            <div className={isMobile ? "mobile-snap-item" : ""}>
+              <About />
+            </div>
+            <div className={isMobile ? "mobile-snap-item" : ""}>
+              <States />
+            </div>
+            <div className={isMobile ? "mobile-snap-item" : ""}>
+              <Gallery />
+            </div>
+            <div className={isMobile ? "mobile-snap-item" : ""}>
+              <Cuisine />
+            </div>
+            <div className={isMobile ? "mobile-snap-item" : ""}>
+              <Experience />
+            </div>
+            <div className={isMobile ? "mobile-snap-item" : ""}>
+              <Reviews />
+            </div>
+            <div className={isMobile ? "mobile-snap-item" : ""}>
+              <Contact />
+            </div>
           </div>
         </div>
       </main>
       <Footer />
-
-      {/* Add custom CSS for mobile view */}
-      <style dangerouslySetInnerHTML={{
-        __html: `
-        @media (max-width: 768px) {
-          .mobile-view section {
-            scroll-snap-align: start;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-          }
-          
-          .mobile-view main {
-            scroll-snap-type: y mandatory;
-            overflow-y: scroll;
-            height: calc(100vh - 64px); /* Adjust based on your navbar height */
-          }
-        }
-        
-        .scrollbar-hide::-webkit-scrollbar {
-          display: none;
-        }
-        
-        .scrollbar-hide {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-      `}} />
     </div>
   );
 };

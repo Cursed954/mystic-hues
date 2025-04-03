@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 
 interface UseImageLazyLoadOptions {
   threshold?: number;
@@ -14,8 +14,9 @@ const useImageLazyLoad = (
   const [imageSrc, setImageSrc] = useState(placeholderSrc);
   const [imageRef, setImageRef] = useState<HTMLImageElement | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  const observerRef = useRef<IntersectionObserver | null>(null);
 
-  const { threshold = 0.1, rootMargin = '0px' } = options;
+  const { threshold = 0.1, rootMargin = '150px' } = options;
 
   const onLoad = useCallback(() => {
     setIsLoaded(true);
@@ -24,15 +25,20 @@ const useImageLazyLoad = (
   const onError = useCallback(() => {
     setIsLoaded(false);
     setImageSrc(placeholderSrc);
-  }, [placeholderSrc]);
+    console.error("Failed to load image:", src);
+  }, [placeholderSrc, src]);
 
   useEffect(() => {
-    let observer: IntersectionObserver;
     let didCancel = false;
 
     if (imageRef && !isLoaded) {
-      if (IntersectionObserver) {
-        observer = new IntersectionObserver(
+      // Cleanup previous observer
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+      }
+
+      if ('IntersectionObserver' in window) {
+        observerRef.current = new IntersectionObserver(
           (entries) => {
             entries.forEach((entry) => {
               // When image is visible in the viewport
@@ -40,18 +46,29 @@ const useImageLazyLoad = (
                 !didCancel &&
                 (entry.intersectionRatio > 0 || entry.isIntersecting)
               ) {
-                setImageSrc(src);
-                // Stop watching once the image is loaded
-                observer.unobserve(imageRef);
+                // Create new image to preload
+                const img = new Image();
+                img.src = src;
+                img.onload = () => {
+                  if (!didCancel) {
+                    setImageSrc(src);
+                  }
+                };
+                img.onerror = onError;
+                
+                // Stop watching once the entry is detected
+                if (observerRef.current && imageRef) {
+                  observerRef.current.unobserve(imageRef);
+                }
               }
             });
           },
           {
             threshold,
-            rootMargin,
+            rootMargin, // Increased to start loading earlier
           }
         );
-        observer.observe(imageRef);
+        observerRef.current.observe(imageRef);
       } else {
         // Fallback for browsers that don't support IntersectionObserver
         setImageSrc(src);
@@ -60,11 +77,12 @@ const useImageLazyLoad = (
 
     return () => {
       didCancel = true;
-      if (observer && imageRef) {
-        observer.unobserve(imageRef);
+      if (observerRef.current && imageRef) {
+        observerRef.current.unobserve(imageRef);
+        observerRef.current.disconnect();
       }
     };
-  }, [src, imageRef, isLoaded, threshold, rootMargin]);
+  }, [src, imageRef, isLoaded, threshold, rootMargin, onError]);
 
   return { imageSrc, setImageRef, isLoaded, onLoad, onError };
 };

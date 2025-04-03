@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+
+import React, { useState, useCallback } from 'react';
 import ScrollReveal from '../ui/ScrollReveal';
 import { ChevronLeft, ChevronRight, X, Download } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../theme/ThemeProvider';
 import HorizontalScroll from '../ui/horizontal-scroll';
 import useMobile from '@/hooks/use-mobile';
+import LazyImage from '../ui/lazy-image';
 
 type ImageType = {
   id: number;
@@ -57,19 +59,17 @@ const Gallery: React.FC = () => {
     },
   ];
 
-  const locationColor = theme === 'dark' ? "#53a6ff" : "#ff7e11";
-
-  const openLightbox = (image: ImageType) => {
+  const openLightbox = useCallback((image: ImageType) => {
     setSelectedImage(image);
     document.body.style.overflow = 'hidden';
-  };
+  }, []);
 
-  const closeLightbox = () => {
+  const closeLightbox = useCallback(() => {
     setSelectedImage(null);
     document.body.style.overflow = 'auto';
-  };
+  }, []);
 
-  const navigateImage = (direction: 'next' | 'prev') => {
+  const navigateImage = useCallback((direction: 'next' | 'prev') => {
     if (!selectedImage) return;
     
     const currentIndex = images.findIndex(img => img.id === selectedImage.id);
@@ -82,16 +82,16 @@ const Gallery: React.FC = () => {
     }
     
     setSelectedImage(images[newIndex]);
-  };
+  }, [selectedImage, images]);
 
-  const downloadImage = (url: string, filename: string) => {
+  const downloadImage = useCallback((url: string, filename: string) => {
     const link = document.createElement('a');
     link.href = url;
     link.download = `mystic-india-${filename.toLowerCase().replace(/\s+/g, '-')}.jpg`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-  };
+  }, []);
 
   return (
     <section id="gallery" className="py-24 px-6 section-gallery relative overflow-hidden">
@@ -124,7 +124,7 @@ const Gallery: React.FC = () => {
         {isMobile ? (
           <HorizontalScroll>
             {images.map((image) => (
-              <div key={image.id} className="min-w-[90%] snap-start">
+              <div key={image.id} className="min-w-[90%] snap-start mobile-snap-x-item">
                 <ImageCard 
                   image={image} 
                   theme={theme} 
@@ -214,7 +214,7 @@ const Gallery: React.FC = () => {
   );
 };
 
-const ImageCard = ({ 
+const ImageCard = React.memo(({ 
   image, 
   theme, 
   openLightbox 
@@ -225,12 +225,12 @@ const ImageCard = ({
 }) => {
   return (
     <motion.div 
-      className={`image-card h-full ${theme === 'dark' ? 'bg-black/10 shadow-lg dark:shadow-black/50 border border-white/5' : 'bg-white shadow-md border border-mystic-100'} rounded-lg overflow-hidden cursor-pointer`}
+      className={`image-card h-full ${theme === 'dark' ? 'bg-black/10 shadow-lg dark:shadow-black/50 border border-white/5' : 'bg-white shadow-md border border-mystic-100'} rounded-lg overflow-hidden cursor-pointer hardware-accelerated`}
       onClick={() => openLightbox(image)}
       whileHover={{ y: -5, scale: 1.02, transition: { duration: 0.2 } }}
     >
       <div className="relative h-64 overflow-hidden">
-        <img 
+        <LazyImage 
           src={image.url} 
           alt={image.alt} 
           className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
@@ -247,6 +247,8 @@ const ImageCard = ({
       </div>
     </motion.div>
   );
-};
+});
+
+ImageCard.displayName = 'ImageCard';
 
 export default Gallery;
