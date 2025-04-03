@@ -1,6 +1,5 @@
 
-import React, { useState, useRef } from 'react';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import React, { useState, useRef, useCallback } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import useMobile from '@/hooks/use-mobile';
@@ -23,15 +22,23 @@ const HorizontalScroll: React.FC<HorizontalScrollProps> = ({
   const [canScrollRight, setCanScrollRight] = useState(true);
   const isMobile = useMobile();
 
-  const checkScrollButtons = () => {
+  // Optimize scroll check to prevent unnecessary state updates
+  const checkScrollButtons = useCallback(() => {
     if (!scrollRef.current) return;
     
     const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
-    setCanScrollLeft(scrollLeft > 0);
-    setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
-  };
+    const newCanScrollLeft = scrollLeft > 0;
+    const newCanScrollRight = scrollLeft < scrollWidth - clientWidth - 10;
+    
+    if (newCanScrollLeft !== canScrollLeft) {
+      setCanScrollLeft(newCanScrollLeft);
+    }
+    if (newCanScrollRight !== canScrollRight) {
+      setCanScrollRight(newCanScrollRight);
+    }
+  }, [canScrollLeft, canScrollRight]);
 
-  const scroll = (direction: 'left' | 'right') => {
+  const scroll = useCallback((direction: 'left' | 'right') => {
     if (!scrollRef.current) return;
     
     const scrollAmount = scrollRef.current.clientWidth * 0.8;
@@ -39,7 +46,7 @@ const HorizontalScroll: React.FC<HorizontalScrollProps> = ({
       left: direction === 'left' ? -scrollAmount : scrollAmount,
       behavior: 'smooth',
     });
-  };
+  }, []);
 
   return (
     <div className={cn("relative group", className)}>
@@ -57,7 +64,7 @@ const HorizontalScroll: React.FC<HorizontalScrollProps> = ({
       
       <div 
         ref={scrollRef}
-        className="overflow-x-auto pb-4 scrollbar-hide snap-x snap-mandatory"
+        className="overflow-x-auto pb-4 scrollbar-hide snap-x snap-mandatory will-change-scroll"
         onScroll={checkScrollButtons}
       >
         <div className="flex space-x-4 px-4">

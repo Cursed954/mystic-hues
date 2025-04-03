@@ -68,7 +68,8 @@ const Index = () => {
       <Footer />
 
       {/* Add custom CSS for mobile view */}
-      <style jsx global>{`
+      <style dangerouslySetInnerHTML={{
+        __html: `
         @media (max-width: 768px) {
           .mobile-view section {
             scroll-snap-align: start;
@@ -93,7 +94,7 @@ const Index = () => {
           -ms-overflow-style: none;
           scrollbar-width: none;
         }
-      `}</style>
+      `}} />
     </div>
   );
 };

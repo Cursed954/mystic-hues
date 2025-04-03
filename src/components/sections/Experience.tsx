@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { memo } from 'react';
 import { Calendar, Map, Star, ArrowRight } from 'lucide-react';
 import SectionHeader from '../ui/SectionHeader';
 import ScrollReveal from '../ui/ScrollReveal';
@@ -10,71 +10,8 @@ import { journeys } from '@/data/journeys';
 import HorizontalScroll from '../ui/horizontal-scroll';
 import useMobile from '@/hooks/use-mobile';
 
-const Experience: React.FC = () => {
-  const { theme } = useTheme();
-  const isMobile = useMobile();
-  
-  const starColor = theme === 'dark' ? "#e94cff" : "#ff7e11";
-  const textAccentColor = theme === 'dark' ? "#53a6ff" : "#ff7e11";
-
-  return (
-    <section id="experience" className={`relative py-24 px-6 section-experience`}>
-      <div className="absolute inset-12 rounded-3xl bg-white/40 dark:bg-white/10 backdrop-blur-sm border border-white/50 dark:border-white/30 z-0"></div>
-      <div className="container mx-auto">
-        {/* Section Header */}
-        <SectionHeader
-          subtitle="Curated Experiences"
-          title="Our Signature Journeys"
-          description="Immerse yourself in handcrafted experiences that blend cultural immersion, natural wonders, and authentic encounters with local communities."
-        />
-
-        {/* Experiences Cards */}
-        {isMobile ? (
-          <div className="mt-12">
-            <HorizontalScroll>
-              {journeys.map((journey, index) => (
-                <div key={journey.id} className="min-w-[90%] snap-start">
-                  <JourneyCard journey={journey} theme={theme} starColor={starColor} textAccentColor={textAccentColor} />
-                </div>
-              ))}
-            </HorizontalScroll>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
-            {journeys.map((journey, index) => (
-              <ScrollReveal key={journey.id} delay={index * 0.1}>
-                <JourneyCard journey={journey} theme={theme} starColor={starColor} textAccentColor={textAccentColor} />
-              </ScrollReveal>
-            ))}
-          </div>
-        )}
-
-        {/* CTA */}
-        <ScrollReveal className="mt-16">
-          <div className="text-center">
-            <motion.a 
-              href="#contact" 
-              className="btn-primary inline-flex items-center px-6 py-3 rounded-md font-medium"
-              whileHover={{ y: -5, transition: { duration: 0.2 } }}
-              whileTap={{ y: 0 }}
-            >
-              Plan Your Journey 
-              <motion.span
-                animate={{ x: [0, 5, 0] }}
-                transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
-              >
-                <ArrowRight size={16} className="ml-2" />
-              </motion.span>
-            </motion.a>
-          </div>
-        </ScrollReveal>
-      </div>
-    </section>
-  );
-};
-
-// Extract card component for reusability
-const JourneyCard = ({ journey, theme, starColor, textAccentColor }: { 
+// Extract card component and memoize it for better performance
+const JourneyCard = memo(({ journey, theme, starColor, textAccentColor }: { 
   journey: any; 
   theme: string;
   starColor: string;
@@ -91,6 +28,7 @@ const JourneyCard = ({ journey, theme, starColor, textAccentColor }: {
           src={journey.imageSrc} 
           alt={journey.title} 
           className="w-full h-full object-cover transition-transform duration-700 ease-in-out hover:scale-110"
+          loading="lazy"
         />
         <div className="absolute top-4 right-4">
           <div className="bg-white/80 dark:bg-black/60 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-medium flex items-center">
@@ -133,6 +71,81 @@ const JourneyCard = ({ journey, theme, starColor, textAccentColor }: {
         </motion.div>
       </div>
     </motion.div>
+  );
+});
+
+JourneyCard.displayName = 'JourneyCard';
+
+const Experience: React.FC = () => {
+  const { theme } = useTheme();
+  const isMobile = useMobile();
+  
+  const starColor = theme === 'dark' ? "#e94cff" : "#ff7e11";
+  const textAccentColor = theme === 'dark' ? "#53a6ff" : "#ff7e11";
+
+  return (
+    <section id="experience" className={`relative py-24 px-6 section-experience`}>
+      <div className="absolute inset-12 rounded-3xl bg-white/40 dark:bg-white/10 backdrop-blur-sm border border-white/50 dark:border-white/30 z-0"></div>
+      <div className="container mx-auto">
+        {/* Section Header */}
+        <SectionHeader
+          subtitle="Curated Experiences"
+          title="Our Signature Journeys"
+          description="Immerse yourself in handcrafted experiences that blend cultural immersion, natural wonders, and authentic encounters with local communities."
+        />
+
+        {/* Experiences Cards */}
+        {isMobile ? (
+          <div className="mt-12">
+            <HorizontalScroll>
+              {journeys.map((journey) => (
+                <div key={journey.id} className="min-w-[90%] snap-start">
+                  <JourneyCard 
+                    journey={journey} 
+                    theme={theme} 
+                    starColor={starColor} 
+                    textAccentColor={textAccentColor} 
+                  />
+                </div>
+              ))}
+            </HorizontalScroll>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
+            {journeys.map((journey, index) => (
+              <ScrollReveal key={journey.id} delay={index * 0.1}>
+                <JourneyCard 
+                  journey={journey} 
+                  theme={theme} 
+                  starColor={starColor} 
+                  textAccentColor={textAccentColor} 
+                />
+              </ScrollReveal>
+            ))}
+          </div>
+        )}
+
+        {/* CTA */}
+        <ScrollReveal className="mt-16">
+          <div className="text-center">
+            <motion.a 
+              href="#contact" 
+              className="btn-primary inline-flex items-center px-6 py-3 rounded-md font-medium"
+              whileHover={{ y: -5, transition: { duration: 0.2 } }}
+              whileTap={{ y: 0 }}
+            >
+              Plan Your Journey 
+              <motion.span
+                animate={{ x: [0, 5, 0] }}
+                transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
+              >
+                <ArrowRight size={16} className="ml-2" />
+              </motion.span>
+            </motion.a>
+          </div>
+        </ScrollReveal>
+      </div>
+    </section>
   );
 };
 

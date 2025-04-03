@@ -1,0 +1,83 @@
+
+/* Optimized CSS for better rendering performance */
+
+/* Optimize animations */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Prioritize GPU rendering for smoother animations */
+.will-change-transform {
+  will-change: transform;
+}
+
+.will-change-opacity {
+  will-change: opacity;
+}
+
+.will-change-scroll {
+  will-change: scroll-position;
+}
+
+/* Optimize image rendering */
+.img-rendering-optimized {
+  image-rendering: optimizeSpeed;
+}
+
+/* Prevent layout shifts */
+.content-visibility-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 500px;
+}
+
+/* Optimize scrollbar styling */
+.optimized-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(155, 155, 155, 0.5) transparent;
+}
+
+.optimized-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.optimized-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.optimized-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(155, 155, 155, 0.5);
+  border-radius: 6px;
+}
+
+/* Optimize for mobile views */
+@media (max-width: 768px) {
+  .mobile-optimized {
+    contain: content;
+    content-visibility: auto;
+  }
+}
+
+/* General performance optimizations */
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+.hardware-accelerated {
+  transform: translateZ(0);
+}
+
+/* Optimize text rendering */
+.text-rendering-optimized {
+  text-rendering: optimizeSpeed;
+}
+
+/* Optimize animations by using transform instead of top/left */
+.transform-optimize {
+  transform: translate3d(0, 0, 0);
+}
