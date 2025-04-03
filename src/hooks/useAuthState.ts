@@ -37,6 +37,19 @@ export function useAuthState() {
     }
   };
 
+  const signUp = async (name: string, email: string, password: string) => {
+    setLoading(true);
+    try {
+      const result = await authService.signUp(name, email, password);
+      if (result.success && result.user) {
+        setUser(result.user);
+      }
+      return result;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const socialLogin = async (provider: 'google' | 'github') => {
     setLoading(true);
     try {
@@ -204,7 +217,8 @@ export function useAuthState() {
   return { 
     user, 
     loading, 
-    login, 
+    login,
+    signUp,
     socialLogin,
     updateProfile,
     toggleFavoriteState,
