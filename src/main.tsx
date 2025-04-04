@@ -14,7 +14,27 @@ const preloadHomeAssets = () => {
   link.rel = 'preload';
   link.href = heroVideoUrl;
   link.as = 'video';
+  // Use regular attribute setting for non-standard attributes
+  link.setAttribute('importance', 'high');
   document.head.appendChild(link);
+  
+  // Force video fetch with high priority
+  const video = document.createElement('video');
+  video.style.display = 'none';
+  video.preload = 'auto';
+  video.setAttribute('importance', 'high');
+  
+  const source = document.createElement('source');
+  source.src = heroVideoUrl;
+  source.type = 'video/mp4';
+  
+  video.appendChild(source);
+  document.head.appendChild(video);
+  
+  // Remove after load attempt
+  setTimeout(() => {
+    document.head.removeChild(video);
+  }, 1000);
 };
 
 // Call preload function

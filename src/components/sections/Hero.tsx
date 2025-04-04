@@ -32,8 +32,7 @@ const Hero: React.FC = () => {
       // Set the starting time to 18 seconds
       videoRef.current.currentTime = 18;
       
-      // Set high priority for this video
-      videoRef.current.setAttribute('fetchpriority', 'high');
+      // Set high priority for this video using a data attribute instead
       videoRef.current.setAttribute('importance', 'high');
       
       // Attempt to play immediately
@@ -66,7 +65,6 @@ const Hero: React.FC = () => {
           muted
           loop
           playsInline
-          fetchpriority="high"
         >
           <source 
             src="https://player.vimeo.com/progressive_redirect/playback/921376317/rendition/1080p/file.mp4?loc=external&oauth2_token_id=1747418641&signature=81fe3100ce7a792e4a2487a6a6a26a72df29adc0cfe19bf09dcae05be11dce97" 
