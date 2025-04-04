@@ -14,19 +14,47 @@ const useImageLazyLoad = (
   const [imageSrc, setImageSrc] = useState(placeholderSrc);
   const [imageRef, setImageRef] = useState<HTMLImageElement | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [hasError, setHasError] = useState(false);
   const observerRef = useRef<IntersectionObserver | null>(null);
+  const isMounted = useRef(true);
 
-  const { threshold = 0.1, rootMargin = '150px' } = options;
+  const { threshold = 0.1, rootMargin = '200px' } = options;
 
-  const onLoad = useCallback(() => {
-    setIsLoaded(true);
+  const onLoad = useCallback((e?: React.SyntheticEvent<HTMLImageElement>) => {
+    if (isMounted.current) {
+      setIsLoaded(true);
+    }
   }, []);
 
-  const onError = useCallback(() => {
-    setIsLoaded(false);
-    setImageSrc(placeholderSrc);
-    console.error("Failed to load image:", src);
+  const onError = useCallback((e?: React.SyntheticEvent<HTMLImageElement>) => {
+    if (isMounted.current) {
+      setIsLoaded(false);
+      setHasError(true);
+      setImageSrc(placeholderSrc);
+      console.error("Failed to load image:", src);
+    }
   }, [placeholderSrc, src]);
+
+  // Handle fallback strategy for failed images
+  useEffect(() => {
+    if (hasError && src.includes('unsplash')) {
+      // If an Unsplash image fails, try a different source
+      const fallbackSrc = src.replace(
+        /unsplash\.com\/.*/, 
+        `picsum.photos/${Math.floor(800 + Math.random() * 400)}/${Math.floor(600 + Math.random() * 200)}`
+      );
+      
+      // Create an image element to preload the fallback
+      const img = new Image();
+      img.src = fallbackSrc;
+      img.onload = () => {
+        if (isMounted.current) {
+          setImageSrc(fallbackSrc);
+          setHasError(false);
+        }
+      };
+    }
+  }, [hasError, src]);
 
   useEffect(() => {
     let didCancel = false;
@@ -83,6 +111,12 @@ const useImageLazyLoad = (
       }
     };
   }, [src, imageRef, isLoaded, threshold, rootMargin, onError]);
+
+  useEffect(() => {
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
 
   return { imageSrc, setImageRef, isLoaded, onLoad, onError };
 };
