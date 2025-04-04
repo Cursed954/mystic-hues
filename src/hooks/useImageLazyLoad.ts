@@ -82,7 +82,13 @@ const useImageLazyLoad = (
                     setImageSrc(src);
                   }
                 };
-                img.onerror = onError;
+                
+                // Fix for type mismatch - use proper event type
+                img.onerror = () => {
+                  if (!didCancel) {
+                    onError();
+                  }
+                };
                 
                 // Stop watching once the entry is detected
                 if (observerRef.current && imageRef) {
