@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import ScrollReveal from '../ui/ScrollReveal';
 import ParallaxSection from '../ui/ParallaxSection';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -6,6 +7,8 @@ import { MapPin, Utensils, Clock, Star, ChevronDown, ChevronUp, Filter } from 'l
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import useMobile from '@/hooks/use-mobile';
 import HorizontalScroll from '../ui/horizontal-scroll';
+import ContentSkeleton, { CardSkeleton } from '../ui/content-skeleton';
+import LazyImage from '../ui/lazy-image';
 
 type DishType = {
   id: number;
@@ -22,7 +25,17 @@ const Cuisine: React.FC = () => {
   const [selectedDish, setSelectedDish] = useState<DishType | null>(null);
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const [activeRegionFilter, setActiveRegionFilter] = useState('all');
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
   const isMobile = useMobile();
+
+  // Load data with slight delay to prioritize layout rendering
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsDataLoaded(true);
+    }, 10);
+    
+    return () => clearTimeout(timer);
+  }, []);
 
   // Regions for filtering
   const regions = [
@@ -122,12 +135,28 @@ const Cuisine: React.FC = () => {
     document.body.style.overflow = 'auto';
   };
 
+  const renderSkeleton = () => (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {[1, 2, 3, 4, 5, 6].map((item) => (
+        <CardSkeleton key={item} className="h-[350px]" animated={true}>
+          <div className="h-40 bg-gray-200 dark:bg-gray-700 rounded-t-md mb-4" />
+          <div className="space-y-2 px-1">
+            <ContentSkeleton variant="text" width="70%" className="h-5" />
+            <ContentSkeleton variant="text" width="40%" className="h-4" />
+            <ContentSkeleton variant="text" width="100%" className="h-4" />
+            <ContentSkeleton variant="text" width="90%" className="h-4" />
+          </div>
+        </CardSkeleton>
+      ))}
+    </div>
+  );
+
   return (
     <section id="cuisine" className="py-24 px-6 relative">
       <div className="absolute inset-12 rounded-3xl bg-white/40 dark:bg-white/10 backdrop-blur-sm border border-white/50 dark:border-white/30 z-0"></div>
       <div className="container mx-auto">
         {/* Section Header */}
-        <ScrollReveal>
+        <ScrollReveal priority={true}>
           <div className="text-center mb-16">
             <p className="subtitle mb-3">Culinary Journey</p>
             <h2 className="section-title after:left-1/2 after:-translate-x-1/2">
@@ -143,21 +172,31 @@ const Cuisine: React.FC = () => {
 
         {/* Cuisine Grid */}
         {isMobile ? (
-          <HorizontalScroll>
-            {filteredDishes.map((dish) => (
-              <div key={dish.id} className="min-w-[90%] snap-start">
-                <DishCard dish={dish} onClick={openDishDetails} />
-              </div>
-            ))}
-          </HorizontalScroll>
+          <ScrollReveal 
+            skeleton={<div className="overflow-x-auto pb-4"><div className="flex gap-4">{[1,2,3].map(i => (
+              <CardSkeleton key={i} className="min-w-[90%] h-[350px]" />
+            ))}</div></div>}
+          >
+            <HorizontalScroll>
+              {isDataLoaded && filteredDishes.map((dish) => (
+                <div key={dish.id} className="min-w-[90%] snap-start">
+                  <DishCard dish={dish} onClick={openDishDetails} />
+                </div>
+              ))}
+            </HorizontalScroll>
+          </ScrollReveal>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredDishes.map((dish, index) => (
-              <ScrollReveal key={dish.id} delay={index % 3}>
-                <DishCard dish={dish} onClick={openDishDetails} />
-              </ScrollReveal>
-            ))}
-          </div>
+          <ScrollReveal skeleton={renderSkeleton()}>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {isDataLoaded && filteredDishes.map((dish, index) => (
+                <ScrollReveal key={dish.id} delay={index % 3} 
+                  skeleton={<CardSkeleton className="h-[350px]" />}
+                >
+                  <DishCard dish={dish} onClick={openDishDetails} />
+                </ScrollReveal>
+              ))}
+            </div>
+          </ScrollReveal>
         )}
 
         {/* Dish Detail Modal */}
@@ -172,10 +211,11 @@ const Cuisine: React.FC = () => {
             >
               <div className="md:w-1/2 h-64 md:h-auto relative">
                 <ParallaxSection speed={0.05} className="h-full">
-                  <img 
+                  <LazyImage 
                     src={selectedDish.imageUrl} 
                     alt={selectedDish.name} 
                     className="w-full h-full object-cover"
+                    priority={true}
                   />
                 </ParallaxSection>
               </div>
@@ -262,7 +302,7 @@ const DishCard = ({ dish, onClick }: { dish: DishType; onClick: (dish: DishType)
   return (
     <Card className="overflow-hidden cursor-pointer hover:shadow-md transition-shadow h-full flex flex-col" onClick={() => onClick(dish)}>
       <div className="h-56 overflow-hidden">
-        <img 
+        <LazyImage 
           src={dish.imageUrl} 
           alt={dish.name} 
           className="w-full h-full object-cover transition-transform duration-700 hover:scale-110"

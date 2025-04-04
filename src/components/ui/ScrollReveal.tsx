@@ -1,5 +1,4 @@
-
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { fadeIn, slideIn, scaleIn } from '@/lib/animations';
@@ -10,6 +9,8 @@ interface ScrollRevealProps {
   threshold?: number;
   delay?: number;
   animation?: 'fade-in' | 'fade-in-right' | 'fade-in-left' | 'slide-up' | 'scale-in';
+  skeleton?: React.ReactNode;
+  priority?: boolean; // For high priority content
 }
 
 const ScrollReveal: React.FC<ScrollRevealProps> = ({
@@ -18,9 +19,22 @@ const ScrollReveal: React.FC<ScrollRevealProps> = ({
   threshold = 0.1,
   delay = 0,
   animation = 'fade-in',
+  skeleton,
+  priority = false,
 }) => {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, amount: threshold });
+  const [isContentLoaded, setIsContentLoaded] = useState<boolean>(priority);
+
+  useEffect(() => {
+    if (!priority) {
+      const timer = setTimeout(() => {
+        setIsContentLoaded(true);
+      }, 100);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [priority]);
 
   const getVariants = () => {
     switch (animation) {
@@ -43,10 +57,10 @@ const ScrollReveal: React.FC<ScrollRevealProps> = ({
       initial="hidden"
       animate={isInView ? "visible" : "hidden"}
       variants={getVariants()}
-      className={cn(className)}
+      className={cn("relative", className)}
       style={{ willChange: 'opacity, transform' }}
     >
-      {children}
+      {isContentLoaded ? children : skeleton || children}
     </motion.div>
   );
 };

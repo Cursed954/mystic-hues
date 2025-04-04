@@ -1,5 +1,5 @@
 
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
@@ -8,6 +8,8 @@ interface ParallaxSectionProps {
   className?: string;
   speed?: number;
   direction?: 'up' | 'down';
+  priority?: boolean;
+  skeleton?: React.ReactNode;
 }
 
 const ParallaxSection: React.FC<ParallaxSectionProps> = ({
@@ -15,12 +17,26 @@ const ParallaxSection: React.FC<ParallaxSectionProps> = ({
   className,
   speed = 0.1,
   direction = 'up',
+  priority = false,
+  skeleton,
 }) => {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start end", "end start"]
   });
+  const [isContentLoaded, setIsContentLoaded] = useState<boolean>(priority);
+
+  // Load non-priority content after layout is established
+  useEffect(() => {
+    if (!priority) {
+      const timer = setTimeout(() => {
+        setIsContentLoaded(true);
+      }, 100);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [priority]);
 
   const factor = direction === 'up' ? -1 : 1;
   const y = useTransform(scrollYProgress, [0, 1], [0, 200 * speed * factor]);
@@ -28,12 +44,12 @@ const ParallaxSection: React.FC<ParallaxSectionProps> = ({
   return (
     <div 
       ref={ref} 
-      className={cn('overflow-hidden', className)}
+      className={cn('overflow-hidden relative', className)}
     >
       <motion.div
         style={{ y }}
       >
-        {children}
+        {isContentLoaded ? children : skeleton || children}
       </motion.div>
     </div>
   );

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '@/components/layout/Navbar';
@@ -12,35 +13,45 @@ import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { regions, getStateRegion } from '@/data/cultural';
+import ContentSkeleton, { CardSkeleton } from '@/components/ui/content-skeleton';
+import LazyImage from '@/components/ui/lazy-image';
 
 const AllStates = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeFilter, setActiveFilter] = useState('All');
-  const [filteredStates, setFilteredStates] = useState(stateData);
+  const [filteredStates, setFilteredStates] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const { user, toggleFavoriteState, isAuthenticated } = useAuth();
   const { toast } = useToast();
 
+  // First show the page layout, then load data
   useEffect(() => {
-    let filtered = [...stateData];
+    // Short timeout to let the page layout render first
+    const timer = setTimeout(() => {
+      let filtered = [...stateData];
 
-    if (activeFilter !== 'All') {
-      const region = regions.find(r => r.name.toLowerCase() === activeFilter.toLowerCase());
-      if (region) {
-        filtered = filtered.filter(state => region.states.includes(state.id));
+      if (activeFilter !== 'All') {
+        const region = regions.find(r => r.name.toLowerCase() === activeFilter.toLowerCase());
+        if (region) {
+          filtered = filtered.filter(state => region.states.includes(state.id));
+        }
       }
-    }
 
-    const results = filtered.filter((state) => {
-      const matchesSearch =
-        state.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        state.capital.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        state.description.toLowerCase().includes(searchTerm.toLowerCase());
+      const results = filtered.filter((state) => {
+        const matchesSearch =
+          state.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          state.capital.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          state.description.toLowerCase().includes(searchTerm.toLowerCase());
 
-      return matchesSearch;
-    });
+        return matchesSearch;
+      });
 
-    results.sort((a, b) => a.name.localeCompare(b.name)); // Sort alphabetically
-    setFilteredStates(results);
+      results.sort((a, b) => a.name.localeCompare(b.name)); // Sort alphabetically
+      setFilteredStates(results);
+      setIsLoading(false);
+    }, 10);
+    
+    return () => clearTimeout(timer);
   }, [searchTerm, activeFilter]);
 
   const handleToggleFavorite = async (e: React.MouseEvent, stateId: string) => {
@@ -85,6 +96,26 @@ const AllStates = () => {
     return user.savedStates.includes(stateId);
   };
 
+  const renderGridSkeleton = () => (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {[...Array(9)].map((_, index) => (
+        <CardSkeleton key={index} className="h-[350px]">
+          <div className="h-48 bg-gray-200 dark:bg-gray-700 rounded-t-md" />
+          <div className="space-y-3 p-4">
+            <ContentSkeleton variant="text" width="60%" className="h-5" />
+            <ContentSkeleton variant="text" width="40%" className="h-4" />
+            <ContentSkeleton variant="text" width="100%" className="h-4 mt-4" />
+            <ContentSkeleton variant="text" width="90%" className="h-4" />
+            <div className="flex justify-between items-center mt-4 pt-2">
+              <ContentSkeleton className="w-24 h-4" />
+              <ContentSkeleton className="w-16 h-4" />
+            </div>
+          </div>
+        </CardSkeleton>
+      ))}
+    </div>
+  );
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
@@ -98,7 +129,7 @@ const AllStates = () => {
             <div className="absolute inset-0 bg-black/50"></div>
           </div>
           <div className="container mx-auto px-6 relative z-10">
-            <ScrollReveal>
+            <ScrollReveal priority={true}>
               <h1 className="text-4xl md:text-5xl font-serif text-white mb-4">Explore Indian States</h1>
               <p className="text-white/90 max-w-2xl">
                 Discover the rich tapestry of India's diverse states, each with its unique culture, heritage, cuisine, and traditions.
@@ -145,8 +176,10 @@ const AllStates = () => {
         {/* States Grid */}
         <section className="py-12 px-6">
           <div className="container mx-auto">
-            <ScrollReveal>
-              {filteredStates.length > 0 ? (
+            <ScrollReveal skeleton={renderGridSkeleton()}>
+              {isLoading ? (
+                renderGridSkeleton()
+              ) : filteredStates.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                   {filteredStates.map((state, index) => (
                     <motion.div
@@ -159,7 +192,7 @@ const AllStates = () => {
                       <Link to={`/state/${state.id}`} className="block h-full">
                         <Card className="overflow-hidden h-full hover:shadow-lg transition-shadow">
                           <div className="relative h-48">
-                            <img 
+                            <LazyImage 
                               src={state.bannerImage} 
                               alt={state.name}
                               className="w-full h-full object-cover"

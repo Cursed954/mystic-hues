@@ -6,6 +6,7 @@ interface UseImageLazyLoadOptions {
   threshold?: number;
   rootMargin?: string;
   immediate?: boolean;
+  priority?: boolean;
 }
 
 const useImageLazyLoad = (
@@ -13,9 +14,9 @@ const useImageLazyLoad = (
   placeholderSrc: string = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E",
   options: UseImageLazyLoadOptions = {}
 ) => {
-  const [imageSrc, setImageSrc] = useState(placeholderSrc);
+  const [imageSrc, setImageSrc] = useState(options.priority ? src : placeholderSrc);
   const [imageRef, setImageRef] = useState<HTMLImageElement | null>(null);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(options.priority || false);
   const [hasError, setHasError] = useState(false);
   const observerRef = useRef<IntersectionObserver | null>(null);
   const isMounted = useRef(true);
@@ -25,7 +26,7 @@ const useImageLazyLoad = (
   const isHomePage = location.pathname === '/';
 
   // If on home page or immediate option is true, skip lazy loading
-  const skipLazyLoad = isHomePage || options.immediate === true;
+  const skipLazyLoad = isHomePage || options.immediate === true || options.priority === true;
 
   const { threshold = 0.1, rootMargin = '200px' } = options;
 
@@ -44,7 +45,7 @@ const useImageLazyLoad = (
     }
   }, [placeholderSrc, src]);
 
-  // Immediately load image if on home page
+  // Immediately load priority images or on home page
   useEffect(() => {
     if (skipLazyLoad && !isLoaded && !hasError) {
       const img = new Image();
@@ -87,7 +88,7 @@ const useImageLazyLoad = (
   useEffect(() => {
     let didCancel = false;
 
-    // Skip intersection observer for home page content
+    // Skip intersection observer for home page content and priority images
     if (skipLazyLoad) {
       return;
     }

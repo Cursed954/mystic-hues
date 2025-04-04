@@ -10,6 +10,8 @@ import { culturalData } from '@/data/culturalData';
 import { regions, getStateRegion } from '@/data/cultural';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import useMobile from '@/hooks/use-mobile';
+import ContentSkeleton, { CardSkeleton } from '../ui/content-skeleton';
+import LazyImage from '../ui/lazy-image';
 
 const Culture: React.FC = () => {
   // Cultural data
@@ -17,7 +19,17 @@ const Culture: React.FC = () => {
   const [activeRegionFilter, setActiveRegionFilter] = useState<string>('all');
   const [filteredItems, setFilteredItems] = useState(culturalData.slice(0, 5));
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
   const isMobile = useMobile();
+
+  // Load data with slight delay to prioritize layout rendering
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsDataLoaded(true);
+    }, 10);
+    
+    return () => clearTimeout(timer);
+  }, []);
 
   // Function to get region name for a cultural item
   const getRegionName = (itemId: string): string => {
@@ -47,6 +59,18 @@ const Culture: React.FC = () => {
     }
   }, [activeRegionFilter, activeTab, isMobile]);
 
+  const renderSkeletonTabContent = () => (
+    <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+      <div className="lg:col-span-3">
+        <ContentSkeleton variant="image" className="w-full h-60 lg:h-full rounded-xl" />
+      </div>
+      <div className="lg:col-span-2 space-y-6">
+        <CardSkeleton className="h-[300px]" />
+        <ContentSkeleton className="h-12 rounded-md" />
+      </div>
+    </div>
+  );
+
   return (
     <section id="culture" className="py-24 px-6 relative">
       {/* Translucent Background Layer */}
@@ -54,7 +78,7 @@ const Culture: React.FC = () => {
       
       <div className="container mx-auto relative z-10">
         {/* Section Header */}
-        <ScrollReveal>
+        <ScrollReveal priority={true}>
           <div className="text-center mb-16">
             <p className="subtitle mb-3">Explore Culture</p>
             <h2 className="section-title after:left-1/2 after:-translate-x-1/2">
@@ -68,8 +92,17 @@ const Culture: React.FC = () => {
         </ScrollReveal>
 
         {/* Cultural Tabs - Limited based on device */}
-        <ScrollReveal delay={2}>
-          {filteredItems.length > 0 ? (
+        <ScrollReveal delay={2} skeleton={
+          <div className="w-full">
+            <div className="flex mb-8 bg-transparent p-0 space-x-2 overflow-x-auto">
+              {[...Array(isMobile ? 2 : 5)].map((_, i) => (
+                <ContentSkeleton key={i} className="px-6 py-3 min-w-[100px]" />
+              ))}
+            </div>
+            {renderSkeletonTabContent()}
+          </div>
+        }>
+          {isDataLoaded && filteredItems.length > 0 ? (
             <Tabs defaultValue={filteredItems[0]?.id} value={activeTab} onValueChange={setActiveTab} className="w-full">
               <TabsList className="w-full flex mb-8 bg-transparent p-0 space-x-2 overflow-x-auto">
                 {filteredItems.map((item) => (
@@ -93,9 +126,13 @@ const Culture: React.FC = () => {
                 <TabsContent key={item.id} value={item.id} className="mt-0">
                   <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
                     <div className="lg:col-span-3">
-                      <ParallaxSection speed={0.05} className="h-full">
+                      <ParallaxSection speed={0.05} className="h-full" skeleton={
                         <div className="rounded-xl overflow-hidden h-full shadow-md">
-                          <img 
+                          <ContentSkeleton variant="image" className="w-full h-60 lg:h-full" />
+                        </div>
+                      }>
+                        <div className="rounded-xl overflow-hidden h-full shadow-md">
+                          <LazyImage 
                             src={item.bannerImage} 
                             alt={item.name} 
                             className="w-full h-full object-cover"
@@ -160,6 +197,8 @@ const Culture: React.FC = () => {
                 </TabsContent>
               ))}
             </Tabs>
+          ) : !isDataLoaded ? (
+            renderSkeletonTabContent()
           ) : (
             <div className="text-center py-8">
               <p className="text-foreground/80">No cultural items found for the selected region.</p>

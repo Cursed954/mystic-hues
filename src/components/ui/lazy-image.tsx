@@ -12,6 +12,7 @@ interface LazyImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   rootMargin?: string;
   loadingClassName?: string;
   immediate?: boolean;
+  priority?: boolean; // For critical images like hero section
 }
 
 const LazyImage = memo(({
@@ -22,6 +23,7 @@ const LazyImage = memo(({
   rootMargin = '150px',
   loadingClassName,
   immediate,
+  priority = false,
   ...props
 }: LazyImageProps) => {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -29,12 +31,16 @@ const LazyImage = memo(({
   const isHomePage = location.pathname === '/';
   
   // Skip lazy loading animation on home page or when immediate prop is true
-  const skipLazyEffects = isHomePage || immediate === true;
+  const skipLazyEffects = isHomePage || immediate === true || priority === true;
   
   const { imageSrc, setImageRef, onLoad, onError } = useImageLazyLoad(
     src,
     placeholderSrc,
-    { rootMargin, immediate: skipLazyEffects }
+    { 
+      rootMargin, 
+      immediate: skipLazyEffects,
+      priority 
+    }
   );
 
   const handleLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {
@@ -49,7 +55,7 @@ const LazyImage = memo(({
   };
 
   useEffect(() => {
-    // If we're on home page, set as loaded immediately to avoid visual delays
+    // If we're on home page or priority image, set as loaded immediately
     if (skipLazyEffects) {
       setIsLoaded(true);
     }
@@ -65,11 +71,12 @@ const LazyImage = memo(({
         onError={handleError}
         className={cn(
           "will-change-transform transition-opacity duration-300", 
-          !isLoaded && !skipLazyEffects && "opacity-50 blur-[2px]",
+          !isLoaded && !skipLazyEffects && "opacity-0 blur-[2px]",
           isLoaded && "opacity-100",
           className
         )}
-        loading={skipLazyEffects ? "eager" : "lazy"}
+        loading={priority ? "eager" : "lazy"}
+        decoding={priority ? "sync" : "async"}
         {...props}
       />
       {!isLoaded && !skipLazyEffects && (

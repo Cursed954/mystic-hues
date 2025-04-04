@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import ScrollReveal from '../ui/ScrollReveal';
@@ -8,6 +9,8 @@ import { MapPin, Users, Calendar, ArrowRight, Globe, Filter, ChevronDown, Chevro
 import { stateData } from '@/data/stateData';
 import { regions, getStateRegion } from '@/data/cultural';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import ContentSkeleton, { CardSkeleton } from '../ui/content-skeleton';
+import LazyImage from '../ui/lazy-image';
 
 const States: React.FC = () => {
   // States data
@@ -15,6 +18,16 @@ const States: React.FC = () => {
   const [activeRegionFilter, setActiveRegionFilter] = useState<string>('all');
   const [filteredStates, setFilteredStates] = useState(stateData.slice(0, 5));
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
+
+  // Load data with slight delay to prioritize layout rendering
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsDataLoaded(true);
+    }, 10);
+    
+    return () => clearTimeout(timer);
+  }, []);
 
   // Function to get region name for a state
   const getRegionName = (stateId: string): string => {
@@ -48,6 +61,18 @@ const States: React.FC = () => {
     }
   }, [activeRegionFilter, activeTab]);
 
+  const renderSkeletonTabContent = () => (
+    <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+      <div className="lg:col-span-3">
+        <ContentSkeleton variant="image" className="w-full h-60 lg:h-full rounded-xl" />
+      </div>
+      <div className="lg:col-span-2 space-y-6">
+        <CardSkeleton className="h-[300px]" />
+        <ContentSkeleton className="h-12 rounded-md" />
+      </div>
+    </div>
+  );
+
   return (
     <section id="states" className="py-24 px-6 relative">
       {/* Translucent Background Layer */}
@@ -55,7 +80,7 @@ const States: React.FC = () => {
       
       <div className="container mx-auto relative z-10">
         {/* Section Header */}
-        <ScrollReveal>
+        <ScrollReveal priority={true}>
           <div className="text-center mb-16">
             <p className="subtitle mb-3">Explore India</p>
             <h2 className="section-title after:left-1/2 after:-translate-x-1/2">
@@ -69,7 +94,7 @@ const States: React.FC = () => {
         </ScrollReveal>
 
         {/* Collapsible Region filter */}
-        <ScrollReveal delay={1}>
+        <ScrollReveal delay={1} priority={true}>
           <Collapsible 
             open={isFilterOpen} 
             onOpenChange={setIsFilterOpen}
@@ -113,8 +138,17 @@ const States: React.FC = () => {
         </ScrollReveal>
 
         {/* State Tabs - Limited to 5 */}
-        <ScrollReveal delay={2}>
-          {filteredStates.length > 0 ? (
+        <ScrollReveal delay={2} skeleton={
+          <div className="w-full">
+            <div className="flex mb-8 bg-transparent p-0 space-x-2 overflow-x-auto">
+              {[...Array(5)].map((_, i) => (
+                <ContentSkeleton key={i} className="px-6 py-3 min-w-[100px]" />
+              ))}
+            </div>
+            {renderSkeletonTabContent()}
+          </div>
+        }>
+          {isDataLoaded && filteredStates.length > 0 ? (
             <Tabs defaultValue={filteredStates[0]?.id} value={activeTab} onValueChange={setActiveTab} className="w-full">
               <TabsList className="w-full flex mb-8 bg-transparent p-0 space-x-2 overflow-x-auto">
                 {filteredStates.map((state) => (
@@ -132,9 +166,13 @@ const States: React.FC = () => {
                 <TabsContent key={state.id} value={state.id} className="mt-0">
                   <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
                     <div className="lg:col-span-3">
-                      <ParallaxSection speed={0.05} className="h-full">
+                      <ParallaxSection speed={0.05} className="h-full" skeleton={
                         <div className="rounded-xl overflow-hidden h-full shadow-md">
-                          <img 
+                          <ContentSkeleton variant="image" className="w-full h-60 lg:h-full" />
+                        </div>
+                      }>
+                        <div className="rounded-xl overflow-hidden h-full shadow-md">
+                          <LazyImage 
                             src={state.bannerImage} 
                             alt={state.name} 
                             className="w-full h-full object-cover"
@@ -190,7 +228,7 @@ const States: React.FC = () => {
                       
                       <Link 
                         to={`/state/${state.id}`} 
-                        className="btn-primary w-full justify-center inline-flex items-center "
+                        className="btn-primary w-full justify-center inline-flex items-center"
                       >
                         Explore {state.name} <ArrowRight size={16} className="ml-2" />
                       </Link>
@@ -199,6 +237,8 @@ const States: React.FC = () => {
                 </TabsContent>
               ))}
             </Tabs>
+          ) : !isDataLoaded ? (
+            renderSkeletonTabContent()
           ) : (
             <div className="text-center py-8">
               <p className="text-foreground/80">No states found for the selected region.</p>

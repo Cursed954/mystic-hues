@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Navbar from '@/components/layout/Navbar';
@@ -6,20 +7,76 @@ import ScrollReveal from '@/components/ui/ScrollReveal';
 import { ArrowLeft, MapPin, Users, Calendar, Bookmark, Utensils, Landmark, Music } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { stateData } from '@/data/stateData';
-
-
+import ContentSkeleton, { CardSkeleton } from '@/components/ui/content-skeleton';
+import LazyImage from '@/components/ui/lazy-image';
 
 const StateDetail = () => {
   const { stateId } = useParams<{ stateId: string }>();
   const [state, setState] = useState<any | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   
   useEffect(() => {
     window.scrollTo(0, 0);
     
-    // Find the state data based on stateId
-    const currentState = stateData.find(s => s.id === stateId);
-    setState(currentState || null);
+    // Find the state data based on stateId with a slight delay to prioritize layout
+    const timer = setTimeout(() => {
+      const currentState = stateData.find(s => s.id === stateId);
+      setState(currentState || null);
+      setIsLoading(false);
+    }, 10);
+    
+    return () => clearTimeout(timer);
   }, [stateId]);
+
+  const renderSkeleton = () => (
+    <>
+      {/* Banner Skeleton */}
+      <section className="relative h-[60vh]">
+        <div className="absolute inset-0 bg-gray-300 dark:bg-gray-700 animate-pulse"></div>
+        <div className="container mx-auto h-full relative z-10 flex flex-col justify-end pb-16 px-6">
+          <div className="space-y-4">
+            <ContentSkeleton className="h-12 w-1/2" />
+            <div className="flex flex-wrap gap-6">
+              <ContentSkeleton className="h-6 w-32" />
+              <ContentSkeleton className="h-6 w-48" />
+              <ContentSkeleton className="h-6 w-40" />
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      {/* Overview Skeleton */}
+      <section className="py-16 px-6">
+        <div className="container mx-auto">
+          <div className="max-w-3xl mx-auto border border-white/20 dark:border-white/10 backdrop-blur-md rounded-lg p-6 bg-white/30 dark:bg-white/10">
+            <ContentSkeleton className="h-8 w-1/3 mb-8" />
+            <div className="space-y-4">
+              <ContentSkeleton className="h-4 w-full" />
+              <ContentSkeleton className="h-4 w-full" />
+              <ContentSkeleton className="h-4 w-3/4" />
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12">
+              {[...Array(4)].map((_, i) => (
+                <CardSkeleton key={i} className="h-40" />
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+    </>
+  );
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen">
+        <Navbar />
+        <main>
+          {renderSkeleton()}
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   if (!state) {
     return (
@@ -51,7 +108,7 @@ const StateDetail = () => {
             >
               <ArrowLeft size={18} className="mr-2" /> Back to Home
             </Link>
-            <ScrollReveal>
+            <ScrollReveal priority={true}>
               <h1 className="text-white text-5xl md:text-6xl font-serif mb-4">{state.name}</h1>
               <div className="flex flex-wrap gap-6 text-white">
                 <div className="flex items-center">
@@ -74,7 +131,7 @@ const StateDetail = () => {
         {/* Overview Section */}
         <section className="py-16 px-6">
           <div className="container mx-auto">
-            <ScrollReveal>
+            <ScrollReveal priority={true}>
               <div className="max-w-3xl mx-auto border border-white/20 dark:border-white/10 backdrop-blur-md rounded-lg p-6 bg-white/30 dark:bg-white/10">
                 <h2 className="section-title after:left-0 mb-8">Overview</h2>
                 <p className="text-lg leading-relaxed mb-8">
@@ -158,7 +215,7 @@ const StateDetail = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
                       {state.culture?.images?.map((image: string, index: number) => (
                         <div key={index} className="rounded-lg overflow-hidden h-64">
-                          <img 
+                          <LazyImage 
                             src={image} 
                             alt={`${state.name} cultural image ${index + 1}`} 
                             className="w-full h-full object-cover"
@@ -181,7 +238,7 @@ const StateDetail = () => {
                           {state.cuisine.dishes.map((dish: any, index: number) => (
                             <div key={index} className="flex items-start">
                               <div className="w-20 h-20 rounded-md overflow-hidden mr-4 shrink-0">
-                                <img 
+                                <LazyImage 
                                   src={dish.image || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c"} 
                                   alt={dish.name} 
                                   className="w-full h-full object-cover"
@@ -228,7 +285,7 @@ const StateDetail = () => {
                         {state.heritage.sites.map((site: any, index: number) => (
                           <div key={index} className="overflow-hidden rounded-lg border border-mystic-100">
                             <div className="h-48">
-                              <img 
+                              <LazyImage 
                                 src={site.image || "https://images.unsplash.com/photo-1599661046289-e31897d36a68"} 
                                 alt={site.name} 
                                 className="w-full h-full object-cover"
