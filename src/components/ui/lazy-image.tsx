@@ -1,7 +1,8 @@
 
-import React, { memo, useState } from 'react';
+import React, { memo, useState, useEffect } from 'react';
 import useImageLazyLoad from '@/hooks/useImageLazyLoad';
 import { cn } from '@/lib/utils';
+import { useLocation } from 'react-router-dom';
 
 interface LazyImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   src: string;
@@ -10,6 +11,7 @@ interface LazyImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   className?: string;
   rootMargin?: string;
   loadingClassName?: string;
+  immediate?: boolean;
 }
 
 const LazyImage = memo(({
@@ -19,13 +21,20 @@ const LazyImage = memo(({
   className,
   rootMargin = '150px',
   loadingClassName,
+  immediate,
   ...props
 }: LazyImageProps) => {
   const [isLoaded, setIsLoaded] = useState(false);
+  const location = useLocation();
+  const isHomePage = location.pathname === '/';
+  
+  // Skip lazy loading animation on home page or when immediate prop is true
+  const skipLazyEffects = isHomePage || immediate === true;
+  
   const { imageSrc, setImageRef, onLoad, onError } = useImageLazyLoad(
     src,
     placeholderSrc,
-    { rootMargin }
+    { rootMargin, immediate: skipLazyEffects }
   );
 
   const handleLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {
@@ -39,6 +48,13 @@ const LazyImage = memo(({
     if (props.onError) props.onError(e);
   };
 
+  useEffect(() => {
+    // If we're on home page, set as loaded immediately to avoid visual delays
+    if (skipLazyEffects) {
+      setIsLoaded(true);
+    }
+  }, [skipLazyEffects]);
+
   return (
     <div className={cn("relative overflow-hidden", className)}>
       <img
@@ -49,14 +65,14 @@ const LazyImage = memo(({
         onError={handleError}
         className={cn(
           "will-change-transform transition-opacity duration-300", 
-          !isLoaded && "opacity-50 blur-[2px]",
+          !isLoaded && !skipLazyEffects && "opacity-50 blur-[2px]",
           isLoaded && "opacity-100",
           className
         )}
-        loading="lazy"
+        loading={skipLazyEffects ? "eager" : "lazy"}
         {...props}
       />
-      {!isLoaded && (
+      {!isLoaded && !skipLazyEffects && (
         <div className={cn(
           "absolute inset-0 flex items-center justify-center bg-gray-100/30 dark:bg-gray-800/30 backdrop-blur-sm",
           loadingClassName

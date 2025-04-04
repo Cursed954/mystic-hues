@@ -54,6 +54,11 @@
   contain-intrinsic-size: 0 500px;
 }
 
+/* High priority loading for homepage */
+[data-priority="high"] {
+  content-visibility: visible;
+}
+
 /* Optimize scrollbar styling */
 .optimized-scrollbar {
   scrollbar-width: thin;
@@ -135,7 +140,7 @@
   transform: translate3d(0, 0, 0);
 }
 
-/* Progressive image loading */
+/* Progressive image loading - skipped for home page */
 .progressive-img-container {
   position: relative;
   overflow: hidden;
@@ -177,7 +182,7 @@
   }
 }
 
-/* Blur-up image loading animation */
+/* Blur-up image loading animation - skipped for home page */
 @keyframes blurUp {
   0% {
     filter: blur(20px);
@@ -191,4 +196,13 @@
 
 .blur-up-animation {
   animation: blurUp 0.4s ease-out forwards;
+}
+
+/* Reduced motion preference - for home page animations */
+@media (prefers-reduced-motion: no-preference) {
+  .home-animation {
+    transition-property: opacity, transform;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+  }
 }

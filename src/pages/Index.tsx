@@ -18,6 +18,9 @@ const Index = () => {
   const isMobile = useMobile();
   
   useEffect(() => {
+    // Priority loading for homepage - set highest priority for FCP
+    document.documentElement.setAttribute('data-priority', 'high');
+    
     // Smooth scroll to hash on page load
     if (window.location.hash) {
       const element = document.querySelector(window.location.hash);
@@ -31,8 +34,15 @@ const Index = () => {
     // Disable overscroll on mobile
     if (isMobile) {
       document.body.classList.add('overflow-hidden');
-      return () => document.body.classList.remove('overflow-hidden');
+      return () => {
+        document.body.classList.remove('overflow-hidden');
+        document.documentElement.removeAttribute('data-priority');
+      };
     }
+    
+    return () => {
+      document.documentElement.removeAttribute('data-priority');
+    };
   }, [isMobile]);
 
   return (

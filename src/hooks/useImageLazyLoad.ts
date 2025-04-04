@@ -1,9 +1,11 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
 
 interface UseImageLazyLoadOptions {
   threshold?: number;
   rootMargin?: string;
+  immediate?: boolean;
 }
 
 const useImageLazyLoad = (
@@ -17,6 +19,13 @@ const useImageLazyLoad = (
   const [hasError, setHasError] = useState(false);
   const observerRef = useRef<IntersectionObserver | null>(null);
   const isMounted = useRef(true);
+  const location = useLocation();
+  
+  // Check if we're on the home page
+  const isHomePage = location.pathname === '/';
+
+  // If on home page or immediate option is true, skip lazy loading
+  const skipLazyLoad = isHomePage || options.immediate === true;
 
   const { threshold = 0.1, rootMargin = '200px' } = options;
 
@@ -34,6 +43,25 @@ const useImageLazyLoad = (
       console.error("Failed to load image:", src);
     }
   }, [placeholderSrc, src]);
+
+  // Immediately load image if on home page
+  useEffect(() => {
+    if (skipLazyLoad && !isLoaded && !hasError) {
+      const img = new Image();
+      img.src = src;
+      img.onload = () => {
+        if (isMounted.current) {
+          setImageSrc(src);
+          setIsLoaded(true);
+        }
+      };
+      img.onerror = () => {
+        if (isMounted.current) {
+          onError();
+        }
+      };
+    }
+  }, [skipLazyLoad, src, isLoaded, hasError, onError]);
 
   // Handle fallback strategy for failed images
   useEffect(() => {
@@ -58,6 +86,11 @@ const useImageLazyLoad = (
 
   useEffect(() => {
     let didCancel = false;
+
+    // Skip intersection observer for home page content
+    if (skipLazyLoad) {
+      return;
+    }
 
     if (imageRef && !isLoaded) {
       // Cleanup previous observer
@@ -116,7 +149,7 @@ const useImageLazyLoad = (
         observerRef.current.disconnect();
       }
     };
-  }, [src, imageRef, isLoaded, threshold, rootMargin, onError]);
+  }, [src, imageRef, isLoaded, threshold, rootMargin, onError, skipLazyLoad]);
 
   useEffect(() => {
     return () => {
