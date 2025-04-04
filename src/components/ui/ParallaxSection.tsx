@@ -9,7 +9,7 @@ interface ParallaxSectionProps {
   speed?: number;
   direction?: 'up' | 'down' | 'left' | 'right';
   easing?: 'linear' | 'easeIn' | 'easeOut' | 'easeInOut';
-  offset?: [string, string];
+  offset?: ["start end", "end start"];
   scale?: boolean;
   rotate?: boolean;
 }
@@ -27,7 +27,7 @@ const ParallaxSection: React.FC<ParallaxSectionProps> = ({
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
-    offset
+    offset: offset
   });
 
   // Y motion based on direction

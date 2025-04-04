@@ -39,11 +39,12 @@ const hoverEffects = {
   },
   color: (color: string) => ({
     hover: { color }
-  })
+  }),
+  none: {} // Add this empty object for the "none" case
 };
 
 type AnimationType = keyof typeof animations;
-type HoverEffectType = keyof typeof hoverEffects | "none";
+type HoverEffectType = keyof typeof hoverEffects;
 
 interface AnimatedTextProps {
   text: string;
@@ -121,8 +122,8 @@ const AnimatedText: React.FC<AnimatedTextProps> = ({
   // For other animations
   const getHoverAnimation = () => {
     if (hoverEffect === "none") return {};
-    if (hoverEffect === "color") return hoverEffects.color(hoverColor);
-    return hoverEffects[hoverEffect];
+    if (hoverEffect === "color") return hoverEffects.color(hoverColor).hover;
+    return hoverEffects[hoverEffect]?.hover || {};
   };
 
   return (
@@ -130,7 +131,7 @@ const AnimatedText: React.FC<AnimatedTextProps> = ({
       className={cn("inline-block", className)}
       initial={animations[animation].initial}
       animate={animations[animation].animate}
-      whileHover={getHoverAnimation().hover}
+      whileHover={getHoverAnimation()}
       transition={{
         duration,
         delay,

@@ -89,7 +89,7 @@ const TransitionSection: React.FC<TransitionSectionProps> = ({
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { 
     once,
-    margin: `-${threshold * 100}px 0px`,
+    amount: threshold
   });
 
   const currentTransition = transitions[transition];
