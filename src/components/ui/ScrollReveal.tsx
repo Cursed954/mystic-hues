@@ -1,3 +1,4 @@
+
 import React, { useRef, useState, useEffect } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { cn } from '@/lib/utils';
@@ -28,33 +29,33 @@ const ScrollReveal: React.FC<ScrollRevealProps> = ({
 
   useEffect(() => {
     if (!priority) {
-      const timer = setTimeout(() => {
-        setIsContentLoaded(true);
-      }, 100);
-      
-      return () => clearTimeout(timer);
+      // Reduced timeout to 0ms for immediate loading
+      setIsContentLoaded(true);
     }
   }, [priority]);
 
   const getVariants = () => {
+    // Minimize animation delay to ensure quick loading
+    const minDelay = delay * 0.05; // Reduce delay to 5% of original
+    
     switch (animation) {
       case 'fade-in-right':
-        return fadeIn('right', delay * 0.1);
+        return fadeIn('right', minDelay);
       case 'fade-in-left':
-        return fadeIn('left', delay * 0.1);
+        return fadeIn('left', minDelay);
       case 'slide-up':
-        return slideIn('up', delay * 0.1);
+        return slideIn('up', minDelay);
       case 'scale-in':
-        return scaleIn(delay * 0.1);
+        return scaleIn(minDelay);
       default:
-        return fadeIn('up', delay * 0.1);
+        return fadeIn('up', minDelay);
     }
   };
 
   return (
     <motion.div
       ref={ref}
-      initial="hidden"
+      initial={priority ? "visible" : "hidden"}
       animate={isInView ? "visible" : "hidden"}
       variants={getVariants()}
       className={cn("relative", className)}

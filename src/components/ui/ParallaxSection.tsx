@@ -27,14 +27,11 @@ const ParallaxSection: React.FC<ParallaxSectionProps> = ({
   });
   const [isContentLoaded, setIsContentLoaded] = useState<boolean>(priority);
 
-  // Load non-priority content after layout is established
+  // Load content immediately
   useEffect(() => {
     if (!priority) {
-      const timer = setTimeout(() => {
-        setIsContentLoaded(true);
-      }, 100);
-      
-      return () => clearTimeout(timer);
+      // Reduced timeout to 0ms for immediate loading
+      setIsContentLoaded(true);
     }
   }, [priority]);
 

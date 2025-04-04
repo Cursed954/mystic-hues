@@ -112,8 +112,8 @@ const Gallery: React.FC = () => {
       )}
       
       <div className="container mx-auto relative z-10">
-        {/* Section Header */}
-        <ScrollReveal>
+        {/* Section Header - Using immediate animation with no delay */}
+        <ScrollReveal delay={0} priority={true}>
           <div className="text-center mb-16">
             <p className="subtitle mb-3">Visual Stories</p>
             <h2 className="section-title after:left-1/2 after:-translate-x-1/2">Capturing India's Essence</h2>
@@ -136,7 +136,7 @@ const Gallery: React.FC = () => {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
             {images.map((image, index) => (
-              <ScrollReveal key={image.id} delay={(index % 3) * 0.1} className="h-full">
+              <ScrollReveal key={image.id} delay={0} priority={true} className="h-full">
                 <ImageCard 
                   image={image} 
                   theme={theme} 
@@ -232,7 +232,9 @@ const ImageCard = React.memo(({
       <div className="relative h-64 overflow-hidden">
         <LazyImage 
           src={image.url} 
-          alt={image.alt} 
+          alt={image.alt}
+          priority={true}
+          immediate={true}
           className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 hover:opacity-100 transition-opacity flex items-end p-4">
