@@ -1,5 +1,6 @@
+
 import React from 'react';
-import { Heart, Mail, MapPin, Phone } from 'lucide-react';
+import { Github, Heart, Linkedin, Mail, MapPin, Phone } from 'lucide-react';
 
 const Footer: React.FC = () => {
   return (
@@ -14,14 +15,27 @@ const Footer: React.FC = () => {
               Discover the colors, textures, and stories of India through our immersive journey experiences.
             </p>
             <div className="flex items-center space-x-4">
-              <a href="#" className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-spice-500 transition-colors">
-                <i className="text-white text-sm"></i>
+              <a 
+                href="https://github.com" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-spice-500 transition-colors"
+              >
+                <Github size={18} className="text-white" />
               </a>
-              <a href="#" className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-spice-500 transition-colors">
-                <i className="text-white text-sm"></i>
+              <a 
+                href="https://linkedin.com" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-spice-500 transition-colors"
+              >
+                <Linkedin size={18} className="text-white" />
               </a>
-              <a href="#" className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-spice-500 transition-colors">
-                <i className="text-white text-sm"></i>
+              <a 
+                href="mailto:info@mysticindia.com" 
+                className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-spice-500 transition-colors"
+              >
+                <Mail size={18} className="text-white" />
               </a>
             </div>
           </div>
