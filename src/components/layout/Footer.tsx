@@ -16,7 +16,7 @@ const Footer: React.FC = () => {
             </p>
             <div className="flex items-center space-x-4">
               <a 
-                href="https://github.com" 
+                href="https://github.com/Deepanshu954" 
                 target="_blank" 
                 rel="noopener noreferrer" 
                 className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-spice-500 transition-colors"
@@ -24,7 +24,7 @@ const Footer: React.FC = () => {
                 <Github size={18} className="text-white" />
               </a>
               <a 
-                href="https://linkedin.com" 
+                href="https://linkedin.com/in/Deepanshu954" 
                 target="_blank" 
                 rel="noopener noreferrer" 
                 className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-spice-500 transition-colors"
@@ -32,7 +32,7 @@ const Footer: React.FC = () => {
                 <Linkedin size={18} className="text-white" />
               </a>
               <a 
-                href="mailto:info@mysticindia.com" 
+                href="mailto:deepanshu95488@gmail.com" 
                 className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-spice-500 transition-colors"
               >
                 <Mail size={18} className="text-white" />
