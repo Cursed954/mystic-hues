@@ -1,4 +1,3 @@
-
 import { Variants } from "framer-motion";
 
 export const fadeIn = (direction: "up" | "down" | "left" | "right" = "up", delay: number = 0): Variants => {
