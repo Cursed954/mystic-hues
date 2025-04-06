@@ -47,6 +47,20 @@ const Index = () => {
 
   return (
     <div className={`min-h-screen relative ${isMobile ? 'mobile-view' : ''}`}>
+      {/* Black hole video for the top of hero section */}
+      <div className="fixed top-0 left-0 w-full h-screen z-[-2] pointer-events-none">
+        <video 
+          autoPlay 
+          muted 
+          loop 
+          playsInline 
+          className="w-full h-full object-cover"
+        >
+          <source src="/src/components/layout/videos/blackhole.webm" type="video/webm" />
+        </video>
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-background z-10"></div>
+      </div>
+      
       {/* Abstract backgrounds for light mode only */}
       {theme === 'light' && (
         <>
