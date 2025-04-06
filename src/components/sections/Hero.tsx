@@ -21,6 +21,21 @@ const Hero: React.FC = () => {
 
   return (
     <section id="home" ref={targetRef} className="relative min-h-screen flex items-center overflow-hidden">
+      {/* Video Background */}
+      <div className="absolute inset-0 w-full h-full z-0 overflow-hidden">
+        <video
+          className="w-full h-full object-cover"
+          autoPlay
+          muted
+          loop
+          playsInline
+          data-src="/src/components/layout/videos/blackhole.webm"
+        >
+          <source src="/src/components/layout/videos/blackhole.webm" type="video/webm" />
+        </video>
+        <div className="absolute inset-0 bg-black/50 z-1"></div>
+      </div>
+      
       {/* Content */}
       <motion.div 
         style={{ opacity, scale, y }}
