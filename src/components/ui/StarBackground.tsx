@@ -8,7 +8,7 @@ import type { Points as PointsType } from "three";
 // Basic star background component
 export const StarBackground = () => {
   const ref = useRef<PointsType | null>(null);
-  const [sphere] = useState(() =>
+  const [sphere] = useState<Float32Array>(() =>
     random.inSphere(new Float32Array(5000), { radius: 1.2 })
   );
 
