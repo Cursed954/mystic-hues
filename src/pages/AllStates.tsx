@@ -15,6 +15,7 @@ import { cn } from '@/lib/utils';
 import { regions, getStateRegion } from '@/data/cultural';
 import ContentSkeleton, { CardSkeleton } from '@/components/ui/content-skeleton';
 import LazyImage from '@/components/ui/lazy-image';
+import { DetailStarsCanvas } from '@/components/ui/StarBackground';
 
 const AllStates = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -118,6 +119,7 @@ const AllStates = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <DetailStarsCanvas />
       <Navbar />
       <main className="flex-grow pt-20">
         {/* Hero Section */}

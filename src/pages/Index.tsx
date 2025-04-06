@@ -12,7 +12,7 @@ import Cuisine from '@/components/sections/Cuisine';
 import Reviews from '@/components/sections/Reviews';
 import { useTheme } from '@/components/theme/ThemeProvider';
 import useMobile from '@/hooks/use-mobile';
-import StarsCanvas from '@/components/ui/StarBackground';
+import { HomeStarsCanvas } from '@/components/ui/StarBackground';
 
 const Index = () => {
   const { theme } = useTheme();
@@ -48,8 +48,8 @@ const Index = () => {
 
   return (
     <div className={`min-h-screen relative ${isMobile ? 'mobile-view' : ''}`}>
-      {/* Star Background */}
-      <StarsCanvas />
+      {/* Enhanced Star Background */}
+      <HomeStarsCanvas />
       
       {/* Abstract backgrounds for light mode only */}
       {theme === 'light' && (
