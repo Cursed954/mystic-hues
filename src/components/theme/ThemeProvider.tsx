@@ -35,7 +35,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       
       // Apply theme-specific styles
       if (theme === 'dark') {
-        // Apply dark theme styles with bg.webm video as background
+        // Apply dark theme styles
         document.body.style.background = '#0a0920';
         document.body.style.backgroundImage = "url('https://r4.wallpaperflare.com/wallpaper/684/422/438/abstract-3d-digital-art-stu-ballinger-wallpaper-2b965cfd43817fe9f584cbf97d1cfc40.jpg')";
         document.body.style.backgroundSize = 'cover';
@@ -43,29 +43,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
         document.body.style.backgroundPosition = 'center';
         document.body.style.backgroundRepeat = 'no-repeat';
         document.body.style.backgroundBlendMode = 'soft-light';
-        
-        // Set up dark mode video background if not on home page
-        const isHomePage = window.location.pathname === '/' || window.location.pathname === '';
-        if (!isHomePage && !document.getElementById('dark-mode-bg-video')) {
-          const videoContainer = document.createElement('div');
-          videoContainer.id = 'dark-mode-bg-video';
-          videoContainer.className = 'fixed inset-0 z-[-2] opacity-60';
-          
-          const video = document.createElement('video');
-          video.autoplay = true;
-          video.loop = true;
-          video.muted = true;
-          video.playsInline = true;
-          video.className = 'w-full h-full object-cover';
-          
-          const source = document.createElement('source');
-          source.src = '/src/components/layout/videos/bg.webm';
-          source.type = 'video/webm';
-          
-          video.appendChild(source);
-          videoContainer.appendChild(video);
-          document.body.appendChild(videoContainer);
-        }
         
         // Initialize all videos with proper settings for dark mode
         initializeVideos();
@@ -78,12 +55,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
         document.body.style.backgroundPosition = '';
         document.body.style.backgroundRepeat = '';
         document.body.style.backgroundBlendMode = '';
-        
-        // Remove dark mode video if exists
-        const darkModeVideo = document.getElementById('dark-mode-bg-video');
-        if (darkModeVideo) {
-          document.body.removeChild(darkModeVideo);
-        }
         
         // Still initialize videos for light mode
         initializeVideos();
