@@ -9,7 +9,6 @@ import { textVariant, fadeIn, staggerContainer } from '@/lib/animations';
 
 const Hero: React.FC = () => {
   const targetRef = useRef<HTMLDivElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
   
   const { scrollYProgress } = useScroll({
     target: targetRef,
@@ -20,65 +19,8 @@ const Hero: React.FC = () => {
   const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.8]);
   const y = useTransform(scrollYProgress, [0, 0.5], [0, 100]);
 
-  // Ensure video autoplay works properly with high priority loading
-  useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.defaultMuted = true;
-      videoRef.current.muted = true;
-      videoRef.current.autoplay = true;
-      videoRef.current.loop = true;
-      videoRef.current.playsInline = true;
-      
-      // Set the starting time to 18 seconds
-      videoRef.current.currentTime = 18;
-      
-      // Set high priority for this video using a data attribute instead
-      videoRef.current.setAttribute('importance', 'high');
-      
-      // Attempt to play immediately
-      const playPromise = videoRef.current.play();
-      
-      if (playPromise !== undefined) {
-        playPromise.catch(e => {
-          console.error("Video autoplay failed:", e);
-          // Try again after user interaction
-          document.body.addEventListener('click', () => {
-            if (videoRef.current) {
-              videoRef.current.currentTime = 18;
-              videoRef.current.play().catch(e => console.error("Video play failed after click:", e));
-            }
-          }, { once: true });
-        });
-      }
-    }
-  }, []);
-
   return (
     <section id="home" ref={targetRef} className="relative min-h-screen flex items-center overflow-hidden">
-      {/* Video Background with Overlay */}
-      <div className="absolute inset-0 z-0 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-background z-10"></div>
-        <video
-          ref={videoRef}
-          className="w-full h-full object-cover"
-          autoPlay
-          muted
-          loop
-          playsInline
-        >
-          <source 
-            src="https://player.vimeo.com/progressive_redirect/playback/921376317/rendition/1080p/file.mp4?loc=external&oauth2_token_id=1747418641&signature=81fe3100ce7a792e4a2487a6a6a26a72df29adc0cfe19bf09dcae05be11dce97" 
-            type="video/mp4" 
-          />
-          Your browser does not support the video tag.
-        </video>
-      </div>
-
-      {/* Abstract Pattern Overlay */}
-      <div className="absolute inset-0 bg-repeat opacity-15 z-[1] mix-blend-soft-light" 
-           style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/oriental-tiles.png")' }}>
-      </div>
-
       {/* Content */}
       <motion.div 
         style={{ opacity, scale, y }}

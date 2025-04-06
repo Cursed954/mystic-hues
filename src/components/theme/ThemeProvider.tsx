@@ -35,45 +35,14 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       
       // Apply theme-specific styles
       if (theme === 'dark') {
-        // Apply dark theme styles with bg.webm video background
+        // Apply dark theme styles
         document.body.style.background = '#0a0920';
-        
-        // Add video background for dark mode only
-        let videoBackground = document.getElementById('theme-background-video');
-        if (!videoBackground) {
-          videoBackground = document.createElement('div');
-          videoBackground.id = 'theme-background-video';
-          videoBackground.style.position = 'fixed';
-          videoBackground.style.top = '0';
-          videoBackground.style.left = '0';
-          videoBackground.style.width = '100%';
-          videoBackground.style.height = '100%';
-          videoBackground.style.zIndex = '-2';
-          videoBackground.style.opacity = '0.5';
-          videoBackground.style.pointerEvents = 'none';
-          
-          const video = document.createElement('video');
-          video.autoplay = true;
-          video.loop = true;
-          video.muted = true;
-          video.playsInline = true;
-          video.style.width = '100%';
-          video.style.height = '100%';
-          video.style.objectFit = 'cover';
-          
-          const source = document.createElement('source');
-          source.src = '/src/components/layout/videos/bg.webm';
-          source.type = 'video/webm';
-          
-          video.appendChild(source);
-          videoBackground.appendChild(video);
-          document.body.appendChild(videoBackground);
-          
-          // Try to play the video
-          video.play().catch(e => console.error('Background video play failed:', e));
-        } else {
-          videoBackground.style.display = 'block';
-        }
+        document.body.style.backgroundImage = "url('https://r4.wallpaperflare.com/wallpaper/684/422/438/abstract-3d-digital-art-stu-ballinger-wallpaper-2b965cfd43817fe9f584cbf97d1cfc40.jpg')";
+        document.body.style.backgroundSize = 'cover';
+        document.body.style.backgroundAttachment = 'fixed';
+        document.body.style.backgroundPosition = 'center';
+        document.body.style.backgroundRepeat = 'no-repeat';
+        document.body.style.backgroundBlendMode = 'soft-light';
         
         // Initialize all videos with proper settings for dark mode
         initializeVideos();
@@ -86,12 +55,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
         document.body.style.backgroundPosition = '';
         document.body.style.backgroundRepeat = '';
         document.body.style.backgroundBlendMode = '';
-        
-        // Hide video background in light mode
-        const videoBackground = document.getElementById('theme-background-video');
-        if (videoBackground) {
-          videoBackground.style.display = 'none';
-        }
         
         // Still initialize videos for light mode
         initializeVideos();
