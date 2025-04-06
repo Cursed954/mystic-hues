@@ -5,10 +5,12 @@ import Footer from '@/components/layout/Footer';
 import DataImporter from '@/components/admin/DataImporter';
 import { Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
+import { StarsCanvas } from '@/components/ui/StarBackground';
 
 const Admin = () => {
   return (
     <div className="min-h-screen bg-background">
+      <StarsCanvas />
       <Navbar />
       <main className="container mx-auto px-6 py-12">
         <div className="mb-8">

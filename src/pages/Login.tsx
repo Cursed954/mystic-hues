@@ -1,9 +1,11 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Mail, Lock, ArrowRight, Github, Chrome } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/context/AuthContext';
+import { StarsCanvas } from '@/components/ui/StarBackground';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -90,6 +92,9 @@ const Login = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 relative overflow-hidden">
+      {/* Star Background */}
+      <StarsCanvas />
+      
       <div className="absolute inset-0 -z-10">
         <div className="absolute top-0 left-0 w-2/3 h-2/3 bg-violet-600/30 rounded-full filter blur-3xl opacity-40 animate-float" />
         <div className="absolute bottom-0 right-0 w-2/3 h-2/3 bg-indigo-600/20 rounded-full filter blur-3xl opacity-40 animate-pulse-slow" />
