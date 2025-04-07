@@ -22,15 +22,15 @@ export const StarBackground = ({ density = 1 }) => {
   useFrame((_state, delta) => {
     if (ref.current) {
       // Slower rotation in dark mode, faster in light mode for snowfall effect
-      const speed = theme === 'dark' ? 1 : 2;
+      const speed = theme === 'dark' ? 1 : 2.5;
       ref.current.rotation.x -= delta / (10 / speed);
       ref.current.rotation.y -= delta / (15 / speed);
       
       // Add vertical movement in light mode for snowfall effect
       if (theme === 'light') {
-        ref.current.position.y -= delta * 0.05;
-        if (ref.current.position.y < -1) {
-          ref.current.position.y = 1;
+        ref.current.position.y -= delta * 0.08;
+        if (ref.current.position.y < -1.5) {
+          ref.current.position.y = 1.5;
         }
       }
     }
@@ -38,8 +38,8 @@ export const StarBackground = ({ density = 1 }) => {
 
   // Update point color and size based on theme
   const pointColor = theme === 'dark' ? '#fff' : '#ffffff';
-  const pointSize = theme === 'dark' ? 0.002 : 0.0015;
-  const pointOpacity = theme === 'dark' ? 1 : 0.8;
+  const pointSize = theme === 'dark' ? 0.002 : 0.004; // Double the size in light mode
+  const pointOpacity = theme === 'dark' ? 1 : 0.85;
 
   return (
     <group rotation={[0, 0, Math.PI / 4]}>
@@ -73,7 +73,7 @@ export const StarsCanvas = () => {
     <div className="w-full h-auto fixed inset-0 -z-10">
       <Canvas camera={{ position: [0, 0, 1] }}>
         <Suspense fallback={null}>
-          <StarBackground density={theme === 'light' ? 2 : 1} />
+          <StarBackground density={theme === 'light' ? 2.5 : 1} />
         </Suspense>
       </Canvas>
     </div>
@@ -91,7 +91,7 @@ export const HomeStarsCanvas = () => {
     <div className="w-full h-auto fixed inset-0 -z-10">
       <Canvas camera={{ position: [0, 0, 1] }}>
         <Suspense fallback={null}>
-          <StarBackground density={theme === 'light' ? 2 : 1} />
+          <StarBackground density={theme === 'light' ? 2.5 : 1} />
         </Suspense>
       </Canvas>
     </div>
