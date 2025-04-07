@@ -36,6 +36,9 @@
     --ring: 24 90% 55%;
 
     --radius: 0.5rem;
+    
+    /* Theme-specific background properties */
+    --theme-bg-image: none;
   }
 
   .dark {
@@ -84,10 +87,23 @@
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    background-image: var(--theme-bg-image);
     background-attachment: fixed !important;
     background-position: center !important;
     background-size: cover !important;
     background-repeat: no-repeat !important;
+    transition: background-image 0.5s ease-in-out;
+  }
+
+  /* Theme-specific body styles for better theme transitions */
+  body.dark-theme {
+    background-color: #0a0920;
+    background-blend-mode: color-dodge;
+  }
+
+  body.light-theme {
+    background-color: #ffffff;
+    background-blend-mode: normal;
   }
 
   #root {

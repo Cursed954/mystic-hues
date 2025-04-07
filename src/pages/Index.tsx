@@ -1,5 +1,5 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import Hero from '@/components/sections/Hero';
@@ -15,12 +15,16 @@ import useMobile from '@/hooks/use-mobile';
 import { HomeStarsCanvas } from '@/components/ui/StarBackground';
 
 const Index = () => {
-  const { theme } = useTheme();
+  const { theme, themeLoaded } = useTheme();
   const isMobile = useMobile();
+  const [pageLoaded, setPageLoaded] = useState(false);
   
   useEffect(() => {
     // Priority loading for homepage - set highest priority for FCP
     document.documentElement.setAttribute('data-priority', 'high');
+    
+    // Mark page as loaded after a short delay to ensure animations start properly
+    const timer = setTimeout(() => setPageLoaded(true), 100);
     
     // Smooth scroll to hash on page load
     if (window.location.hash) {
@@ -28,7 +32,7 @@ const Index = () => {
       if (element) {
         setTimeout(() => {
           element.scrollIntoView({ behavior: 'smooth' });
-        }, 100);
+        }, 300); // Increased timeout to ensure page is fully loaded
       }
     }
     
@@ -38,18 +42,32 @@ const Index = () => {
       return () => {
         document.body.classList.remove('overflow-hidden');
         document.documentElement.removeAttribute('data-priority');
+        clearTimeout(timer);
       };
     }
     
     return () => {
       document.documentElement.removeAttribute('data-priority');
+      clearTimeout(timer);
     };
   }, [isMobile]);
 
+  // Show a loading state until both theme and page are ready
+  if (!themeLoaded || !pageLoaded) {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center bg-background">
+        <div className="flex flex-col items-center space-y-4">
+          <div className="w-12 h-12 rounded-full border-4 border-primary border-t-transparent animate-spin"></div>
+          <p className="text-foreground/80">Loading experience...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={`min-h-screen relative w-full ${isMobile ? 'mobile-view' : ''}`}>
-      {/* Star Background only for dark mode */}
-      {theme === 'dark' && <HomeStarsCanvas />}
+      {/* Display stars for both themes with different densities */}
+      <HomeStarsCanvas />
       
       {/* Abstract colored overlays for visual interest */}
       {theme === 'light' && (
