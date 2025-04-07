@@ -42,7 +42,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
         document.body.style.backgroundAttachment = 'fixed';
         document.body.style.backgroundPosition = 'center';
         document.body.style.backgroundRepeat = 'no-repeat';
-        document.body.style.backgroundBlendMode = 'soft-light';
+        document.body.style.backgroundBlendMode = 'color-dodge'; // Changed blend mode for better visibility
         document.body.style.minHeight = '100vh';
         
         // Initialize all videos with proper settings for dark mode
@@ -55,7 +55,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
         document.body.style.backgroundAttachment = 'fixed';
         document.body.style.backgroundPosition = 'center';
         document.body.style.backgroundRepeat = 'no-repeat';
-        document.body.style.backgroundBlendMode = 'soft-light';
+        document.body.style.backgroundBlendMode = 'normal'; // Changed blend mode for better visibility
         document.body.style.minHeight = '100vh';
         
         // Still initialize videos for light mode

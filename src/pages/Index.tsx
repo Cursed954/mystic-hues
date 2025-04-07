@@ -47,28 +47,28 @@ const Index = () => {
   }, [isMobile]);
 
   return (
-    <div className={`min-h-screen relative ${isMobile ? 'mobile-view' : ''}`}>
+    <div className={`min-h-screen relative w-full ${isMobile ? 'mobile-view' : ''}`}>
       {/* Star Background only for dark mode */}
       {theme === 'dark' && <HomeStarsCanvas />}
       
       {/* Abstract colored overlays for visual interest */}
       {theme === 'light' && (
         <>
-          <div className="fixed top-0 right-0 w-96 h-96 bg-spice-100 rounded-full filter blur-3xl opacity-30 -translate-y-1/2 translate-x-1/2 z-[-1]"></div>
-          <div className="fixed bottom-0 left-0 w-96 h-96 bg-indigo-200 rounded-full filter blur-3xl opacity-30 translate-y-1/2 -translate-x-1/2 z-[-1]"></div>
+          <div className="fixed top-0 right-0 w-96 h-96 bg-spice-100 rounded-full filter blur-3xl opacity-30 -translate-y-1/2 translate-x-1/2 z-[0]"></div>
+          <div className="fixed bottom-0 left-0 w-96 h-96 bg-indigo-200 rounded-full filter blur-3xl opacity-30 translate-y-1/2 -translate-x-1/2 z-[0]"></div>
         </>
       )}
       
       {/* Dark mode accent elements */}
       {theme === 'dark' && (
         <>
-          <div className="fixed top-1/4 right-1/4 w-96 h-96 bg-purple-900 rounded-full filter blur-3xl opacity-10 z-[-1]"></div>
-          <div className="fixed bottom-1/4 left-1/4 w-96 h-96 bg-blue-900 rounded-full filter blur-3xl opacity-10 z-[-1]"></div>
+          <div className="fixed top-1/4 right-1/4 w-96 h-96 bg-purple-900 rounded-full filter blur-3xl opacity-10 z-[0]"></div>
+          <div className="fixed bottom-1/4 left-1/4 w-96 h-96 bg-blue-900 rounded-full filter blur-3xl opacity-10 z-[0]"></div>
         </>
       )}
       
       <Navbar />
-      <main className={isMobile ? "mobile-snap-container hardware-accelerated" : ""}>
+      <main className={`relative z-[1] ${isMobile ? "mobile-snap-container hardware-accelerated" : ""}`}>
         <div className={isMobile ? "mobile-snap-item" : ""}>
           <Hero />
         </div>
