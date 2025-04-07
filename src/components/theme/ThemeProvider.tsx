@@ -33,28 +33,30 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       root.classList.remove('light', 'dark');
       root.classList.add(theme);
       
-      // Apply theme-specific styles
+      // Apply theme-specific styles directly to HTML for better visibility
       if (theme === 'dark') {
-        // Apply dark theme styles
-        document.body.style.background = '#0a0920';
+        // Apply dark theme background
+        document.body.style.backgroundColor = '#0a0920';
         document.body.style.backgroundImage = "url('https://r4.wallpaperflare.com/wallpaper/684/422/438/abstract-3d-digital-art-stu-ballinger-wallpaper-2b965cfd43817fe9f584cbf97d1cfc40.jpg')";
         document.body.style.backgroundSize = 'cover';
         document.body.style.backgroundAttachment = 'fixed';
         document.body.style.backgroundPosition = 'center';
         document.body.style.backgroundRepeat = 'no-repeat';
         document.body.style.backgroundBlendMode = 'soft-light';
+        document.body.style.minHeight = '100vh';
         
         // Initialize all videos with proper settings for dark mode
         initializeVideos();
       } else {
-        // Reset to light theme styles
-        document.body.style.background = '';
+        // Apply light theme background
+        document.body.style.backgroundColor = '#ffffff';
         document.body.style.backgroundImage = "url('https://images.unsplash.com/photo-1740137660661-96c8ec7bc92e?q=80&w=2268&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')";
         document.body.style.backgroundSize = 'cover';
         document.body.style.backgroundAttachment = 'fixed';
         document.body.style.backgroundPosition = 'center';
         document.body.style.backgroundRepeat = 'no-repeat';
         document.body.style.backgroundBlendMode = 'soft-light';
+        document.body.style.minHeight = '100vh';
         
         // Still initialize videos for light mode
         initializeVideos();

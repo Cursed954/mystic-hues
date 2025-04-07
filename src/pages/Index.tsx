@@ -51,7 +51,7 @@ const Index = () => {
       {/* Star Background only for dark mode */}
       {theme === 'dark' && <HomeStarsCanvas />}
       
-      {/* Abstract backgrounds for light mode only */}
+      {/* Abstract colored overlays for visual interest */}
       {theme === 'light' && (
         <>
           <div className="fixed top-0 right-0 w-96 h-96 bg-spice-100 rounded-full filter blur-3xl opacity-30 -translate-y-1/2 translate-x-1/2 z-[-1]"></div>
@@ -75,7 +75,7 @@ const Index = () => {
         
         {/* Add translucent background layer to content sections */}
         <div className="relative">
-          <div className="absolute inset-0 bg-white/70 dark:bg-black/50 backdrop-blur-sm"></div>
+          <div className="absolute inset-0 bg-white/70 dark:bg-black/50 backdrop-blur-sm z-0"></div>
           <div className="relative z-10">
             <div className={isMobile ? "mobile-snap-item" : ""}>
               <About />
