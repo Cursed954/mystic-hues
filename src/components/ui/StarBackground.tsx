@@ -2,44 +2,22 @@
 import { Points, PointMaterial } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
 import * as random from "maath/random";
-import { useState, useRef, Suspense, useEffect } from "react";
+import { useState, useRef, Suspense } from "react";
 import type { Points as PointsType } from "three";
-import { useTheme } from '@/components/theme/ThemeProvider';
 
-// Enhanced star background component with theme awareness
-export const StarBackground = ({ density = 1 }) => {
+// Basic star background component
+export const StarBackground = () => {
   const ref = useRef<PointsType | null>(null);
-  const { theme } = useTheme();
-  
-  // Create more stars in light mode for snowfall effect
-  const pointCount = theme === 'dark' ? 5000 : 10000;
-  const radius = theme === 'dark' ? 1.2 : 1.5;
-  
-  const [sphere] = useState(() =>
-    random.inSphere(new Float32Array(pointCount * density), { radius }) as Float32Array
+  const [sphere] = useState<Float32Array>(() =>
+    random.inSphere(new Float32Array(5000), { radius: 1.2 })
   );
 
   useFrame((_state, delta) => {
     if (ref.current) {
-      // Slower rotation in dark mode, faster in light mode for snowfall effect
-      const speed = theme === 'dark' ? 1 : 2.5;
-      ref.current.rotation.x -= delta / (10 / speed);
-      ref.current.rotation.y -= delta / (15 / speed);
-      
-      // Add vertical movement in light mode for snowfall effect
-      if (theme === 'light') {
-        ref.current.position.y -= delta * 0.08;
-        if (ref.current.position.y < -1.5) {
-          ref.current.position.y = 1.5;
-        }
-      }
+      ref.current.rotation.x -= delta / 10;
+      ref.current.rotation.y -= delta / 15;
     }
   });
-
-  // Update point color and size based on theme
-  const pointColor = theme === 'dark' ? '#fff' : '#ffffff';
-  const pointSize = theme === 'dark' ? 0.002 : 0.004; // Double the size in light mode
-  const pointOpacity = theme === 'dark' ? 1 : 0.85;
 
   return (
     <group rotation={[0, 0, Math.PI / 4]}>
@@ -51,51 +29,36 @@ export const StarBackground = ({ density = 1 }) => {
       >
         <PointMaterial
           transparent
-          color={pointColor}
-          size={pointSize}
+          color="#fff"
+          size={0.002}
           sizeAttenuation={true}
           depthWrite={false}
-          opacity={pointOpacity}
         />
       </Points>
     </group>
   );
 };
 
-// Default canvas for stars with theme support
-export const StarsCanvas = () => {
-  const { theme, themeLoaded } = useTheme();
-  
-  // Only render stars when theme is loaded to avoid flickering
-  if (!themeLoaded) return null;
-  
-  return (
-    <div className="w-full h-auto fixed inset-0 -z-10">
-      <Canvas camera={{ position: [0, 0, 1] }}>
-        <Suspense fallback={null}>
-          <StarBackground density={theme === 'light' ? 2.5 : 1} />
-        </Suspense>
-      </Canvas>
-    </div>
-  );
-};
+// Default canvas for stars
+export const StarsCanvas = () => (
+  <div className="w-full h-auto fixed inset-0 -z-10">
+    <Canvas camera={{ position: [0, 0, 1] }}>
+      <Suspense fallback={null}>
+        <StarBackground />
+      </Suspense>
+    </Canvas>
+  </div>
+);
 
-// Home page specific stars canvas with additional styling and density
-export const HomeStarsCanvas = () => {
-  const { theme, themeLoaded } = useTheme();
-  
-  // Only render stars when theme is loaded to avoid flickering
-  if (!themeLoaded) return null;
-  
-  return (
-    <div className="w-full h-auto fixed inset-0 -z-10">
-      <Canvas camera={{ position: [0, 0, 1] }}>
-        <Suspense fallback={null}>
-          <StarBackground density={theme === 'light' ? 2.5 : 1} />
-        </Suspense>
-      </Canvas>
-    </div>
-  );
-};
+// Home page specific stars canvas with additional styling
+export const HomeStarsCanvas = () => (
+  <div className="w-full h-auto fixed inset-0 -z-10">
+    <Canvas camera={{ position: [0, 0, 1] }}>
+      <Suspense fallback={null}>
+        <StarBackground />
+      </Suspense>
+    </Canvas>
+  </div>
+);
 
 export default StarsCanvas;

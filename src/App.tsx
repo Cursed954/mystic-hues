@@ -18,7 +18,7 @@ import Profile from "./pages/Profile";
 import AccountSettings from "./pages/AccountSettings";
 import JourneyDetail from "./pages/JourneyDetail";
 import { useEffect } from "react";
-// Removed ThemeProvider import as it's now in main.tsx
+import { ThemeProvider } from "./components/theme/ThemeProvider";
 
 const queryClient = new QueryClient();
 
@@ -30,29 +30,31 @@ const App = () => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/states" element={<AllStates />} />
-              <Route path="/state/:stateId" element={<StateDetail />} />
-              <Route path="/cuisine" element={<Cuisine />} />
-              <Route path="/culture" element={<Culture />} />
-              <Route path="/journey/:journeyId" element={<JourneyDetail />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<SignUp />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/account-settings" element={<AccountSettings />} />
-              <Route path="/admin" element={<Admin />} />
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
-        </TooltipProvider>
-      </AuthProvider>
+      <ThemeProvider>
+        <AuthProvider>
+          <TooltipProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/states" element={<AllStates />} />
+                <Route path="/state/:stateId" element={<StateDetail />} />
+                <Route path="/cuisine" element={<Cuisine />} />
+                <Route path="/culture" element={<Culture />} />
+                <Route path="/journey/:journeyId" element={<JourneyDetail />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/signup" element={<SignUp />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/account-settings" element={<AccountSettings />} />
+                <Route path="/admin" element={<Admin />} />
+                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </BrowserRouter>
+          </TooltipProvider>
+        </AuthProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 };
