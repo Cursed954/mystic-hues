@@ -12,23 +12,14 @@ import { useToast } from '@/hooks/use-toast';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { stateData } from '@/data/stateData';
 
 const Profile = () => {
-  const { user, logout, addTrip, deleteTrip } = useAuth();
+  const { user, logout, deleteTrip } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [newTripDialogOpen, setNewTripDialogOpen] = useState(false);
   const [confirmDeleteDialogOpen, setConfirmDeleteDialogOpen] = useState(false);
   const [tripToDelete, setTripToDelete] = useState<number | null>(null);
-  const [newTripData, setNewTripData] = useState({
-    destination: '',
-    date: '',
-    status: 'Upcoming'
-  });
 
   // Redirect if not logged in
   React.useEffect(() => {
@@ -58,36 +49,8 @@ const Profile = () => {
     navigate('/');
   };
 
-  const handleAddTrip = async () => {
-    if (!newTripData.destination || !newTripData.date) {
-      toast({
-        title: "Validation Error",
-        description: "Please fill in all required fields",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    const result = await addTrip(newTripData);
-    
-    if (result.success) {
-      toast({
-        title: "Trip Added",
-        description: `Your trip to ${newTripData.destination} has been added`,
-      });
-      setNewTripDialogOpen(false);
-      setNewTripData({
-        destination: '',
-        date: '',
-        status: 'Upcoming'
-      });
-    } else {
-      toast({
-        title: "Error",
-        description: result.message,
-        variant: "destructive"
-      });
-    }
+  const handleAddTrip = () => {
+    navigate('/journey-planner');
   };
 
   const handleDeleteTrip = async () => {
@@ -197,9 +160,9 @@ const Profile = () => {
           >
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-2xl font-bold">Your Trips</h2>
-              <Button onClick={() => setNewTripDialogOpen(true)} size="sm">
+              <Button onClick={handleAddTrip} size="sm">
                 <Plus className="mr-2 h-4 w-4" />
-                Add Trip
+                Plan New Trip
               </Button>
             </div>
             
@@ -281,9 +244,9 @@ const Profile = () => {
               <div className="bg-white/5 backdrop-blur-sm rounded-lg p-8 text-center border border-white/10">
                 <Package className="w-12 h-12 mx-auto mb-3 text-gray-400" />
                 <h3 className="text-xl font-medium mb-2">No trips yet</h3>
-                <p className="text-gray-400 mb-4">Looks like you haven't booked any journeys yet.</p>
-                <Button onClick={() => navigate('/states')} className="bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700">
-                  Explore Destinations
+                <p className="text-gray-400 mb-4">Looks like you haven't planned any journeys yet.</p>
+                <Button onClick={() => navigate('/journey-planner')} className="bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700">
+                  Plan Your Journey
                 </Button>
               </div>
             )}
@@ -378,68 +341,6 @@ const Profile = () => {
           </motion.div>
         </div>
       </div>
-      
-      {/* Add Trip Dialog */}
-      <Dialog open={newTripDialogOpen} onOpenChange={setNewTripDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Add New Trip</DialogTitle>
-            <DialogDescription>
-              Enter the details of your new trip below.
-            </DialogDescription>
-          </DialogHeader>
-          
-          <div className="space-y-4 py-4">
-            <div className="space-y-2">
-              <Label htmlFor="destination">Destination</Label>
-              <Input
-                id="destination"
-                placeholder="e.g. Goa, Rajasthan"
-                value={newTripData.destination}
-                onChange={(e) => setNewTripData({ ...newTripData, destination: e.target.value })}
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="date">Date</Label>
-              <Input
-                id="date"
-                type="date"
-                value={newTripData.date}
-                onChange={(e) => setNewTripData({ ...newTripData, date: e.target.value })}
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="status">Status</Label>
-              <Select 
-                value={newTripData.status} 
-                onValueChange={(value) => setNewTripData({ ...newTripData, status: value })}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select status" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Upcoming">Upcoming</SelectItem>
-                  <SelectItem value="In Progress">In Progress</SelectItem>
-                  <SelectItem value="Completed">Completed</SelectItem>
-                  <SelectItem value="Cancelled">Cancelled</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-          
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setNewTripDialogOpen(false)}>
-              Cancel
-            </Button>
-            <Button onClick={handleAddTrip}>
-              <Plus className="mr-2 h-4 w-4" />
-              Add Trip
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
       
       {/* Delete Confirmation Dialog */}
       <Dialog open={confirmDeleteDialogOpen} onOpenChange={setConfirmDeleteDialogOpen}>

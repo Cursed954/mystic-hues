@@ -1,11 +1,7 @@
 
-// Home: Experience the timeless spirit of India
-
-import React, { useRef, useEffect } from 'react';
+import React, { useRef } from 'react';
 import { ArrowRight } from 'lucide-react';
-import ParallaxSection from '../ui/ParallaxSection';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { textVariant, fadeIn, staggerContainer } from '@/lib/animations';
 
 const Hero: React.FC = () => {
   const targetRef = useRef<HTMLDivElement>(null);
@@ -19,6 +15,15 @@ const Hero: React.FC = () => {
   const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.8]);
   const y = useTransform(scrollYProgress, [0, 0.5], [0, 100]);
 
+  // Static variant defaults to avoid animations that delay rendering
+  const containerVariants = {
+    visible: { opacity: 1, transition: { duration: 0 } }
+  };
+
+  const itemVariants = {
+    visible: { opacity: 1, y: 0, transition: { duration: 0 } }
+  };
+
   return (
     <section id="home" ref={targetRef} className="relative min-h-screen flex items-center overflow-hidden">
       {/* Content */}
@@ -27,34 +32,34 @@ const Hero: React.FC = () => {
         className="container mx-auto px-6 z-10 mt-16 relative"
       >
         <motion.div 
-          variants={staggerContainer}
-          initial="visible" // Changed from "hidden" to "visible" to skip animation on home page
+          variants={containerVariants}
+          initial="visible"
           animate="visible"
           className="max-w-3xl"
         >
           <motion.p 
-            variants={textVariant(0)}  // Reduced delay to 0
+            variants={itemVariants}
             className="subtitle mb-3 text-white"
           >
             Experience the timeless spirit of India
           </motion.p>
           
           <motion.h1 
-            variants={textVariant(0)}  // Reduced delay to 0
+            variants={itemVariants}
             className="text-4xl md:text-5xl lg:text-7xl font-serif font-medium leading-tight mb-6 text-white"
           >
             Journey Through India's <span className="text-spice-400">Rich</span> Cultural Heritage
           </motion.h1>
           
           <motion.p 
-            variants={textVariant(0)}  // Reduced delay to 0
+            variants={itemVariants}
             className="text-lg text-white/90 mb-8 max-w-2xl"
           >
             Explore the vibrant tapestry of traditions, art forms, and cuisines that make up India's diverse cultural landscape, from ancient temples to living traditions passed down through generations.
           </motion.p>
           
           <motion.div 
-            variants={fadeIn("up", 0)}  // Reduced delay to 0
+            variants={itemVariants}
             className="flex flex-wrap gap-4"
           >
             <a href="#states" className="btn-primary flex items-center group">
@@ -67,8 +72,8 @@ const Hero: React.FC = () => {
           
           {/* Stats */}
           <motion.div 
-            variants={staggerContainer}
-            initial="visible"  // Changed from "hidden" to "visible" to skip animation on home page
+            variants={containerVariants}
+            initial="visible"
             animate="visible"
             className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6"
           >
@@ -80,7 +85,7 @@ const Hero: React.FC = () => {
             ].map((stat, index) => (
               <motion.div 
                 key={index}
-                variants={fadeIn("up", 0)}  // Reduced delay to 0
+                variants={itemVariants}
                 className="glass-panel p-4 rounded-lg bg-white/10 backdrop-blur-md border border-white/20"
                 whileHover={{ y: -5, transition: { duration: 0.2 } }}
               >
@@ -95,9 +100,8 @@ const Hero: React.FC = () => {
       {/* Scroll Indicator */}
       <motion.div 
         className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center"
-        initial={{ opacity: 1 }}  // Changed from 0 to 1 to skip animation
+        initial={{ opacity: 1 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 0.6, delay: 0 }}  // Reduced delay to 0
       >
         <div className="w-[30px] h-[50px] rounded-full border-2 border-spice-400 mb-2 flex justify-center">
           <motion.div 

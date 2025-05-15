@@ -279,7 +279,7 @@ export const artFormDetailsMap: Record<string, ArtFormDetails> = {
       goldenPeriod: "Medieval period",
       currentStatus: "Still widely practiced and appreciated",
     },
-    image: "https://originalhandicraft.org/wp-content/uploads/IMG_1683.jpg",
+    image: "https://c1.wallpaperflare.com/path/844/408/847/pottery-clay-art-craftsman-37a762148f1692812588c0c935fa5c2b.jpg",
     additionalImages: [
       "https://decodemalayalam.com/wp-content/uploads/2024/07/3-4-1024x576.jpg",
       "https://poothali.com/wp-content/uploads/2023/08/Traditional-Pottery-in-Erikkulam.jpg",

@@ -14,21 +14,26 @@ const useImageLazyLoad = (
   placeholderSrc: string = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E",
   options: UseImageLazyLoadOptions = {}
 ) => {
-  const [imageSrc, setImageSrc] = useState(options.priority ? src : placeholderSrc);
-  const [imageRef, setImageRef] = useState<HTMLImageElement | null>(null);
+  const [imageSrc, setImageSrc] = useState(options.priority || options.immediate ? src : placeholderSrc);
+  const imageRef = useRef<HTMLImageElement>(null);
   const [isLoaded, setIsLoaded] = useState(options.priority || false);
   const [hasError, setHasError] = useState(false);
   const observerRef = useRef<IntersectionObserver | null>(null);
   const isMounted = useRef(true);
   const location = useLocation();
   
-  // Check if we're on the home page
+  // Check if we're on the home page or state pages
   const isHomePage = location.pathname === '/';
+  const isStatePage = location.pathname.includes('/state/');
 
-  // If on home page or immediate option is true, skip lazy loading
-  const skipLazyLoad = isHomePage || options.immediate === true || options.priority === true;
+  // If on home page, state page or immediate option is true, skip lazy loading
+  const skipLazyLoad = isHomePage || isStatePage || options.immediate === true || options.priority === true;
 
-  const { threshold = 0.1, rootMargin = '200px' } = options;
+  // Optimize threshold and rootMargin based on page type
+  const { 
+    threshold = isStatePage ? 0.01 : 0.1, 
+    rootMargin = isStatePage ? '500px' : '200px' 
+  } = options;
 
   const onLoad = useCallback((e?: React.SyntheticEvent<HTMLImageElement>) => {
     if (isMounted.current) {
@@ -45,7 +50,7 @@ const useImageLazyLoad = (
     }
   }, [placeholderSrc, src]);
 
-  // Immediately load priority images or on home page
+  // Immediately load priority images or on home/state pages
   useEffect(() => {
     if (skipLazyLoad && !isLoaded && !hasError) {
       const img = new Image();
@@ -64,24 +69,34 @@ const useImageLazyLoad = (
     }
   }, [skipLazyLoad, src, isLoaded, hasError, onError]);
 
-  // Handle fallback strategy for failed images
+  // Handle fallback for failed images
   useEffect(() => {
-    if (hasError && src.includes('unsplash')) {
-      // If an Unsplash image fails, try a different source
-      const fallbackSrc = src.replace(
-        /unsplash\.com\/.*/, 
-        `picsum.photos/${Math.floor(800 + Math.random() * 400)}/${Math.floor(600 + Math.random() * 200)}`
-      );
+    if (hasError) {
+      // Try with a different strategy if the image fails to load
+      let fallbackSrc = src;
       
-      // Create an image element to preload the fallback
-      const img = new Image();
-      img.src = fallbackSrc;
-      img.onload = () => {
-        if (isMounted.current) {
-          setImageSrc(fallbackSrc);
-          setHasError(false);
-        }
-      };
+      if (src.includes('unsplash')) {
+        // If an Unsplash image fails, try a different source
+        fallbackSrc = src.replace(
+          /unsplash\.com\/.*/, 
+          `picsum.photos/${Math.floor(800 + Math.random() * 400)}/${Math.floor(600 + Math.random() * 200)}`
+        );
+      } else if (src.includes('images.') || src.includes('previews.') || src.includes('shutterstock')) {
+        // General fallback for any image URL
+        fallbackSrc = `https://picsum.photos/800/600?random=${Math.floor(Math.random() * 1000)}`;
+      }
+      
+      if (fallbackSrc !== src) {
+        // Create an image element to preload the fallback
+        const img = new Image();
+        img.src = fallbackSrc;
+        img.onload = () => {
+          if (isMounted.current) {
+            setImageSrc(fallbackSrc);
+            setHasError(false);
+          }
+        };
+      }
     }
   }, [hasError, src]);
 
@@ -90,10 +105,11 @@ const useImageLazyLoad = (
 
     // Skip intersection observer for home page content and priority images
     if (skipLazyLoad) {
+      setImageSrc(src);
       return;
     }
 
-    if (imageRef && !isLoaded) {
+    if (imageRef.current && !isLoaded) {
       // Cleanup previous observer
       if (observerRef.current) {
         observerRef.current.disconnect();
@@ -125,8 +141,8 @@ const useImageLazyLoad = (
                 };
                 
                 // Stop watching once the entry is detected
-                if (observerRef.current && imageRef) {
-                  observerRef.current.unobserve(imageRef);
+                if (observerRef.current && imageRef.current) {
+                  observerRef.current.unobserve(imageRef.current);
                 }
               }
             });
@@ -136,7 +152,7 @@ const useImageLazyLoad = (
             rootMargin, // Increased to start loading earlier
           }
         );
-        observerRef.current.observe(imageRef);
+        observerRef.current.observe(imageRef.current);
       } else {
         // Fallback for browsers that don't support IntersectionObserver
         setImageSrc(src);
@@ -145,12 +161,12 @@ const useImageLazyLoad = (
 
     return () => {
       didCancel = true;
-      if (observerRef.current && imageRef) {
-        observerRef.current.unobserve(imageRef);
+      if (observerRef.current && imageRef.current) {
+        observerRef.current.unobserve(imageRef.current);
         observerRef.current.disconnect();
       }
     };
-  }, [src, imageRef, isLoaded, threshold, rootMargin, onError, skipLazyLoad]);
+  }, [src, isLoaded, threshold, rootMargin, onError, skipLazyLoad]);
 
   useEffect(() => {
     return () => {
@@ -158,7 +174,7 @@ const useImageLazyLoad = (
     };
   }, []);
 
-  return { imageSrc, setImageRef, isLoaded, onLoad, onError };
+  return { imageSrc, imageRef, isLoaded, onLoad, onError };
 };
 
 export default useImageLazyLoad;

@@ -14,7 +14,6 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { regions, getStateRegion } from '@/data/cultural';
 import ContentSkeleton, { CardSkeleton } from '@/components/ui/content-skeleton';
-import LazyImage from '@/components/ui/lazy-image';
 
 const AllStates = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -192,10 +191,13 @@ const AllStates = () => {
                       <Link to={`/state/${state.id}`} className="block h-full">
                         <Card className="overflow-hidden h-full hover:shadow-lg transition-shadow">
                           <div className="relative h-48">
-                            <LazyImage 
-                              src={state.bannerImage} 
+                            {/* Plain <img> with immediate loading, no lazy logic */}
+                            <img
+                              src={state.bannerImage}
                               alt={state.name}
                               className="w-full h-full object-cover"
+                              loading="eager"
+                              style={{ borderRadius: "0.5rem" }}
                             />
                             <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
                               <h3 className="text-white text-xl font-medium">{state.name}</h3>

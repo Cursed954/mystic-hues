@@ -1,6 +1,6 @@
-
 import { useState, useEffect } from 'react';
 import { authService } from '@/lib/auth';
+import { stateData } from '@/data/stateData';
 
 export function useAuthState() {
   const [user, setUser] = useState<any>(null);
@@ -146,6 +146,101 @@ export function useAuthState() {
     }
   };
 
+  // Generate a sample itinerary for a trip based on duration
+  const generateSampleItinerary = (destination: string, duration: number = 3) => {
+    const itinerary = [];
+    
+    // Activities for each time of day
+    const morningActivities = [
+      `Explore ${destination} local markets`,
+      `Visit historical sites in ${destination}`,
+      `Take a guided tour of ${destination}`,
+      `Enjoy breakfast at a local café in ${destination}`
+    ];
+    
+    const afternoonActivities = [
+      `Try local cuisine at a restaurant in ${destination}`,
+      `Visit museums and galleries in ${destination}`,
+      `Relax at a scenic spot in ${destination}`,
+      `Shopping for souvenirs in ${destination}`
+    ];
+    
+    const eveningActivities = [
+      `Watch the sunset from a viewpoint in ${destination}`,
+      `Attend a cultural performance in ${destination}`,
+      `Dine at a famous restaurant in ${destination}`,
+      `Take an evening walk through ${destination}`
+    ];
+    
+    const nightActivities = [
+      `Experience the nightlife of ${destination}`,
+      `Stargazing in ${destination}`,
+      `Night photography tour in ${destination}`,
+      `Attend a local event in ${destination}`
+    ];
+    
+    const places = [
+      `Main Square of ${destination}`,
+      `${destination} Heritage Museum`,
+      `${destination} Nature Park`,
+      `${destination} Cultural Center`,
+      `Famous temple in ${destination}`,
+      `Historic fort in ${destination}`
+    ];
+    
+    const cuisine = [
+      `Traditional ${destination} thali`,
+      `Street food of ${destination}`,
+      `Special sweets of ${destination}`,
+      `Regional specialties of ${destination}`
+    ];
+    
+    const artForms = [
+      `Traditional dance of ${destination}`,
+      `Folk music of ${destination}`,
+      `Handicrafts of ${destination}`,
+      `Painting styles of ${destination}`
+    ];
+    
+    // Create day-by-day itinerary
+    for (let i = 1; i <= duration; i++) {
+      itinerary.push({
+        day: i,
+        title: i === 1 ? `Arrival in ${destination}` : 
+               i === duration ? `Departure from ${destination}` : 
+               `Exploring ${destination} - Day ${i}`,
+        morningActivities: [
+          morningActivities[Math.floor(Math.random() * morningActivities.length)],
+          morningActivities[Math.floor(Math.random() * morningActivities.length)]
+        ],
+        afternoonActivities: [
+          afternoonActivities[Math.floor(Math.random() * afternoonActivities.length)],
+          afternoonActivities[Math.floor(Math.random() * afternoonActivities.length)]
+        ],
+        eveningActivities: [
+          eveningActivities[Math.floor(Math.random() * eveningActivities.length)],
+          eveningActivities[Math.floor(Math.random() * eveningActivities.length)]
+        ],
+        nightActivities: [
+          nightActivities[Math.floor(Math.random() * nightActivities.length)]
+        ],
+        places: [
+          places[Math.floor(Math.random() * places.length)],
+          places[Math.floor(Math.random() * places.length)]
+        ],
+        cuisine: [
+          cuisine[Math.floor(Math.random() * cuisine.length)],
+          cuisine[Math.floor(Math.random() * cuisine.length)]
+        ],
+        artForms: [
+          artForms[Math.floor(Math.random() * artForms.length)]
+        ]
+      });
+    }
+    
+    return itinerary;
+  };
+
   const addTrip = async (trip: any) => {
     try {
       if (!user) return { success: false, message: "User not authenticated" };
@@ -158,8 +253,46 @@ export function useAuthState() {
         ? Math.max(...trips.map((t: any) => t.id)) + 1 
         : 1;
       
-      // Add new trip with ID
-      const newTrip = { ...trip, id: newTripId };
+      // Parse the duration if it's a string
+      let durationValue = trip.duration;
+      if (typeof durationValue === 'string') {
+        const match = durationValue.match(/^(\d+)/);
+        if (match) {
+          durationValue = parseInt(match[1]);
+        } else {
+          durationValue = 3; // Default
+        }
+      }
+      
+      // Use provided itinerary if available, otherwise generate a sample one
+      const itinerary = trip.itinerary || generateSampleItinerary(trip.destination, durationValue);
+      
+      // Find matching state to get banner image if not provided
+      let imageSrc = trip.imageSrc;
+      if (!imageSrc) {
+        const stateInfo = stateData.find(s => 
+          s.name.toLowerCase() === trip.destination.toLowerCase()
+        );
+        if (stateInfo) {
+          imageSrc = stateInfo.bannerImage;
+        }
+      }
+      
+      // Prepare timeline for the journey overview
+      const timeline = trip.timeline || itinerary.map((day: any) => ({
+        title: day.title,
+        description: day.activities?.join(', ') || 'Explore and enjoy'
+      }));
+      
+      // Add new trip with ID and itinerary
+      const newTrip = {
+        ...trip,
+        id: newTripId,
+        duration: durationValue,
+        imageSrc,
+        itinerary,
+        timeline
+      };
       
       // Update user profile
       const result = await authService.updateUserProfile({

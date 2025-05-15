@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import ScrollReveal from '../ui/ScrollReveal';
@@ -10,7 +9,7 @@ import { stateData } from '@/data/stateData';
 import { regions, getStateRegion } from '@/data/cultural';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import ContentSkeleton, { CardSkeleton } from '../ui/content-skeleton';
-import LazyImage from '../ui/lazy-image';
+import StateCard from '../StateCard';
 
 const States: React.FC = () => {
   // States data
@@ -172,10 +171,11 @@ const States: React.FC = () => {
                         </div>
                       }>
                         <div className="rounded-xl overflow-hidden h-full shadow-md">
-                          <LazyImage 
-                            src={state.bannerImage} 
-                            alt={state.name} 
-                            className="w-full h-full object-cover"
+                          <StateCard 
+                            state={{
+                              name: state.name,
+                              image: state.bannerImage
+                            }}
                           />
                         </div>
                       </ParallaxSection>

@@ -29,16 +29,17 @@ const LazyImage = memo(({
   const [isLoaded, setIsLoaded] = useState(false);
   const location = useLocation();
   const isHomePage = location.pathname === '/';
+  const isStatePage = location.pathname.includes('/state/');
   
-  // Skip lazy loading animation on home page or when immediate prop is true
-  const skipLazyEffects = isHomePage || immediate === true || priority === true;
+  // Skip lazy loading animation on home page, state pages, or when immediate prop is true
+  const skipLazyEffects = isHomePage || isStatePage || immediate === true || priority === true;
   
-  const { imageSrc, setImageRef, onLoad, onError } = useImageLazyLoad(
+  const { imageSrc, imageRef, onLoad, onError } = useImageLazyLoad(
     src,
     placeholderSrc,
     { 
       rootMargin, 
-      immediate: skipLazyEffects,
+      immediate: skipLazyEffects || location.pathname.includes('/state/') || location.pathname === '/cuisine',
       priority 
     }
   );
@@ -50,12 +51,20 @@ const LazyImage = memo(({
   };
 
   const handleError = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    console.error("Image failed to load:", src);
     onError(e);
     if (props.onError) props.onError(e);
   };
 
+  // When src changes, reset isLoaded state
   useEffect(() => {
-    // If we're on home page or priority image, set as loaded immediately
+    if (!skipLazyEffects) {
+      setIsLoaded(false);
+    }
+  }, [src, skipLazyEffects]);
+
+  useEffect(() => {
+    // If we're on home page, state page or priority image, set as loaded immediately
     if (skipLazyEffects) {
       setIsLoaded(true);
     }
@@ -64,7 +73,7 @@ const LazyImage = memo(({
   return (
     <div className={cn("relative overflow-hidden", className)}>
       <img
-        ref={setImageRef}
+        ref={imageRef}
         src={imageSrc}
         alt={alt}
         onLoad={handleLoad}
@@ -75,8 +84,8 @@ const LazyImage = memo(({
           isLoaded && "opacity-100",
           className
         )}
-        loading={priority ? "eager" : "lazy"}
-        decoding={priority ? "sync" : "async"}
+        loading={priority || skipLazyEffects ? "eager" : "lazy"}
+        decoding={priority || skipLazyEffects ? "sync" : "async"}
         {...props}
       />
       {!isLoaded && !skipLazyEffects && (

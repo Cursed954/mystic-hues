@@ -9,7 +9,8 @@ import type { Points as PointsType } from "three";
 export const StarBackground = () => {
   const ref = useRef<PointsType | null>(null);
   const [sphere] = useState<Float32Array>(() =>
-    random.inSphere(new Float32Array(5000), { radius: 1.2 })
+    // Explicitly cast the return value to Float32Array
+    random.inSphere(new Float32Array(5000), { radius: 1.2 }) as Float32Array
   );
 
   useFrame((_state, delta) => {
