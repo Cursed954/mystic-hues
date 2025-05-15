@@ -13,8 +13,12 @@ interface Message {
   id?: string;
 }
 
-const Chatbot: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(false);
+interface ChatbotProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+const Chatbot: React.FC<ChatbotProps> = ({ isOpen, onClose }) => {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
@@ -47,8 +51,6 @@ const Chatbot: React.FC = () => {
       }, 300);
     }
   }, [isOpen]);
-
-  const toggleChat = () => setIsOpen((prev) => !prev);
 
   const generateGeminiResponse = async (
     prompt: string,
@@ -138,85 +140,74 @@ const Chatbot: React.FC = () => {
     }
   };
 
+  if (!isOpen) return null;
+
   return (
     <>
-      {/* Floating Robot Button */}
-      <div className="fixed bottom-5 right-5 z-50">
-        <button
-          onClick={toggleChat}
-          className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-full p-4 shadow-lg transition-transform hover:scale-110"
-          aria-label="Open Mystic India Chatbot"
-        >
-          <FaRobot size={24} />
-        </button>
-      </div>
-
       {/* Chat Window */}
-      {isOpen && (
-        <div
-          className="fixed bottom-24 right-5 z-50 w-[360px] h-[60vh] flex flex-col rounded-2xl overflow-hidden shadow-2xl border border-white/20 backdrop-blur-md bg-white/20"
-          style={{
-            backgroundImage: "url('https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDJ8fGluZGlhbnxlbnwwfHx8fDE2OTI3NTY5NzE&ixlib=rb-4.0.3&q=80&w=1080')",
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            backgroundBlendMode: "soft-light",
-          }}
-        >
-          
-          {/* Header */}
-          <div className="flex items-center justify-between px-5 py-3 bg-gradient-to-r from-indigo-700 to-purple-700 text-white">
-            <h2 className="text-lg font-semibold">Mystic India Guide</h2>
-            <button onClick={toggleChat} className="hover:text-gray-300">✕</button>
-          </div>
+      <div
+        className="fixed bottom-24 right-5 z-50 w-[360px] h-[60vh] flex flex-col rounded-2xl overflow-hidden shadow-2xl border border-white/20 backdrop-blur-md bg-white/20"
+        style={{
+          backgroundImage: "url('https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDJ8fGluZGlhbnxlbnwwfHx8fDE2OTI3NTY5NzE&ixlib=rb-4.0.3&q=80&w=1080')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundBlendMode: "soft-light",
+        }}
+      >
+        
+        {/* Header */}
+        <div className="flex items-center justify-between px-5 py-3 bg-gradient-to-r from-indigo-700 to-purple-700 text-white">
+          <h2 className="text-lg font-semibold">Mystic India Guide</h2>
+          <button onClick={onClose} className="hover:text-gray-300">✕</button>
+        </div>
 
-          {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-3">
-            {messages.map((m) => (
-              <div
-                key={m.id}
-                className={`whitespace-pre-line px-4 py-2 rounded-xl max-w-[80%] text-sm ${
-                  m.role === "user"
-                    ? "bg-indigo-600 text-white self-end ml-auto"
-                    : "bg-gray-900/70 text-white self-start mr-auto"
-                }`}
-              >
-                {m.content}
-              </div>
-            ))}
-            {loading && (
-              <div className="px-4 py-2 rounded-xl bg-gray-900/70 text-white w-fit animate-pulse">
-                Typing...
-              </div>
-            )}
-            <div ref={messagesEndRef} />
-          </div>
-
-          {/* Input Box */}
-          <div className="flex items-center gap-2 p-4 border-t border-gray-600 bg-black/40">
-            <input
-              ref={inputRef}
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={handleKeyPress}
-              placeholder="Ask me about India..."
-              className="flex-1 px-4 py-2 rounded-full bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              disabled={loading}
-            />
-            <button
-              onClick={handleSend}
-              disabled={loading || !input.trim()}
-              className={`p-2 rounded-full ${
-                input.trim() && !loading 
-                  ? "bg-indigo-600 hover:bg-indigo-700" 
-                  : "bg-indigo-600/50 cursor-not-allowed"
+        {/* Messages */}
+        <div className="flex-1 overflow-y-auto p-4 space-y-3">
+          {messages.map((m) => (
+            <div
+              key={m.id}
+              className={`whitespace-pre-line px-4 py-2 rounded-xl max-w-[80%] text-sm ${
+                m.role === "user"
+                  ? "bg-indigo-600 text-white self-end ml-auto"
+                  : "bg-gray-900/70 text-white self-start mr-auto"
               }`}
             >
-              <SendHorizontal className="w-5 h-5 text-white" />
-            </button>
-          </div>
+              {m.content}
+            </div>
+          ))}
+          {loading && (
+            <div className="px-4 py-2 rounded-xl bg-gray-900/70 text-white w-fit animate-pulse">
+              Typing...
+            </div>
+          )}
+          <div ref={messagesEndRef} />
         </div>
-      )}
+
+        {/* Input Box */}
+        <div className="flex items-center gap-2 p-4 border-t border-gray-600 bg-black/40">
+          <input
+            ref={inputRef}
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={handleKeyPress}
+            placeholder="Ask me about India..."
+            className="flex-1 px-4 py-2 rounded-full bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            disabled={loading}
+          />
+          <button
+            onClick={handleSend}
+            disabled={loading || !input.trim()}
+            className={`p-2 rounded-full ${
+              input.trim() && !loading 
+                ? "bg-indigo-600 hover:bg-indigo-700" 
+                : "bg-indigo-600/50 cursor-not-allowed"
+            }`}
+          >
+            <SendHorizontal className="w-5 h-5 text-white" />
+          </button>
+        </div>
+      </div>
     </>
   );
 };
