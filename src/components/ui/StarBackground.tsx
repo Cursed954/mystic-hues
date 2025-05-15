@@ -15,12 +15,11 @@ export const StarBackground = () => {
   // Use more stars and bigger size for light mode (snowfall effect)
   const starCount = isLight ? 10000 : 5000;
   const starSize = isLight ? 0.004 : 0.002;
-  const rotationSpeed = isLight ? 0.15 : 0.1; // Faster for light mode
   
-  const [sphere] = useState<Float32Array>(() =>
-    // Explicitly cast the return value to Float32Array
-    random.inSphere(new Float32Array(starCount), { radius: 1.2 }) as Float32Array
-  );
+  const [sphere] = useState<Float32Array>(() => {
+    // Create a sphere of points with the specified radius
+    return random.inSphere(new Float32Array(starCount * 3), { radius: 1.2 }) as Float32Array;
+  });
 
   useFrame((_state, delta) => {
     if (ref.current) {
@@ -57,8 +56,6 @@ export const StarBackground = () => {
 
 // Default canvas for stars
 export const StarsCanvas = () => {
-  const { theme } = useTheme();
-  
   return (
     <div className="w-full h-auto fixed inset-0 -z-10">
       <Canvas camera={{ position: [0, 0, 1] }}>
