@@ -1,12 +1,10 @@
+
 // src/components/chatbot/Chatbot.tsx
 
 import React, { useState, useEffect, useRef } from "react";
 import { FaRobot } from "react-icons/fa";
 import { SendHorizontal } from "lucide-react";
-
-const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
-const MODEL_NAME = "gemini-1.5-flash";
-const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent`;
+import { toast } from "@/hooks/use-toast";
 
 interface Message {
   role: "user" | "assistant";
@@ -30,10 +28,25 @@ const Chatbot: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Get API key from environment or use empty string as fallback
+  const API_KEY = import.meta.env.VITE_GEMINI_API_KEY || "";
+  const MODEL_NAME = "gemini-1.5-flash";
+  const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent`;
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  // Focus input when chat is opened
+  useEffect(() => {
+    if (isOpen && inputRef.current) {
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 300);
+    }
+  }, [isOpen]);
 
   const toggleChat = () => setIsOpen((prev) => !prev);
 
@@ -41,7 +54,14 @@ const Chatbot: React.FC = () => {
     prompt: string,
     chatHistory: Message[]
   ): Promise<string> => {
-    if (!API_KEY) throw new Error("API Key missing!");
+    if (!API_KEY) {
+      toast({
+        title: "API Key Missing",
+        description: "Gemini API key is not configured.",
+        variant: "destructive"
+      });
+      throw new Error("API Key missing!");
+    }
 
     const contents = [
       {
@@ -57,21 +77,26 @@ const Chatbot: React.FC = () => {
       { role: "user", parts: [{ text: prompt }] },
     ];
 
-    const resp = await fetch(`${API_URL}?key=${API_KEY}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        contents,
-        generationConfig: { temperature: 0.6, maxOutputTokens: 600 },
-      }),
-    });
+    try {
+      const resp = await fetch(`${API_URL}?key=${API_KEY}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents,
+          generationConfig: { temperature: 0.6, maxOutputTokens: 600 },
+        }),
+      });
 
-    if (!resp.ok) throw new Error(`API error: ${resp.status}`);
-    const data = await resp.json();
-    const txt = data.candidates?.[0]?.content?.parts?.[0]?.text;
-    if (!txt) throw new Error("Unexpected Gemini API response.");
+      if (!resp.ok) throw new Error(`API error: ${resp.status}`);
+      const data = await resp.json();
+      const txt = data.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (!txt) throw new Error("Unexpected Gemini API response.");
 
-    return formatResponseAsBullets(txt);
+      return formatResponseAsBullets(txt);
+    } catch (err) {
+      console.error("Gemini API error:", err);
+      throw err;
+    }
   };
 
   const formatResponseAsBullets = (text: string): string => {
@@ -81,10 +106,6 @@ const Chatbot: React.FC = () => {
 
   const handleSend = async () => {
     const trimmed = input.trim();
-    if (!API_KEY) {
-      setError("Missing API Key!");
-      return;
-    }
     if (!trimmed || loading) return;
 
     const userMsg: Message = { id: Date.now().toString(), role: "user", content: trimmed, timestamp: new Date() };
@@ -98,15 +119,20 @@ const Chatbot: React.FC = () => {
       const botMsg: Message = { id: (Date.now() + 1).toString(), role: "assistant", content: botText, timestamp: new Date() };
       setMessages((prev) => [...prev, botMsg]);
     } catch (e) {
-      const msg = e instanceof Error ? e.message : "Unknown error";
-      setError(msg);
+      const errorMessage = e instanceof Error ? e.message : "Unknown error";
+      setError(errorMessage);
+      toast({
+        title: "Error",
+        description: errorMessage,
+        variant: "destructive"
+      });
     } finally {
       setLoading(false);
     }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && !loading && input.trim()) {
+    if (e.key === "Enter" && !e.shiftKey && !loading && input.trim()) {
       e.preventDefault();
       handleSend();
     }
@@ -133,7 +159,7 @@ const Chatbot: React.FC = () => {
             backgroundImage: "url('https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDJ8fGluZGlhbnxlbnwwfHx8fDE2OTI3NTY5NzE&ixlib=rb-4.0.3&q=80&w=1080')",
             backgroundSize: "cover",
             backgroundPosition: "center",
-            backgroundBlendMode : "soft-light",
+            backgroundBlendMode: "soft-light",
           }}
         >
           
@@ -168,18 +194,23 @@ const Chatbot: React.FC = () => {
           {/* Input Box */}
           <div className="flex items-center gap-2 p-4 border-t border-gray-600 bg-black/40">
             <input
+              ref={inputRef}
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyPress}
               placeholder="Ask me about India..."
-              className="flex-1 px-4 py-2 rounded-full bg-gray-800 text-white focus:outline-none"
-              disabled={loading || !API_KEY}
+              className="flex-1 px-4 py-2 rounded-full bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              disabled={loading}
             />
             <button
               onClick={handleSend}
               disabled={loading || !input.trim()}
-              className="p-2 rounded-full bg-indigo-600 hover:bg-indigo-700"
+              className={`p-2 rounded-full ${
+                input.trim() && !loading 
+                  ? "bg-indigo-600 hover:bg-indigo-700" 
+                  : "bg-indigo-600/50 cursor-not-allowed"
+              }`}
             >
               <SendHorizontal className="w-5 h-5 text-white" />
             </button>
