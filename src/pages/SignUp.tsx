@@ -3,24 +3,22 @@ import { useNavigate } from 'react-router-dom';
 import { Mail, Lock, ArrowRight, User, Github, Chrome } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useToast } from '@/hooks/use-toast';
-import { useAuth } from '@/context/AuthContext';
+import { useSupabaseAuthContext } from '@/context/SupabaseAuthContext';
 
 const SignUp = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [socialLoading, setSocialLoading] = useState<string | null>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { signUp, socialLogin, isAuthenticated } = useAuth();
+  const { user, signUp, signInWithOAuth, loading } = useSupabaseAuthContext();
   
   useEffect(() => {
-    if (isAuthenticated) {
+    if (user) {
       navigate('/');
     }
-  }, [isAuthenticated, navigate]);
+  }, [user, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,24 +40,22 @@ const SignUp = () => {
       });
       return;
     }
-    
-    setIsLoading(true);
 
     try {
-      const result = await signUp(name, email, password);
+      const { error } = await signUp(email, password, name);
       
-      if (result.success) {
-        toast({
-          title: "Account Created Successfully",
-          description: "Welcome to Mystic India! You are now registered.",
-        });
-        navigate('/profile');
-      } else {
+      if (error) {
         toast({
           title: "Registration Failed",
-          description: result.message,
+          description: error.message,
           variant: "destructive"
         });
+      } else {
+        toast({
+          title: "Account Created Successfully",
+          description: "Welcome to Mystic India! Please check your email for verification.",
+        });
+        navigate('/login');
       }
     } catch (error) {
       console.error("Registration error:", error);
@@ -68,30 +64,21 @@ const SignUp = () => {
         description: "An unexpected error occurred. Please try again.",
         variant: "destructive"
       });
-    } finally {
-      setIsLoading(false);
     }
   };
 
   const handleSocialLogin = async (provider: 'google' | 'github') => {
-    setSocialLoading(provider);
-    
     try {
-      const result = await socialLogin(provider);
+      const { error } = await signInWithOAuth(provider);
       
-      if (result.success) {
-        toast({
-          title: "Account Created Successfully",
-          description: `You have been registered with ${provider}.`,
-        });
-        navigate('/profile');
-      } else {
+      if (error) {
         toast({
           title: "Registration Failed",
-          description: result.message,
+          description: error.message,
           variant: "destructive"
         });
       }
+      // Success will be handled by auth state change
     } catch (error) {
       console.error(`${provider} registration error:`, error);
       toast({
@@ -99,8 +86,6 @@ const SignUp = () => {
         description: `An error occurred while registering with ${provider}.`,
         variant: "destructive"
       });
-    } finally {
-      setSocialLoading(null);
     }
   };
 
@@ -233,7 +218,7 @@ const SignUp = () => {
 
             <motion.button
               type="submit"
-              disabled={isLoading}
+              disabled={loading}
               className="w-full bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white py-3 rounded-lg font-semibold flex items-center justify-center gap-2 transition-all duration-300 relative overflow-hidden group shadow-lg shadow-violet-900/30"
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
@@ -241,7 +226,7 @@ const SignUp = () => {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
-              {isLoading ? (
+              {loading ? (
                 <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
               ) : (
                 <>
@@ -273,9 +258,9 @@ const SignUp = () => {
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
                 onClick={() => handleSocialLogin('google')}
-                disabled={!!socialLoading}
+                disabled={loading}
               >
-                {socialLoading === 'google' ? (
+                {loading ? (
                   <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                 ) : (
                   <>
@@ -289,9 +274,9 @@ const SignUp = () => {
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
                 onClick={() => handleSocialLogin('github')}
-                disabled={!!socialLoading}
+                disabled={loading}
               >
-                {socialLoading === 'github' ? (
+                {loading ? (
                   <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                 ) : (
                   <>
