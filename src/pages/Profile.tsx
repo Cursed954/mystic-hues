@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { useAuth } from '@/context/AuthContext';
+import { useSupabaseAuthContext } from '@/context/SupabaseAuthContext';
 import { 
   UserCircle, LogOut, Calendar, MapPin, Package, ChevronRight, 
   Edit, Mail, Phone, Plus, Trash, Clock, Star, Heart 
@@ -15,7 +15,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogD
 import { stateData } from '@/data/stateData';
 
 const Profile = () => {
-  const { user, logout, deleteTrip } = useAuth();
+  const { user, signOut } = useSupabaseAuthContext();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [confirmDeleteDialogOpen, setConfirmDeleteDialogOpen] = useState(false);
