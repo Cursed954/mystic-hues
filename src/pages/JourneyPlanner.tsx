@@ -281,6 +281,7 @@ const JourneyPlanner = () => {
       itinerary: journeyData.itinerary
     };
 
+    try {
       toast({
         title: "Feature Coming Soon", 
         description: "Trip saving will be available soon!",
