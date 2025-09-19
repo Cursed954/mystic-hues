@@ -53,9 +53,14 @@ const Login = () => {
       const { error } = await signInWithOAuth(provider);
       
       if (error) {
+        // Show more user-friendly error for unconfigured providers
+        const errorMessage = error.message?.includes('provider is not enabled') 
+          ? `${provider} login is not configured yet. Please use email login instead.`
+          : error.message;
+        
         toast({
           title: "Login Failed",
-          description: error.message,
+          description: errorMessage,
           variant: "destructive"
         });
       }

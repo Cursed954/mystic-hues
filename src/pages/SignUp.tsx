@@ -72,9 +72,14 @@ const SignUp = () => {
       const { error } = await signInWithOAuth(provider);
       
       if (error) {
+        // Show more user-friendly error for unconfigured providers
+        const errorMessage = error.message?.includes('provider is not enabled') 
+          ? `${provider} signup is not configured yet. Please use email signup instead.`
+          : error.message;
+        
         toast({
           title: "Registration Failed",
-          description: error.message,
+          description: errorMessage,
           variant: "destructive"
         });
       }
