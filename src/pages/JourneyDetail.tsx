@@ -10,7 +10,7 @@ import JourneyTimeline from '@/components/journey/JourneyTimeline';
 import JourneyActivities from '@/components/journey/JourneyActivities';
 import CabBooking from '@/components/journey/CabBooking';
 import { getJourneyById } from '@/data/journeys';
-import { useAuth } from '@/context/AuthContext';
+import { useSupabaseAuthContext } from '@/context/SupabaseAuthContext';
 import JourneyViewer from '@/components/journey/JourneyViewer';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
@@ -19,16 +19,19 @@ import { stateData } from '@/data/stateData';
 const JourneyDetail = () => {
   const { journeyId } = useParams<{ journeyId: string }>();
   const [journey, setJourney] = useState<any | null>(null);
-  const { user } = useAuth();
+  const { user } = useSupabaseAuthContext();
   const navigate = useNavigate();
   const { toast } = useToast();
   
   useEffect(() => {
     window.scrollTo(0, 0);
     
-    // First try to find journey in user trips
-    if (journeyId && user && user.trips) {
-      const userJourney = user.trips.find((trip: any) => trip.id === parseInt(journeyId));
+    // Temporarily disable user trip functionality
+    // if (journeyId && user && user.trips) {
+    //   const userJourney = user.trips.find((trip: any) => trip.id === parseInt(journeyId));
+    
+    // For now, just load from predefined journeys
+    if (journeyId) {
       if (userJourney) {
         // If we found a user journey, use it
         setJourney({

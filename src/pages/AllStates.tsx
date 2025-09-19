@@ -1,18 +1,17 @@
-
 import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import ScrollReveal from '@/components/ui/ScrollReveal';
-import { Card, CardContent } from '@/components/ui/card';
 import { stateData } from '@/data/stateData';
 import { MapPin, ArrowRight, Search, Filter, Heart } from 'lucide-react';
-import { motion } from 'framer-motion';
-import { useAuth } from '@/context/AuthContext';
+import { motion as motionDiv } from 'framer-motion';
+import { useSupabaseAuthContext } from '@/context/SupabaseAuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { regions, getStateRegion } from '@/data/cultural';
+import LazyImage from '@/components/ui/lazy-image';
 import ContentSkeleton, { CardSkeleton } from '@/components/ui/content-skeleton';
 
 const AllStates = () => {
@@ -20,7 +19,8 @@ const AllStates = () => {
   const [activeFilter, setActiveFilter] = useState('All');
   const [filteredStates, setFilteredStates] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const { user, toggleFavoriteState, isAuthenticated } = useAuth();
+  const { user } = useSupabaseAuthContext();
+  const isAuthenticated = !!user;
   const { toast } = useToast();
 
   // First show the page layout, then load data
@@ -28,225 +28,212 @@ const AllStates = () => {
     // Short timeout to let the page layout render first
     const timer = setTimeout(() => {
       let filtered = [...stateData];
-
-      if (activeFilter !== 'All') {
-        const region = regions.find(r => r.name.toLowerCase() === activeFilter.toLowerCase());
-        if (region) {
-          filtered = filtered.filter(state => region.states.includes(state.id));
-        }
+      
+      if (searchTerm) {
+        filtered = filtered.filter(state => 
+          state.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          state.region.toLowerCase().includes(searchTerm.toLowerCase())
+        );
       }
 
-      const results = filtered.filter((state) => {
-        const matchesSearch =
-          state.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          state.capital.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          state.description.toLowerCase().includes(searchTerm.toLowerCase());
+      if (activeFilter !== 'All') {
+        filtered = filtered.filter(state => state.region === activeFilter);
+      }
 
-        return matchesSearch;
-      });
-
-      results.sort((a, b) => a.name.localeCompare(b.name)); // Sort alphabetically
-      setFilteredStates(results);
+      setFilteredStates(filtered);
       setIsLoading(false);
-    }, 10);
-    
+    }, 100);
+
     return () => clearTimeout(timer);
   }, [searchTerm, activeFilter]);
 
-  const handleToggleFavorite = async (e: React.MouseEvent, stateId: string) => {
+  const regions = ['All', ...Array.from(new Set(stateData.map(state => state.region)))];
+
+  const handleFavoriteToggle = async (stateId: string, e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     
     if (!isAuthenticated) {
       toast({
         title: "Authentication Required",
-        description: "Please login to save destinations",
-        action: (
-          <Button 
-            size="sm" 
-            variant="outline"
-            onClick={() => window.location.href = '/login'}
-          >
-            Login
-          </Button>
-        ),
+        description: "Please log in to save your favorite states.",
+        variant: "destructive"
       });
       return;
     }
-    
-    const result = await toggleFavoriteState(stateId);
-    
-    if (result.success) {
+
+    try {
+      // TODO: Implement favorite toggle with Supabase
       toast({
-        title: "Success",
-        description: result.message,
+        title: "Feature Coming Soon",
+        description: "Favorites functionality will be available soon!",
       });
-    } else {
+    } catch (error) {
+      console.error('Error toggling favorite:', error);
       toast({
         title: "Error",
-        description: result.message,
-        variant: "destructive",
+        description: "Failed to update favorite states. Please try again.",
+        variant: "destructive"
       });
     }
   };
 
-  const isStateFavorited = (stateId: string) => {
-    if (!user || !user.savedStates) return false;
-    return user.savedStates.includes(stateId);
+  const isStateFavorite = (stateId: string) => {
+    // TODO: Check against user profile data from Supabase
+    return false;
   };
 
-  const renderGridSkeleton = () => (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      {[...Array(9)].map((_, index) => (
-        <CardSkeleton key={index} className="h-[350px]">
-          <div className="h-48 bg-gray-200 dark:bg-gray-700 rounded-t-md" />
-          <div className="space-y-3 p-4">
-            <ContentSkeleton variant="text" width="60%" className="h-5" />
-            <ContentSkeleton variant="text" width="40%" className="h-4" />
-            <ContentSkeleton variant="text" width="100%" className="h-4 mt-4" />
-            <ContentSkeleton variant="text" width="90%" className="h-4" />
-            <div className="flex justify-between items-center mt-4 pt-2">
-              <ContentSkeleton className="w-24 h-4" />
-              <ContentSkeleton className="w-16 h-4" />
-            </div>
-          </div>
-        </CardSkeleton>
-      ))}
-    </div>
-  );
-
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-indigo-50 dark:from-gray-900 dark:to-slate-800">
       <Navbar />
-      <main className="flex-grow pt-20">
-        {/* Hero Section */}
-        <section className="relative h-[40vh] flex items-center">
-          <div 
-            className="absolute inset-0 bg-center bg-cover"
-            style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1524613032530-449a5d94c285?q=80&w=2070)' }}
-          >
-            <div className="absolute inset-0 bg-black/50"></div>
-          </div>
-          <div className="container mx-auto px-6 relative z-10">
-            <ScrollReveal priority={true}>
-              <h1 className="text-4xl md:text-5xl font-serif text-white mb-4">Explore Indian States</h1>
-              <p className="text-white/90 max-w-2xl">
-                Discover the rich tapestry of India's diverse states, each with its unique culture, heritage, cuisine, and traditions.
+      
+      {/* Hero Section */}
+      <section className="relative py-20 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-indigo-600/20 to-purple-600/20 dark:from-indigo-900/30 dark:to-purple-900/30"></div>
+        <div className="container mx-auto px-4 relative z-10">
+          <ScrollReveal>
+            <div className="text-center max-w-4xl mx-auto">
+              <h1 className="text-5xl md:text-6xl font-bold text-gray-800 dark:text-white mb-6">
+                Explore All <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">States</span>
+              </h1>
+              <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-2xl mx-auto">
+                Discover the rich cultural heritage, stunning landscapes, and unique experiences across all Indian states
               </p>
-            </ScrollReveal>
-          </div>
-        </section>
-
-        {/* Search and Filter Section */}
-        <section className="py-8 px-6 bg-secondary dark:bg-secondary">
-          <div className="container mx-auto">
-            <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
-              <div className="relative w-full md:w-80">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-foreground/60" />
-                <input
-                  type="text"
-                  placeholder="Search states..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="search-box pl-10"
-                />
-              </div>
               
-              <div className="flex items-center gap-2">
-                <Filter className="h-4 w-4 text-foreground/70" />
-                <span className="text-sm font-medium text-foreground/70">Filter by region:</span>
-              </div>
-              
-              <div className="filter-container">
-                {regions.map(region => (
-                  <button
-                    key={region.name}
-                    className={`filter-tag ${activeFilter === region.name ? 'active' : ''}`}
-                    onClick={() => setActiveFilter(region.name)}
-                  >
-                    {region.name}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* States Grid */}
-        <section className="py-12 px-6">
-          <div className="container mx-auto">
-            <ScrollReveal skeleton={renderGridSkeleton()}>
-              {isLoading ? (
-                renderGridSkeleton()
-              ) : filteredStates.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                  {filteredStates.map((state, index) => (
-                    <motion.div
-                      key={state.id}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.1 }}
-                      className="h-full"
+              {/* Search and Filter */}
+              <div className="max-w-2xl mx-auto space-y-4">
+                <div className="relative">
+                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  <input
+                    type="text"
+                    placeholder="Search states or regions..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full pl-12 pr-4 py-3 rounded-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-800 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-300"
+                  />
+                </div>
+                
+                <div className="flex flex-wrap gap-2 justify-center">
+                  {regions.map((region) => (
+                    <button
+                      key={region}
+                      onClick={() => setActiveFilter(region)}
+                      className={cn(
+                        "px-4 py-2 rounded-full text-sm font-medium transition-all duration-300",
+                        activeFilter === region
+                          ? "bg-indigo-600 text-white shadow-lg"
+                          : "bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 border border-gray-300 dark:border-gray-600 hover:bg-indigo-50 dark:hover:bg-gray-700"
+                      )}
                     >
-                      <Link to={`/state/${state.id}`} className="block h-full">
-                        <Card className="overflow-hidden h-full hover:shadow-lg transition-shadow">
-                          <div className="relative h-48">
-                            {/* Plain <img> with immediate loading, no lazy logic */}
-                            <img
-                              src={state.bannerImage}
-                              alt={state.name}
-                              className="w-full h-full object-cover"
-                              loading="eager"
-                              style={{ borderRadius: "0.5rem" }}
-                            />
-                            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-                              <h3 className="text-white text-xl font-medium">{state.name}</h3>
-                            </div>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className={cn(
-                                "absolute top-2 right-2 rounded-full bg-black/30 backdrop-blur-sm hover:bg-black/50",
-                                isStateFavorited(state.id) && "text-rose-400 hover:text-rose-300"
-                              )}
-                              onClick={(e) => handleToggleFavorite(e, state.id)}
-                            >
-                              <Heart className={cn(
-                                "h-5 w-5",
-                                isStateFavorited(state.id) && "fill-current"
-                              )} />
-                              <span className="sr-only">
-                                {isStateFavorited(state.id) ? "Remove from favorites" : "Add to favorites"}
-                              </span>
-                            </Button>
-                          </div>
-                          <CardContent className="p-6">
-                            <div className="flex items-center text-sm text-muted-foreground mb-4">
-                              <MapPin size={16} className="mr-1" />
-                              <span>Capital: {state.capital}</span>
-                            </div>
-                            <p className="line-clamp-3 text-foreground/80 mb-4">
-                              {state.description}
-                            </p>
-                            <div className="mt-auto flex items-center text-spice-500 font-medium">
-                              Explore <ArrowRight size={16} className="ml-1" />
-                            </div>
-                          </CardContent>
-                        </Card>
-                      </Link>
-                    </motion.div>
+                      <Filter className="w-4 h-4 inline mr-2" />
+                      {region}
+                    </button>
                   ))}
                 </div>
-              ) : (
+              </div>
+            </div>
+          </ScrollReveal>
+        </div>
+      </section>
+
+      {/* States Grid */}
+      <section className="py-16">
+        <div className="container mx-auto px-4">
+          {isLoading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+              {[...Array(8)].map((_, index) => (
+                <CardSkeleton key={index} />
+              ))}
+            </div>
+          ) : (
+            <>
+              <div className="text-center mb-8">
+                <p className="text-gray-600 dark:text-gray-400">
+                  Showing {filteredStates.length} of {stateData.length} states
+                  {activeFilter !== 'All' && ` in ${activeFilter}`}
+                </p>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                {filteredStates.map((state, index) => (
+                  <ScrollReveal key={state.id} delay={index * 0.1}>
+                    <Link to={`/state/${state.id}`}>
+                      <motionDiv.div
+                        className="group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200 dark:border-gray-700"
+                        whileHover={{ y: -8, scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                      >
+                        <div className="relative h-48 overflow-hidden">
+                          <LazyImage
+                            src={state.bannerImage}
+                            alt={state.name}
+                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+                          
+                          {/* Favorite Button */}
+                          <button
+                            onClick={(e) => handleFavoriteToggle(state.id, e)}
+                            className="absolute top-4 right-4 p-2 rounded-full bg-white/90 hover:bg-white transition-all duration-300 group shadow-lg"
+                            disabled={!isAuthenticated}
+                          >
+                            <Heart 
+                              className={cn(
+                                "w-5 h-5 transition-colors duration-300",
+                                isStateFavorite(state.id) 
+                                  ? "text-red-500 fill-current" 
+                                  : "text-gray-600 hover:text-red-500"
+                              )} 
+                            />
+                          </button>
+                          
+                          <div className="absolute bottom-4 left-4 text-white">
+                            <div className="flex items-center space-x-2">
+                              <MapPin className="w-4 h-4" />
+                              <span className="text-sm font-medium">{state.region}</span>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div className="p-6">
+                          <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-2 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-300">
+                            {state.name}
+                          </h3>
+                          <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-2">
+                            {state.description}
+                          </p>
+                          
+                          <div className="flex items-center justify-between">
+                            <div className="text-sm text-gray-500 dark:text-gray-400">
+                              {state.famousFor?.length > 0 && state.famousFor[0]}
+                            </div>
+                            <ArrowRight className="w-5 h-5 text-indigo-600 group-hover:translate-x-2 transition-transform duration-300" />
+                          </div>
+                        </div>
+                      </motionDiv.div>
+                    </Link>
+                  </ScrollReveal>
+                ))}
+              </div>
+
+              {filteredStates.length === 0 && (
                 <div className="text-center py-16">
-                  <h3 className="text-2xl font-medium mb-2">No states found</h3>
-                  <p className="text-foreground/70">Try adjusting your search or filter criteria</p>
+                  <div className="text-gray-400 mb-4">
+                    <Search className="w-16 h-16 mx-auto mb-4" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-gray-600 dark:text-gray-300 mb-2">
+                    No states found
+                  </h3>
+                  <p className="text-gray-500 dark:text-gray-400">
+                    Try adjusting your search criteria or filters.
+                  </p>
                 </div>
               )}
-            </ScrollReveal>
-          </div>
-        </section>
-      </main>
+            </>
+          )}
+        </div>
+      </section>
+
       <Footer />
     </div>
   );

@@ -16,6 +16,7 @@ export type Database = {
     Tables: {
       profiles: {
         Row: {
+          address: Json | null
           avatar_url: string | null
           bio: string | null
           created_at: string
@@ -24,10 +25,15 @@ export type Database = {
           full_name: string | null
           id: string
           phone: string | null
+          preferences: Json | null
+          recent_activities: Json | null
+          saved_states: string[] | null
+          trips: Json | null
           updated_at: string
           user_id: string
         }
         Insert: {
+          address?: Json | null
           avatar_url?: string | null
           bio?: string | null
           created_at?: string
@@ -36,10 +42,15 @@ export type Database = {
           full_name?: string | null
           id?: string
           phone?: string | null
+          preferences?: Json | null
+          recent_activities?: Json | null
+          saved_states?: string[] | null
+          trips?: Json | null
           updated_at?: string
           user_id: string
         }
         Update: {
+          address?: Json | null
           avatar_url?: string | null
           bio?: string | null
           created_at?: string
@@ -48,6 +59,10 @@ export type Database = {
           full_name?: string | null
           id?: string
           phone?: string | null
+          preferences?: Json | null
+          recent_activities?: Json | null
+          saved_states?: string[] | null
+          trips?: Json | null
           updated_at?: string
           user_id?: string
         }

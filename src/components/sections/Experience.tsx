@@ -1,76 +1,99 @@
-import React, { memo, useEffect, useState } from 'react';
-import { Calendar, Map, Star, ArrowRight, MessageSquareText } from 'lucide-react';
+import React, { memo, useRef, useState, useEffect } from 'react';
+import { motion, useInView } from 'framer-motion';
+import { Star, MapPin, Calendar, Users, Navigation, ArrowLeft, ArrowRight } from 'lucide-react';
+import { useTheme } from '@/components/theme/ThemeProvider';
+import { useNavigate } from 'react-router-dom';
 import SectionHeader from '../ui/SectionHeader';
-import ScrollReveal from '../ui/ScrollReveal';
-import { motion } from 'framer-motion';
-import { useTheme } from '../theme/ThemeProvider';
-import { Link, useNavigate } from 'react-router-dom';
+import { Button } from '../ui/button';
 import { journeys } from '@/data/journeys';
 import HorizontalScroll from '../ui/horizontal-scroll';
 import useMobile from '@/hooks/use-mobile';
-import { useAuth } from '@/context/AuthContext';
+import { useSupabaseAuthContext } from '@/context/SupabaseAuthContext';
 import { useChatbot } from '@/components/chatbot/ChatbotProvider';
 
 const JourneyCard = memo(({ journey, theme, starColor, textAccentColor }: { 
   journey: any; 
-  theme: string;
-  starColor: string;
-  textAccentColor: string;
+  theme: string; 
+  starColor: string; 
+  textAccentColor: string; 
 }) => {
+  const navigate = useNavigate();
+  
+  const handleCardClick = () => {
+    navigate(`/journey/${journey.id}`);
+  };
+
+  const handleBookClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    navigate('/journey-planner', { 
+      state: { 
+        selectedDestination: journey.destination,
+        selectedTitle: journey.title 
+      } 
+    });
+  };
+
   return (
-    <motion.div 
-      className={`rounded-xl overflow-hidden shadow-lg ${theme === 'dark' ? 'experience-card' : 'bg-white'} h-full flex flex-col card-hover`}
-      whileHover={{ y: -5 }}
-      transition={{ type: "spring", stiffness: 400, damping: 10 }}
+    <motion.div
+      className="relative bg-gradient-to-br from-white via-gray-50 to-gray-100 dark:from-gray-800 dark:via-gray-850 dark:to-gray-900 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer group border border-gray-200 dark:border-gray-700 flex-shrink-0 w-80"
+      whileHover={{ 
+        scale: 1.02,
+        boxShadow: theme === 'dark' 
+          ? "0 25px 50px -12px rgba(138, 43, 226, 0.25)" 
+          : "0 25px 50px -12px rgba(75, 0, 130, 0.25)"
+      }}
+      onClick={handleCardClick}
     >
-      <div className="relative h-52 overflow-hidden">
-        <img 
-          src={journey.imageSrc || 'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?q=80&w=2071&auto=format&fit=crop'} 
-          alt={journey.title || journey.destination} 
-          className="w-full h-full object-cover transition-transform duration-700 ease-in-out hover:scale-110"
-          loading="lazy"
+      <div className="relative h-48 overflow-hidden">
+        <img
+          src={journey.imageSrc}
+          alt={journey.title}
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
         />
-        <div className="absolute top-4 right-4">
-          <div className="bg-white/80 dark:bg-black/60 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-medium flex items-center">
-            <Star size={14} className={`mr-1`} fill={starColor} stroke={starColor} />
-            {journey.rating || journey.status || "5.0"}
-          </div>
+        <div className="absolute inset-0 bg-black bg-opacity-20" />
+        <div className="absolute top-4 left-4">
+          <span className="bg-white bg-opacity-90 text-gray-800 px-3 py-1 rounded-full text-sm font-medium">
+            {journey.duration}
+          </span>
         </div>
       </div>
       
-      <div className="p-6 flex flex-col flex-grow">
-        <h3 className="text-xl font-serif font-semibold mb-3">{journey.title || journey.destination}</h3>
+      <div className="p-6">
+        <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-2 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-300">
+          {journey.title}
+        </h3>
         
-        <p className="text-foreground/80 mb-4">
-          {journey.description || `Explore the wonders of ${journey.destination}. A journey filled with adventures and cultural experiences.`}
-        </p>
-        
-        <div className="flex flex-wrap gap-4 mb-4 text-sm mt-auto">
-          <div className="flex items-center text-foreground/70">
-            <Calendar size={16} className="mr-1" />
-            {journey.duration || journey.date || "3 days"}
-          </div>
-          <div className="flex items-center text-foreground/70">
-            <Map size={16} className="mr-1" />
-            {journey.location || journey.destination}
-          </div>
+        <div className="flex items-center text-gray-600 dark:text-gray-300 mb-3">
+          <MapPin className="w-4 h-4 mr-2" style={{ color: textAccentColor }} />
+          <span className="text-sm">{journey.destination}</span>
         </div>
         
-        <motion.div>
-          <Link 
-            to={`/journey/${journey.id}`}
-            className={`inline-flex items-center font-medium transition-colors mt-2`}
-            style={{ color: textAccentColor }}
+        <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-2">
+          {journey.description}
+        </p>
+        
+        <div className="flex items-center justify-between">
+          <div className="flex items-center">
+            <div className="flex items-center mr-4">
+              {[...Array(5)].map((_, i) => (
+                <Star 
+                  key={i} 
+                  className="w-4 h-4 mr-1" 
+                  fill={i < journey.rating ? starColor : "transparent"} 
+                  style={{ color: starColor }} 
+                />
+              ))}
+            </div>
+          </div>
+          
+          <Button 
+            onClick={handleBookClick}
+            size="sm" 
+            className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white border-0"
           >
-            <motion.span
-              whileHover={{ x: 5 }}
-              transition={{ type: "spring", stiffness: 400, damping: 10 }}
-              className="flex items-center"
-            >
-              View Details <ArrowRight size={16} className="ml-1" />
-            </motion.span>
-          </Link>
-        </motion.div>
+            Book Now
+          </Button>
+        </div>
       </div>
     </motion.div>
   );
@@ -81,136 +104,102 @@ JourneyCard.displayName = 'JourneyCard';
 const Experience: React.FC = () => {
   const { theme } = useTheme();
   const isMobile = useMobile();
-  const { user } = useAuth();
+  const { user } = useSupabaseAuthContext();
   const navigate = useNavigate();
   const [allJourneys, setAllJourneys] = useState<any[]>([]);
   const { openChatbot } = useChatbot();
   
   const starColor = theme === 'dark' ? "#e94cff" : "#ff7e11";
   const textAccentColor = theme === 'dark' ? "#53a6ff" : "#ff7e11";
-
+  
   useEffect(() => {
-    const combinedJourneys = [...journeys];
-    
-    if (user && user.trips && user.trips.length > 0) {
-      const userJourneys = user.trips.map((trip: any) => ({
-        ...trip,
-        title: trip.destination,
-        location: trip.destination,
-        description: `Your personal journey to ${trip.destination}.`,
-        rating: "5.0"
-      }));
-      
-      combinedJourneys.unshift(...userJourneys);
-    }
-    
-    setAllJourneys(combinedJourneys.slice(0, 6));
+    // Load default journeys for now
+    setAllJourneys(journeys.slice(0, 6));
   }, [user]);
 
-  const handlePlanJourney = () => {
-    navigate('/journey-planner');
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
+
+  const handlePlanCustomJourney = () => {
+    if (user) {
+      navigate('/journey-planner');
+    } else {
+      navigate('/login');
+    }
   };
-  
-  const handleAskAI = () => {
+
+  const handleAIAssistance = () => {
     openChatbot();
   };
 
   return (
-    <section id="experience" className={`relative py-24 px-6 section-experience`}>
-      <div className="absolute inset-12 rounded-3xl bg-white/40 dark:bg-white/10 backdrop-blur-sm border border-white/50 dark:border-white/30 z-0"></div>
-      <div className="container mx-auto">
-        <SectionHeader
-          subtitle="Curated Experiences"
-          title="Our Signature Journeys"
-          description="Immerse yourself in handcrafted experiences that blend cultural immersion, natural wonders, and authentic encounters with local communities."
-        />
+    <section 
+      id="experiences" 
+      className="py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden"
+      ref={ref}
+    >
+      <div className="max-w-7xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8 }}
+        >
+          <SectionHeader 
+            title="Curated Experiences"
+            subtitle="Discover handpicked journeys through India's most enchanting destinations"
+          />
+        </motion.div>
 
-        {isMobile ? (
-          <div className="mt-12">
-            <HorizontalScroll>
-              {allJourneys.map((journey) => (
-                <div key={journey.id} className="min-w-[90%] snap-start">
-                  <JourneyCard 
-                    journey={journey} 
-                    theme={theme} 
-                    starColor={starColor} 
-                    textAccentColor={textAccentColor} 
-                  />
-                </div>
-              ))}
-            </HorizontalScroll>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={isInView ? { opacity: 1 } : {}}
+          transition={{ duration: 0.8, delay: 0.3 }}
+          className="mt-16"
+        >
+          <HorizontalScroll>
             {allJourneys.map((journey, index) => (
-              <ScrollReveal key={journey.id} delay={index * 0.1}>
+              <motion.div
+                key={journey.id}
+                initial={{ opacity: 0, x: 50 }}
+                animate={isInView ? { opacity: 1, x: 0 } : {}}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+              >
                 <JourneyCard 
                   journey={journey} 
                   theme={theme} 
-                  starColor={starColor} 
-                  textAccentColor={textAccentColor} 
+                  starColor={starColor}
+                  textAccentColor={textAccentColor}
                 />
-              </ScrollReveal>
+              </motion.div>
             ))}
-          </div>
-        )}
+          </HorizontalScroll>
+        </motion.div>
 
-        <ScrollReveal className="mt-16">
-          <div className="text-center flex flex-col sm:flex-row items-center justify-center gap-4">
-            <motion.div>
-              <Link 
-                to="/states"
-                className="btn-primary inline-flex items-center px-6 py-3 rounded-md font-medium"
-              >
-                <motion.span
-                  whileHover={{ y: -5, transition: { duration: 0.2 } }}
-                  whileTap={{ y: 0 }}
-                  className="inline-flex items-center"
-                >
-                  Explore More Destinations
-                  <motion.span
-                    animate={{ x: [0, 5, 0] }}
-                    transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
-                  >
-                    <ArrowRight size={16} className="ml-2" />
-                  </motion.span>
-                </motion.span>
-              </Link>
-            </motion.div>
+        <motion.div 
+          className="text-center mt-12"
+          initial={{ opacity: 0, y: 30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, delay: 0.8 }}
+        >
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <Button 
+              onClick={handlePlanCustomJourney}
+              className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white px-8 py-3 rounded-full flex items-center gap-2 transition-all duration-300 transform hover:scale-105 shadow-lg"
+            >
+              <Navigation className="w-5 h-5" />
+              {user ? 'Plan Your Journey' : 'Sign in to Plan Journey'}
+            </Button>
             
-            <motion.div>
-              <button 
-                onClick={handlePlanJourney}
-                className="btn-secondary inline-flex items-center px-6 py-3 rounded-md font-medium border-2 border-indigo-500 text-indigo-600 dark:text-indigo-400 dark:border-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-colors"
-              >
-                <motion.span
-                  whileHover={{ y: -5, transition: { duration: 0.2 } }}
-                  whileTap={{ y: 0 }}
-                  className="inline-flex items-center"
-                >
-                  Plan Your Journey
-                  <ArrowRight size={16} className="ml-2" />
-                </motion.span>
-              </button>
-            </motion.div>
-            
-            <motion.div>
-              <button 
-                onClick={handleAskAI}
-                className="inline-flex items-center px-6 py-3 rounded-md font-medium border-2 border-purple-500 text-purple-600 dark:text-purple-400 dark:border-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors"
-              >
-                <motion.span
-                  whileHover={{ y: -5, transition: { duration: 0.2 } }}
-                  whileTap={{ y: 0 }}
-                  className="inline-flex items-center"
-                >
-                  Ask Our AI Guide
-                  <MessageSquareText size={16} className="ml-2" />
-                </motion.span>
-              </button>
-            </motion.div>
+            <Button 
+              variant="outline"
+              onClick={handleAIAssistance}
+              className="border-2 border-indigo-600 text-indigo-600 hover:bg-indigo-600 hover:text-white px-8 py-3 rounded-full flex items-center gap-2 transition-all duration-300 transform hover:scale-105"
+            >
+              <Users className="w-5 h-5" />
+              Get AI Assistance
+            </Button>
           </div>
-        </ScrollReveal>
+        </motion.div>
       </div>
     </section>
   );
