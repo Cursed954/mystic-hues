@@ -9,7 +9,17 @@ interface ChatbotButtonProps {
 }
 
 const ChatbotButton: React.FC<ChatbotButtonProps> = ({ onClick }) => {
-  const { theme } = useTheme();
+  // Handle theme context safely
+  let theme = 'dark';
+  
+  try {
+    const themeContext = useTheme();
+    theme = themeContext.theme;
+  } catch (error) {
+    // Fallback when context is not available
+    theme = 'dark';
+  }
+  
   const isDark = theme === 'dark';
   
   return (

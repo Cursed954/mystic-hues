@@ -8,7 +8,15 @@ interface LogoProps {
 }
 
 export const Logo: React.FC<LogoProps> = ({ className }) => {
-  const { theme } = useTheme();
+  // Use optional chaining and provide fallbacks
+  let theme = 'dark';
+  try {
+    const themeContext = useTheme();
+    theme = themeContext.theme;
+  } catch (error) {
+    // Fallback to dark theme if context is not available
+    theme = 'dark';
+  }
   
   const primaryColor = theme === 'dark' ? '#e94cff' : '#FF7E11';
   const bgColor = theme === 'dark' ? '#1A1A1A' : '#F5F0E6';

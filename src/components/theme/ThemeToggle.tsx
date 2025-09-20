@@ -6,7 +6,19 @@ import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export function ThemeToggle() {
-  const { theme, setTheme } = useTheme();
+  // Handle theme context safely
+  let theme: 'dark' | 'light' = 'dark';
+  let setTheme: (theme: 'dark' | 'light') => void = () => {};
+  
+  try {
+    const themeContext = useTheme();
+    theme = themeContext.theme;
+    setTheme = themeContext.setTheme;
+  } catch (error) {
+    // Fallback when context is not available
+    theme = 'dark';
+    setTheme = () => {};
+  }
 
   return (
     <Button
