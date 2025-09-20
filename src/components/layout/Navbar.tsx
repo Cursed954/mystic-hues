@@ -1,12 +1,13 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { useLocation, Link } from 'react-router-dom';
-import { Menu, X, User } from 'lucide-react';
+import { useLocation, Link, useNavigate } from 'react-router-dom';
+import { Menu, X, User, LogOut } from 'lucide-react';
 import { Logo } from '../ui/Logo';
 import { ThemeToggle } from '../theme/ThemeToggle';
 import useMobile from '@/hooks/use-mobile';
 import { useAuth } from '@/auth';
 import { useScrollToTop } from '@/hooks/useScrollToTop';
+import { useToast } from '@/hooks/use-toast';
 import { motion, AnimatePresence } from 'framer-motion';
 
 type BaseNavItem = {
@@ -26,12 +27,14 @@ const hasIcon = (item: NavItem): item is NavItemWithIcon => {
 
 const Navbar: React.FC = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const isMobile = useMobile();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const isHome = location.pathname === '/';
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, signOut } = useAuth();
   const scrollToTop = useScrollToTop();
+  const { toast } = useToast();
 
   const handleScroll = useCallback(() => {
     setIsScrolled(window.scrollY > 20);
@@ -65,6 +68,24 @@ const Navbar: React.FC = () => {
   };
 
   const navItems = getNavItems();
+
+  const handleLogout = async () => {
+    const result = await signOut();
+    if (result.success) {
+      toast({
+        title: "Logged Out",
+        description: "You have been successfully logged out",
+      });
+      setMobileMenuOpen(false);
+      navigate('/');
+    } else {
+      toast({
+        title: "Logout Error",
+        description: result.error || "Failed to logout",
+        variant: "destructive"
+      });
+    }
+  };
 
   const handleNavigation = useCallback(() => {
     setMobileMenuOpen(false);
@@ -101,17 +122,37 @@ const Navbar: React.FC = () => {
               </div>
             ))}
 
-            <div className="ml-4">
+            <div className="ml-4 flex items-center space-x-2">
               <ThemeToggle />
+              {isAuthenticated && (
+                <button
+                  onClick={handleLogout}
+                  className="p-2 rounded-full text-foreground hover:bg-secondary/50 transition-colors"
+                  aria-label="Logout"
+                  title="Logout"
+                >
+                  <LogOut size={16} />
+                </button>
+              )}
             </div>
           </div>
         )}
 
         {isMobile && (
-          <div className="flex items-center">
+          <div className="flex items-center space-x-2">
             <ThemeToggle />
+            {isAuthenticated && (
+              <button
+                onClick={handleLogout}
+                className="p-2 rounded-full text-foreground hover:bg-secondary/50 transition-colors"
+                aria-label="Logout"
+                title="Logout"
+              >
+                <LogOut size={16} />
+              </button>
+            )}
             <button
-              className="ml-2 p-2 text-foreground"
+              className="p-2 text-foreground"
               onClick={toggleMobileMenu}
               aria-label="Toggle mobile menu"
             >

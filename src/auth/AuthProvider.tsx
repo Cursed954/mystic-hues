@@ -129,13 +129,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signOut = async () => {
     try {
+      // Clear local state first for immediate UI update
+      setUser(null);
+      setSession(null);
+      setUserProfile(null);
+      
       const { error } = await supabase.auth.signOut();
       if (error) {
-        return { success: false, error: error.message };
+        console.warn('Logout error (session may already be invalid):', error.message);
+        // Don't treat this as a failure since local state is already cleared
       }
       return { success: true };
     } catch (error) {
-      return { success: false, error: 'An unexpected error occurred' };
+      console.warn('Logout error:', error);
+      // Still return success since local state is cleared
+      return { success: true };
     }
   };
 
