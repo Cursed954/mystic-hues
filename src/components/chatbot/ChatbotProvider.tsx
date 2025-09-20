@@ -82,7 +82,7 @@ export const ChatbotProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }}>
       {children}
       <ChatbotButton onClick={toggleChatbot} />
-      <Chatbot isOpen={isOpen} onClose={closeChatbot} />
+      <Chatbot />
     </ChatbotContext.Provider>
   );
 };
