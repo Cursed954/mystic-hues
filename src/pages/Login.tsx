@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Mail, Lock, ArrowRight, Github, Chrome } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useToast } from '@/hooks/use-toast';
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from '@/auth';
 import { StarsCanvas } from '@/components/ui/StarBackground';
 
 const Login = () => {
@@ -14,7 +14,7 @@ const Login = () => {
   const [socialLoading, setSocialLoading] = useState<string | null>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { login, socialLogin, isAuthenticated } = useAuth();
+  const { signIn, signInWithOAuth, isAuthenticated } = useAuth();
   
   useEffect(() => {
     if (isAuthenticated) {
@@ -27,7 +27,7 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      const result = await login(email, password);
+      const result = await signIn(email, password);
       
       if (result.success) {
         toast({
@@ -38,7 +38,7 @@ const Login = () => {
       } else {
         toast({
           title: "Login Failed",
-          description: result.message,
+          description: result.error,
           variant: "destructive"
         });
       }
@@ -58,7 +58,7 @@ const Login = () => {
     setSocialLoading(provider);
     
     try {
-      const result = await socialLogin(provider);
+      const result = await signInWithOAuth(provider);
       
       if (result.success) {
         toast({
@@ -69,7 +69,7 @@ const Login = () => {
       } else {
         toast({
           title: "Login Failed",
-          description: result.message,
+          description: result.error,
           variant: "destructive"
         });
       }

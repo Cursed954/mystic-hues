@@ -8,7 +8,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { stateData } from '@/data/stateData';
 import { MapPin, ArrowRight, Search, Filter, Heart } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from '@/auth';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -20,7 +20,7 @@ const AllStates = () => {
   const [activeFilter, setActiveFilter] = useState('All');
   const [filteredStates, setFilteredStates] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const { user, toggleFavoriteState, isAuthenticated } = useAuth();
+  const { user, userProfile, isAuthenticated } = useAuth();
   const { toast } = useToast();
 
   // First show the page layout, then load data
@@ -74,20 +74,13 @@ const AllStates = () => {
       return;
     }
     
-    const result = await toggleFavoriteState(stateId);
+    // const result = await toggleFavoriteState(stateId);
     
-    if (result.success) {
-      toast({
-        title: "Success",
-        description: result.message,
-      });
-    } else {
-      toast({
-        title: "Error",
-        description: result.message,
-        variant: "destructive",
-      });
-    }
+    // This feature is temporarily disabled - will be implemented with backend integration
+    toast({
+      title: "Feature Coming Soon",
+      description: "State favorites will be available soon",
+    });
   };
 
   const isStateFavorited = (stateId: string) => {

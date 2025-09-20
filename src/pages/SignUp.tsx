@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Mail, Lock, ArrowRight, User, Github, Chrome } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useToast } from '@/hooks/use-toast';
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from '@/auth';
 
 const SignUp = () => {
   const [name, setName] = useState('');
@@ -14,7 +14,7 @@ const SignUp = () => {
   const [socialLoading, setSocialLoading] = useState<string | null>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { signUp, socialLogin, isAuthenticated } = useAuth();
+  const { signUp, signInWithOAuth, isAuthenticated } = useAuth();
   
   useEffect(() => {
     if (isAuthenticated) {
@@ -57,7 +57,7 @@ const SignUp = () => {
       } else {
         toast({
           title: "Registration Failed",
-          description: result.message,
+          description: result.error || "Failed to create account",
           variant: "destructive"
         });
       }
@@ -77,7 +77,7 @@ const SignUp = () => {
     setSocialLoading(provider);
     
     try {
-      const result = await socialLogin(provider);
+      const result = await signInWithOAuth(provider);
       
       if (result.success) {
         toast({
@@ -88,7 +88,7 @@ const SignUp = () => {
       } else {
         toast({
           title: "Registration Failed",
-          description: result.message,
+          description: result.error || `Failed to register with ${provider}`,
           variant: "destructive"
         });
       }

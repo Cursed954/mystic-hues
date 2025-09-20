@@ -5,7 +5,7 @@ import { Menu, X, User } from 'lucide-react';
 import { Logo } from '../ui/Logo';
 import { ThemeToggle } from '../theme/ThemeToggle';
 import useMobile from '@/hooks/use-mobile';
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from '@/auth';
 import { useScrollToTop } from '@/hooks/useScrollToTop';
 import { motion, AnimatePresence } from 'framer-motion';
 

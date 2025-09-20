@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from '@/auth';
 import { toast } from '@/hooks/use-toast';
 import { Calendar, Clock, MapPin, Plus, Save, Trash, Wand2, Sun, Moon, Utensils, Paintbrush, ArrowLeft } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -20,7 +20,7 @@ import { useScrollToTop } from '@/hooks/useScrollToTop';
 const JourneyPlanner = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, addTrip } = useAuth();
+  const { user } = useAuth();
   const [showAIAssistant, setShowAIAssistant] = useState(false);
   
   useScrollToTop(true);
@@ -281,21 +281,14 @@ const JourneyPlanner = () => {
       itinerary: journeyData.itinerary
     };
 
-    const result = await addTrip(tripData);
+    // const result = await addTrip(tripData);
     
-    if (result.success) {
-      toast({
-        title: "Journey Created",
-        description: `Your journey to ${journeyData.destination} has been saved`,
-      });
-      navigate('/profile');
-    } else {
-      toast({
-        title: "Error",
-        description: result.message || "Failed to save journey",
-        variant: "destructive"
-      });
-    }
+    // This feature is temporarily disabled - will be implemented with backend integration
+    toast({
+      title: "Feature Coming Soon",
+      description: "Trip creation will be available soon",
+    });
+    navigate('/profile');
   };
 
   const handleAIComplete = (generatedJourney: any) => {

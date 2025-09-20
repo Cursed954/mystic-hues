@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from '@/auth';
 import { 
   UserCircle, LogOut, Calendar, MapPin, Package, ChevronRight, 
   Edit, Mail, Phone, Plus, Trash, Clock, Star, Heart 
@@ -15,7 +15,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogD
 import { stateData } from '@/data/stateData';
 
 const Profile = () => {
-  const { user, logout, deleteTrip } = useAuth();
+  const { user, userProfile, signOut } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [confirmDeleteDialogOpen, setConfirmDeleteDialogOpen] = useState(false);
@@ -32,21 +32,23 @@ const Profile = () => {
     return null; // Don't render anything while redirecting
   }
 
-  // Get saved states data from stateData using user.savedStates
-  const savedStates = user.savedStates 
-    ? stateData.filter(state => user.savedStates.includes(state.id)) 
+  // Get saved states data from stateData using userProfile.saved_states
+  const savedStates = userProfile?.saved_states 
+    ? stateData.filter(state => userProfile.saved_states?.includes(state.id)) 
     : [];
 
-  // Get recent activities from user data
-  const recentActivities = user.recentActivities || [];
+  // Get recent activities from userProfile data
+  const recentActivities = userProfile?.recent_activities || [];
 
-  const handleLogout = () => {
-    logout();
-    toast({
-      title: "Logged Out",
-      description: "You have been successfully logged out",
-    });
-    navigate('/');
+  const handleLogout = async () => {
+    const result = await signOut();
+    if (result.success) {
+      toast({
+        title: "Logged Out",
+        description: "You have been successfully logged out",
+      });
+      navigate('/');
+    }
   };
 
   const handleAddTrip = () => {
@@ -54,24 +56,14 @@ const Profile = () => {
   };
 
   const handleDeleteTrip = async () => {
-    if (tripToDelete === null) return;
-    
-    const result = await deleteTrip(tripToDelete);
-    
-    if (result.success) {
-      toast({
-        title: "Trip Deleted",
-        description: "Your trip has been deleted",
-      });
-      setConfirmDeleteDialogOpen(false);
-      setTripToDelete(null);
-    } else {
-      toast({
-        title: "Error",
-        description: result.message,
-        variant: "destructive"
-      });
-    }
+    // This feature is temporarily disabled - will be implemented with backend integration
+    toast({
+      title: "Feature Coming Soon",
+      description: "Trip management will be available soon",
+      variant: "destructive"
+    });
+    setConfirmDeleteDialogOpen(false);
+    setTripToDelete(null);
   };
 
   return (
@@ -87,10 +79,10 @@ const Profile = () => {
           >
             <div className="flex flex-col md:flex-row items-center gap-6">
               <div className="relative">
-                {user.profilePicture ? (
+                {userProfile?.avatar_url ? (
                   <img 
-                    src={user.profilePicture} 
-                    alt={user.name} 
+                    src={userProfile.avatar_url} 
+                    alt={userProfile.full_name || user?.email || 'User'} 
                     className="w-32 h-32 rounded-full border-4 border-violet-500/50 object-cover"
                   />
                 ) : (
@@ -101,34 +93,32 @@ const Profile = () => {
               </div>
               
               <div className="flex-1 text-center md:text-left">
-                <h1 className="text-3xl font-bold">{user.name}</h1>
-                <p className="text-gray-400 mt-1">{user.email}</p>
+                <h1 className="text-3xl font-bold">{userProfile?.full_name || user?.email}</h1>
+                <p className="text-gray-400 mt-1">{user?.email}</p>
                 
-                {user.bio && (
-                  <p className="text-gray-300 mt-2 italic">"{user.bio}"</p>
+                {userProfile?.bio && (
+                  <p className="text-gray-300 mt-2 italic">"{userProfile.bio}"</p>
                 )}
                 
                 <div className="mt-2 space-y-1">
-                  {user.phone && (
+                  {userProfile?.phone && (
                     <div className="flex items-center justify-center md:justify-start text-gray-400 text-sm">
                       <Phone className="mr-2 h-4 w-4 text-violet-400" />
-                      {user.phone}
+                      {userProfile.phone}
                     </div>
                   )}
                   
-                  {user.address?.city && user.address?.state && (
+                  {userProfile?.address?.city && userProfile?.address?.state && (
                     <div className="flex items-center justify-center md:justify-start text-gray-400 text-sm">
                       <MapPin className="mr-2 h-4 w-4 text-violet-400" />
-                      {[user.address.city, user.address.state].filter(Boolean).join(', ')}
+                      {[userProfile.address.city, userProfile.address.state].filter(Boolean).join(', ')}
                     </div>
                   )}
                 </div>
                 
-                {user.provider && (
-                  <div className="inline-flex items-center gap-2 mt-2 bg-violet-900/30 px-3 py-1 rounded-full text-violet-300 text-sm">
-                    <span>Signed in with {user.provider}</span>
-                  </div>
-                )}
+                <div className="inline-flex items-center gap-2 mt-2 bg-violet-900/30 px-3 py-1 rounded-full text-violet-300 text-sm">
+                  <span>Signed in with email</span>
+                </div>
                 
                 <div className="mt-4 flex flex-wrap gap-4 justify-center md:justify-start">
                   <Button
@@ -166,9 +156,9 @@ const Profile = () => {
               </Button>
             </div>
             
-            {user.trips && user.trips.length > 0 ? (
+            {userProfile?.trips && userProfile.trips.length > 0 ? (
               <div className="space-y-4">
-                {user.trips.map((trip: any) => (
+                {userProfile.trips.map((trip: any) => (
                   <motion.div
                     key={trip.id}
                     whileHover={{ scale: 1.02 }}

@@ -10,7 +10,7 @@ import JourneyTimeline from '@/components/journey/JourneyTimeline';
 import JourneyActivities from '@/components/journey/JourneyActivities';
 import CabBooking from '@/components/journey/CabBooking';
 import { getJourneyById } from '@/data/journeys';
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from '@/auth';
 import JourneyViewer from '@/components/journey/JourneyViewer';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
@@ -19,7 +19,7 @@ import { stateData } from '@/data/stateData';
 const JourneyDetail = () => {
   const { journeyId } = useParams<{ journeyId: string }>();
   const [journey, setJourney] = useState<any | null>(null);
-  const { user } = useAuth();
+  const { user, userProfile } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
   

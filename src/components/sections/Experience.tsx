@@ -8,7 +8,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { journeys } from '@/data/journeys';
 import HorizontalScroll from '../ui/horizontal-scroll';
 import useMobile from '@/hooks/use-mobile';
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from '@/auth';
 import { useChatbot } from '@/components/chatbot/ChatbotProvider';
 
 const JourneyCard = memo(({ journey, theme, starColor, textAccentColor }: { 
@@ -81,7 +81,7 @@ JourneyCard.displayName = 'JourneyCard';
 const Experience: React.FC = () => {
   const { theme } = useTheme();
   const isMobile = useMobile();
-  const { user } = useAuth();
+  const { user, userProfile } = useAuth();
   const navigate = useNavigate();
   const [allJourneys, setAllJourneys] = useState<any[]>([]);
   const { openChatbot } = useChatbot();
