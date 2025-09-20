@@ -5,7 +5,7 @@ import { Menu, X, User } from 'lucide-react';
 import { Logo } from '../ui/Logo';
 import { ThemeToggle } from '../theme/ThemeToggle';
 import useMobile from '@/hooks/use-mobile';
-import { useSupabaseAuthContext } from '@/context/SupabaseAuthContext';
+import { useAuth } from '@/context/AuthContext';
 import { useScrollToTop } from '@/hooks/useScrollToTop';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -30,8 +30,7 @@ const Navbar: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const isHome = location.pathname === '/';
-  const { user } = useSupabaseAuthContext();
-  const isAuthenticated = !!user;
+  const { isAuthenticated } = useAuth();
   const scrollToTop = useScrollToTop();
 
   const handleScroll = useCallback(() => {

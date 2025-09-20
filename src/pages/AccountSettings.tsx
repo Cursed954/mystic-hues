@@ -1,22 +1,55 @@
-import React, { useState, useRef } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Switch } from '@/components/ui/switch';
-import { Label } from '@/components/ui/label';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Camera, Save, User, MapPin, Bell, ArrowLeft } from 'lucide-react';
+
+import React, { useState } from 'react';
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { useSupabaseAuthContext } from '@/context/SupabaseAuthContext';
+import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/hooks/use-toast';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import { Camera, Save, UserCircle, MapPin, Bell, Mail, Trash, ArrowLeft } from 'lucide-react';
+
+// Define schema for profile form
+const profileFormSchema = z.object({
+  name: z.string().min(2, { message: "Name must be at least 2 characters." }),
+  email: z.string().email({ message: "Please enter a valid email address." }),
+  bio: z.string().optional(),
+  phone: z.string().optional(),
+  profilePicture: z.string().optional(),
+});
+
+// Define schema for address form
+const addressFormSchema = z.object({
+  street: z.string().optional(),
+  city: z.string().optional(),
+  state: z.string().optional(),
+  zipCode: z.string().optional(),
+});
+
+// Define schema for preferences form
+const preferencesFormSchema = z.object({
+  notifications: z.boolean().default(true),
+  newsletter: z.boolean().default(true),
+  travelAlerts: z.boolean().default(false),
+});
+
+type ProfileFormValues = z.infer<typeof profileFormSchema>;
+type AddressFormValues = z.infer<typeof addressFormSchema>;
+type PreferencesFormValues = z.infer<typeof preferencesFormSchema>;
 
 const AccountSettings = () => {
-  const { user, updateProfile } = useSupabaseAuthContext();
+  const { user, updateProfile } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [profileImage, setProfileImage] = useState<string | null>(null);
@@ -29,259 +62,484 @@ const AccountSettings = () => {
     }
   }, [user, navigate]);
 
-  if (!user) {
-    return null;
-  }
+  // Initialize profile form
+  const profileForm = useForm<ProfileFormValues>({
+    resolver: zodResolver(profileFormSchema),
+    defaultValues: {
+      name: user?.name || "",
+      email: user?.email || "",
+      bio: user?.bio || "",
+      phone: user?.phone || "",
+      profilePicture: user?.profilePicture || "",
+    },
+  });
 
-  const handleProfileSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
+  // Initialize address form
+  const addressForm = useForm<AddressFormValues>({
+    resolver: zodResolver(addressFormSchema),
+    defaultValues: {
+      street: user?.address?.street || "",
+      city: user?.address?.city || "",
+      state: user?.address?.state || "",
+      zipCode: user?.address?.zipCode || "",
+    },
+  });
+
+  // Initialize preferences form
+  const preferencesForm = useForm<PreferencesFormValues>({
+    resolver: zodResolver(preferencesFormSchema),
+    defaultValues: {
+      notifications: user?.preferences?.notifications !== undefined ? user.preferences.notifications : true,
+      newsletter: user?.preferences?.newsletter !== undefined ? user.preferences.newsletter : true,
+      travelAlerts: user?.preferences?.travelAlerts !== undefined ? user.preferences.travelAlerts : false,
+    },
+  });
+
+  // Handle profile form submission
+  const onProfileSubmit = async (data: ProfileFormValues) => {
     try {
+      // Create FormData for image upload if there's a new image
+      if (imageFile) {
+        // In a real app, this would upload the image to a server
+        // For now, we'll use a data URL for the demo
+        data.profilePicture = profileImage || user?.profilePicture;
+      }
+
       const result = await updateProfile({
-        full_name: user.user_metadata?.full_name || '',
+        ...user,
+        name: data.name,
+        email: data.email,
+        bio: data.bio,
+        phone: data.phone,
+        profilePicture: data.profilePicture || user?.profilePicture,
       });
-      
-      if (!result.error) {
+
+      if (result.success) {
         toast({
-          title: "Success",
-          description: "Profile updated successfully!",
+          title: "Profile Updated",
+          description: "Your profile has been updated successfully.",
         });
       } else {
         toast({
-          title: "Error",
-          description: result.error.message || "Failed to update profile.",
-          variant: "destructive"
+          title: "Update Failed",
+          description: result.message,
+          variant: "destructive",
         });
       }
     } catch (error) {
-      console.error('Profile update error:', error);
       toast({
         title: "Error",
-        description: "An unexpected error occurred.",
-        variant: "destructive"
+        description: "An error occurred while updating your profile.",
+        variant: "destructive",
       });
     }
   };
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-indigo-50 dark:from-gray-900 dark:to-slate-800">
-      <Navbar />
+  // Handle address form submission
+  const onAddressSubmit = async (data: AddressFormValues) => {
+    try {
+      const result = await updateProfile({
+        ...user,
+        address: {
+          ...user?.address,
+          street: data.street,
+          city: data.city,
+          state: data.state,
+          zipCode: data.zipCode,
+        },
+      });
+
+      if (result.success) {
+        toast({
+          title: "Address Updated",
+          description: "Your address has been updated successfully.",
+        });
+      } else {
+        toast({
+          title: "Update Failed",
+          description: result.message,
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "An error occurred while updating your address.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  // Handle preferences form submission
+  const onPreferencesSubmit = async (data: PreferencesFormValues) => {
+    try {
+      const result = await updateProfile({
+        ...user,
+        preferences: {
+          ...user?.preferences,
+          notifications: data.notifications,
+          newsletter: data.newsletter,
+          travelAlerts: data.travelAlerts,
+        },
+      });
+
+      if (result.success) {
+        toast({
+          title: "Preferences Updated",
+          description: "Your preferences have been updated successfully.",
+        });
+      } else {
+        toast({
+          title: "Update Failed",
+          description: result.message,
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "An error occurred while updating your preferences.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  // Handle image upload
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setImageFile(file);
       
-      <div className="container mx-auto px-4 py-8 mt-16">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="max-w-4xl mx-auto"
-        >
-          <div className="flex items-center mb-8">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => navigate('/profile')}
-              className="mr-4"
-            >
-              <ArrowLeft className="w-5 h-5" />
-            </Button>
-            <div>
-              <h1 className="text-3xl font-bold text-gray-800 dark:text-white">Account Settings</h1>
-              <p className="text-gray-600 dark:text-gray-300 mt-2">
-                Manage your account preferences and personal information
-              </p>
+      // Create a preview URL for the image
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProfileImage(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  if (!user) {
+    return null; // Don't render anything while redirecting
+  }
+
+  return (
+    <>
+      <Navbar />
+      <div className="min-h-screen pt-24 pb-16 px-4">
+        <div className="max-w-4xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="mb-8"
+          >
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center">
+                <Button 
+                  variant="ghost" 
+                  className="mr-2"
+                  onClick={() => navigate('/profile')}
+                >
+                  <ArrowLeft className="mr-2 h-4 w-4" />
+                  Back to Profile
+                </Button>
+              </div>
             </div>
-          </div>
+            
+            <h1 className="text-3xl font-bold">Account Settings</h1>
+            <p className="text-muted-foreground mt-1">Manage your account information and preferences</p>
+          </motion.div>
 
-          <Tabs defaultValue="profile" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-3 lg:grid-cols-3">
-              <TabsTrigger value="profile" className="flex items-center gap-2">
-                <User className="w-4 h-4" />
-                Profile
-              </TabsTrigger>
-              <TabsTrigger value="address" className="flex items-center gap-2">
-                <MapPin className="w-4 h-4" />
-                Address
-              </TabsTrigger>
-              <TabsTrigger value="notifications" className="flex items-center gap-2">
-                <Bell className="w-4 h-4" />
-                Notifications
-              </TabsTrigger>
+          <Tabs defaultValue="profile" className="w-full">
+            <TabsList className="grid grid-cols-3 mb-8">
+              <TabsTrigger value="profile">Profile</TabsTrigger>
+              <TabsTrigger value="address">Address</TabsTrigger>
+              <TabsTrigger value="preferences">Preferences</TabsTrigger>
             </TabsList>
-
+            
+            {/* Profile Tab */}
             <TabsContent value="profile">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Profile Information</CardTitle>
-                  <CardDescription>
-                    Update your personal details and profile picture
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <form onSubmit={handleProfileSubmit} className="space-y-6">
-                    <div className="flex items-center gap-6">
-                      <Avatar className="w-24 h-24">
-                        <AvatarImage 
-                          src={profileImage || user.user_metadata?.avatar_url || ''} 
-                        />
-                        <AvatarFallback className="text-2xl">
-                          {user.user_metadata?.full_name?.[0] || user.email?.[0] || 'U'}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <Button type="button" variant="outline" className="mb-2">
-                          <Camera className="w-4 h-4 mr-2" />
-                          Change Photo
-                        </Button>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">
-                          JPG, GIF or PNG. 1MB max.
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div className="space-y-2">
-                        <Label htmlFor="name">Full Name</Label>
-                        <Input
-                          id="name"
-                          defaultValue={user.user_metadata?.full_name || ''}
-                          placeholder="Enter your full name"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="email">Email Address</Label>
-                        <Input
-                          id="email"
-                          type="email"
-                          defaultValue={user.email || ''}
-                          disabled
-                          className="bg-gray-50 dark:bg-gray-700"
+              <Card className="p-6">
+                <Form {...profileForm}>
+                  <form onSubmit={profileForm.handleSubmit(onProfileSubmit)} className="space-y-6">
+                    <div className="flex flex-col items-center space-y-4 mb-6 sm:items-start">
+                      <FormLabel>Profile Picture</FormLabel>
+                      <div className="relative">
+                        <Avatar className="w-32 h-32 border-4 border-background">
+                          <AvatarImage src={profileImage || user.profilePicture} />
+                          <AvatarFallback className="bg-gradient-to-br from-violet-500 to-indigo-600 text-white">
+                            <UserCircle className="w-16 h-16" />
+                          </AvatarFallback>
+                        </Avatar>
+                        <label
+                          htmlFor="profile-image"
+                          className="absolute -bottom-2 -right-2 p-2 bg-primary text-primary-foreground rounded-full cursor-pointer hover:bg-primary/90 transition-colors"
+                        >
+                          <Camera className="h-5 w-5" />
+                          <span className="sr-only">Upload picture</span>
+                        </label>
+                        <input
+                          id="profile-image"
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={handleImageUpload}
                         />
                       </div>
                     </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="bio">Bio</Label>
-                      <Textarea
-                        id="bio"
-                        placeholder="Tell us about yourself..."
-                        className="min-h-[100px]"
+                    
+                    <div className="grid gap-6 sm:grid-cols-2">
+                      <FormField
+                        control={profileForm.control}
+                        name="name"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Name</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Your name" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={profileForm.control}
+                        name="email"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Email</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Your email" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
                       />
                     </div>
-
-                    <Button type="submit" className="w-full md:w-auto">
-                      <Save className="w-4 h-4 mr-2" />
-                      Save Changes
-                    </Button>
+                    
+                    <FormField
+                      control={profileForm.control}
+                      name="phone"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Phone</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Your phone number" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={profileForm.control}
+                      name="bio"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Bio</FormLabel>
+                          <FormControl>
+                            <Textarea 
+                              placeholder="A short bio about yourself" 
+                              className="resize-none min-h-[100px]"
+                              {...field} 
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <div className="flex justify-end">
+                      <Button type="submit" className="w-full sm:w-auto">
+                        <Save className="mr-2 h-4 w-4" />
+                        Save Profile
+                      </Button>
+                    </div>
                   </form>
-                </CardContent>
+                </Form>
               </Card>
             </TabsContent>
-
+            
+            {/* Address Tab */}
             <TabsContent value="address">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Address Information</CardTitle>
-                  <CardDescription>
-                    Update your address details for better travel recommendations
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <form className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div className="space-y-2">
-                        <Label htmlFor="street">Street Address</Label>
-                        <Input
-                          id="street"
-                          placeholder="Enter your street address"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="city">City</Label>
-                        <Input
-                          id="city"
-                          placeholder="Enter your city"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="state">State</Label>
-                        <Input
-                          id="state"
-                          placeholder="Enter your state"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="zipCode">ZIP Code</Label>
-                        <Input
-                          id="zipCode"
-                          placeholder="Enter your ZIP code"
-                        />
-                      </div>
+              <Card className="p-6">
+                <Form {...addressForm}>
+                  <form onSubmit={addressForm.handleSubmit(onAddressSubmit)} className="space-y-6">
+                    <FormField
+                      control={addressForm.control}
+                      name="street"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Street Address</FormLabel>
+                          <FormControl>
+                            <Input placeholder="123 Example Street" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <div className="grid gap-6 sm:grid-cols-2">
+                      <FormField
+                        control={addressForm.control}
+                        name="city"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>City</FormLabel>
+                            <FormControl>
+                              <Input placeholder="City" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={addressForm.control}
+                        name="state"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>State</FormLabel>
+                            <FormControl>
+                              <Input placeholder="State" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
                     </div>
-
-                    <Button type="submit" className="w-full md:w-auto">
-                      <Save className="w-4 h-4 mr-2" />
-                      Save Address
-                    </Button>
+                    
+                    <FormField
+                      control={addressForm.control}
+                      name="zipCode"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Zip Code</FormLabel>
+                          <FormControl>
+                            <Input placeholder="12345" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <div className="flex justify-end">
+                      <Button type="submit" className="w-full sm:w-auto">
+                        <Save className="mr-2 h-4 w-4" />
+                        Save Address
+                      </Button>
+                    </div>
                   </form>
-                </CardContent>
+                </Form>
               </Card>
             </TabsContent>
-
-            <TabsContent value="notifications">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Notification Preferences</CardTitle>
-                  <CardDescription>
-                    Choose how you want to receive notifications and updates
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <form className="space-y-6">
+            
+            {/* Preferences Tab */}
+            <TabsContent value="preferences">
+              <Card className="p-6">
+                <Form {...preferencesForm}>
+                  <form onSubmit={preferencesForm.handleSubmit(onPreferencesSubmit)} className="space-y-6">
                     <div className="space-y-4">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <Label htmlFor="notifications">Email Notifications</Label>
-                          <p className="text-sm text-gray-500 dark:text-gray-400">
-                            Receive notifications about your trips and bookings
-                          </p>
-                        </div>
-                        <Switch id="notifications" />
-                      </div>
+                      <FormField
+                        control={preferencesForm.control}
+                        name="notifications"
+                        render={({ field }) => (
+                          <FormItem className="flex items-center justify-between rounded-lg border p-4">
+                            <div className="space-y-0.5">
+                              <FormLabel className="text-base">
+                                <Bell className="h-4 w-4 mr-2 inline-block" />
+                                Notifications
+                              </FormLabel>
+                              <div className="text-sm text-muted-foreground">
+                                Receive notifications about your trips and bookings.
+                              </div>
+                            </div>
+                            <FormControl>
+                              <Switch
+                                checked={field.value}
+                                onCheckedChange={field.onChange}
+                              />
+                            </FormControl>
+                          </FormItem>
+                        )}
+                      />
                       
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <Label htmlFor="newsletter">Newsletter</Label>
-                          <p className="text-sm text-gray-500 dark:text-gray-400">
-                            Get travel tips and destination highlights
-                          </p>
-                        </div>
-                        <Switch id="newsletter" />
-                      </div>
+                      <FormField
+                        control={preferencesForm.control}
+                        name="newsletter"
+                        render={({ field }) => (
+                          <FormItem className="flex items-center justify-between rounded-lg border p-4">
+                            <div className="space-y-0.5">
+                              <FormLabel className="text-base">
+                                <Mail className="h-4 w-4 mr-2 inline-block" />
+                                Newsletter
+                              </FormLabel>
+                              <div className="text-sm text-muted-foreground">
+                                Receive our newsletter with travel tips and offers.
+                              </div>
+                            </div>
+                            <FormControl>
+                              <Switch
+                                checked={field.value}
+                                onCheckedChange={field.onChange}
+                              />
+                            </FormControl>
+                          </FormItem>
+                        )}
+                      />
                       
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <Label htmlFor="alerts">Travel Alerts</Label>
-                          <p className="text-sm text-gray-500 dark:text-gray-400">
-                            Important updates about your travel plans
-                          </p>
-                        </div>
-                        <Switch id="alerts" />
-                      </div>
+                      <FormField
+                        control={preferencesForm.control}
+                        name="travelAlerts"
+                        render={({ field }) => (
+                          <FormItem className="flex items-center justify-between rounded-lg border p-4">
+                            <div className="space-y-0.5">
+                              <FormLabel className="text-base">
+                                <MapPin className="h-4 w-4 mr-2 inline-block" />
+                                Travel Alerts
+                              </FormLabel>
+                              <div className="text-sm text-muted-foreground">
+                                Receive alerts about travel conditions for your destinations.
+                              </div>
+                            </div>
+                            <FormControl>
+                              <Switch
+                                checked={field.value}
+                                onCheckedChange={field.onChange}
+                              />
+                            </FormControl>
+                          </FormItem>
+                        )}
+                      />
                     </div>
-
-                    <Button type="submit" className="w-full md:w-auto">
-                      <Save className="w-4 h-4 mr-2" />
-                      Save Preferences
-                    </Button>
+                    
+                    <Separator className="my-4" />
+                    
+                    <div className="space-y-4">
+                      <h3 className="text-lg font-medium">Data & Privacy</h3>
+                      <Button variant="outline" type="button" className="text-destructive border-destructive/30 hover:bg-destructive/10">
+                        <Trash className="mr-2 h-4 w-4" />
+                        Delete Account
+                      </Button>
+                    </div>
+                    
+                    <div className="flex justify-end">
+                      <Button type="submit" className="w-full sm:w-auto">
+                        <Save className="mr-2 h-4 w-4" />
+                        Save Preferences
+                      </Button>
+                    </div>
                   </form>
-                </CardContent>
+                </Form>
               </Card>
             </TabsContent>
           </Tabs>
-        </motion.div>
+        </div>
       </div>
-
       <Footer />
-    </div>
+    </>
   );
 };
 

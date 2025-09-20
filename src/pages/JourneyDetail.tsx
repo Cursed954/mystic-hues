@@ -1,303 +1,289 @@
-import React, { useState, useEffect } from 'react';
+
+import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import ScrollReveal from '@/components/ui/ScrollReveal';
+import { Calendar, Map, Navigation, Star, ArrowLeft, Clock, Activity, Route, Edit, Share2 } from 'lucide-react';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import JourneyTimeline from '@/components/journey/JourneyTimeline';
 import JourneyActivities from '@/components/journey/JourneyActivities';
 import CabBooking from '@/components/journey/CabBooking';
 import { getJourneyById } from '@/data/journeys';
-import { useSupabaseAuthContext } from '@/context/SupabaseAuthContext';
+import { useAuth } from '@/context/AuthContext';
 import JourneyViewer from '@/components/journey/JourneyViewer';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { Calendar, Map, Navigation, Star, ArrowLeft, Clock, Activity, Route, Edit, Share2, MapPin } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { stateData } from '@/data/stateData';
 
 const JourneyDetail = () => {
   const { journeyId } = useParams<{ journeyId: string }>();
   const [journey, setJourney] = useState<any | null>(null);
-  const { user } = useSupabaseAuthContext();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
   
   useEffect(() => {
     window.scrollTo(0, 0);
     
-    // Load journey from predefined journeys
-    if (journeyId) {
-      const foundJourney = getJourneyById(parseInt(journeyId) || 0);
-      if (foundJourney) {
-        setJourney(foundJourney);
+    // First try to find journey in user trips
+    if (journeyId && user && user.trips) {
+      const userJourney = user.trips.find((trip: any) => trip.id === parseInt(journeyId));
+      if (userJourney) {
+        // If we found a user journey, use it
+        setJourney({
+          ...userJourney,
+          title: userJourney.title || userJourney.destination,
+          location: userJourney.location || userJourney.destination,
+          description: userJourney.description || `Your personal journey to ${userJourney.destination}.`,
+          rating: userJourney.rating || "5.0",
+          duration: userJourney.duration || 3
+        });
+        return;
       }
     }
-  }, [journeyId]);
+    
+    // If not found in user trips, look in predefined journeys
+    if (journeyId) {
+      const predefinedJourney = getJourneyById(parseInt(journeyId));
+      setJourney(predefinedJourney || null);
+    }
+  }, [journeyId, user]);
 
   if (!journey) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-indigo-50 dark:from-gray-900 dark:to-slate-800">
-        <Navbar />
-        <div className="container mx-auto px-4 py-20">
-          <div className="text-center">
-            <h1 className="text-2xl font-bold text-gray-800 dark:text-white">Journey not found</h1>
-            <p className="text-gray-600 dark:text-gray-300 mt-2">The journey you're looking for doesn't exist.</p>
-            <Link to="/">
-              <Button className="mt-4">
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Back to Home
-              </Button>
-            </Link>
-          </div>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-medium mb-4">Journey not found</h2>
+          <Button onClick={() => navigate('/')} variant="default">Return Home</Button>
         </div>
-        <Footer />
       </div>
     );
   }
 
-  const handleBookJourney = () => {
-    if (!user) {
-      navigate('/login');
-      return;
-    }
-    
-    navigate('/journey-planner', { 
-      state: { 
-        selectedDestination: journey.destination,
-        selectedTitle: journey.title,
-        selectedDuration: journey.duration
-      } 
-    });
+  // Helper to find state info for the journey destination
+  const getStateInfo = () => {
+    if (!journey.destination) return null;
+    return stateData.find(state => 
+      state.name.toLowerCase() === journey.destination.toLowerCase()
+    );
   };
 
-  const handleEditJourney = () => {
-    if (!user) {
-      navigate('/login');
-      return;
-    }
+  const stateInfo = getStateInfo();
 
-    // TODO: Check if this is a user's custom journey
-    const foundInUserTrips = false;
-
-    if (foundInUserTrips) {
-      navigate('/journey-planner', { 
-        state: { 
-          editMode: true,
-          journeyData: journey
-        } 
-      });
-    } else {
-      toast({
-        title: "Cannot Edit",
-        description: "You can only edit your own custom journeys.",
-        variant: "destructive"
-      });
-    }
-  };
-
-  const handleShare = async () => {
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: journey.title,
-          text: journey.description,
-          url: window.location.href
-        });
-      } catch (error) {
-        console.error('Share failed:', error);
-      }
-    } else {
-      // Fallback: copy to clipboard
-      try {
-        await navigator.clipboard.writeText(window.location.href);
-        toast({
-          title: "Link Copied",
-          description: "Journey link copied to clipboard!",
-        });
-      } catch (error) {
-        console.error('Copy failed:', error);
-        toast({
-          title: "Share Failed",
-          description: "Unable to share or copy link.",
-          variant: "destructive"
-        });
-      }
-    }
-  };
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-indigo-50 dark:from-gray-900 dark:to-slate-800">
-      <Navbar />
-      
-      {/* Hero Section */}
-      <section className="relative pt-20 pb-12 overflow-hidden">
-        <div className="absolute inset-0">
-          <img 
-            src={journey.imageSrc} 
-            alt={journey.title}
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-black bg-opacity-50" />
-        </div>
-        
-        <div className="container mx-auto px-4 relative z-10">
-          <motion.div 
-            className="max-w-4xl mx-auto text-center text-white"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-          >
-            <Link 
-              to="/"
-              className="inline-flex items-center text-white hover:text-gray-200 transition-colors mb-6"
-            >
-              <ArrowLeft className="w-5 h-5 mr-2" />
-              Back to Journeys
-            </Link>
-            
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">
-              {journey.title}
-            </h1>
-            
-            <p className="text-xl md:text-2xl text-gray-200 mb-8 max-w-3xl mx-auto">
-              {journey.description}
-            </p>
-            
-            <div className="flex flex-wrap justify-center gap-4 mb-8">
-              <div className="flex items-center bg-white bg-opacity-20 backdrop-blur-sm rounded-full px-4 py-2">
-                <MapPin className="w-5 h-5 mr-2" />
-                <span>{journey.destination}</span>
-              </div>
-              <div className="flex items-center bg-white bg-opacity-20 backdrop-blur-sm rounded-full px-4 py-2">
-                <Clock className="w-5 h-5 mr-2" />
-                <span>{journey.duration}</span>
-              </div>
-              <div className="flex items-center bg-white bg-opacity-20 backdrop-blur-sm rounded-full px-4 py-2">
-                <Star className="w-5 h-5 mr-2" />
-                <span>{journey.rating}/5</span>
+  // If this is a user-created journey, use enhanced JourneyViewer component
+  if (user && user.trips && user.trips.find((trip: any) => trip.id === parseInt(journeyId || '0'))) {
+    return (
+      <>
+        <Navbar />
+        <main className="pt-20 pb-16 min-h-screen">
+          <div className="container mx-auto px-4 py-8">
+            <div className="flex flex-wrap justify-between items-center mb-6">
+              <Link 
+                to="/profile" 
+                className="flex items-center text-primary hover:underline"
+              >
+                <ArrowLeft size={18} className="mr-2" /> Back to Profile
+              </Link>
+              
+              <div className="flex gap-2 mt-2 sm:mt-0">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="border-indigo-400 text-indigo-600 hover:bg-indigo-50 flex items-center gap-1"
+                  onClick={() => navigate(`/journey-planner`, { state: { journey } })}
+                >
+                  <Edit size={16} />
+                  <span className="hidden sm:inline-block">Edit Journey</span>
+                </Button>
+                
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="border-indigo-400 text-indigo-600 hover:bg-indigo-50 flex items-center gap-1"
+                  onClick={() => {
+                    navigator.clipboard.writeText(window.location.href);
+                    toast({
+                      title: "Link copied!",
+                      description: "Journey link copied to clipboard"
+                    });
+                  }}
+                >
+                  <Share2 size={16} />
+                  <span className="hidden sm:inline-block">Share</span>
+                </Button>
               </div>
             </div>
             
-            <div className="flex flex-wrap justify-center gap-4">
-              <Button 
-                size="lg"
-                onClick={handleBookJourney}
-                className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white px-8 py-3"
-              >
-                <Navigation className="w-5 h-5 mr-2" />
-                {user ? 'Customize This Journey' : 'Sign in to Book'}
-              </Button>
-              
-              <Button 
-                size="lg"
-                variant="outline"
-                onClick={handleShare}
-                className="border-white text-white hover:bg-white hover:text-gray-800"
-              >
-                <Share2 className="w-5 h-5 mr-2" />
-                Share Journey
-              </Button>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Journey Content */}
-      <section className="py-16">
-        <div className="container mx-auto px-4">
-          <div className="max-w-6xl mx-auto">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              {/* Main Content */}
-              <div className="lg:col-span-2 space-y-8">
-                {journey.timeline && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.2 }}
-                  >
-                    <JourneyTimeline journey={journey} />
-                  </motion.div>
-                )}
-                
-                {journey.activities && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.4 }}
-                  >
-                    <JourneyActivities journey={journey} />
-                  </motion.div>
-                )}
-
-                {journey.itinerary && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.6 }}
-                  >
-                    <JourneyViewer journey={journey} />
-                  </motion.div>
-                )}
-              </div>
-              
-              {/* Sidebar */}
-              <div className="space-y-6">
-                <motion.div
-                  initial={{ opacity: 0, x: 30 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.6, delay: 0.8 }}
-                >
-                  <CabBooking journey={journey} />
-                </motion.div>
-                
-                {/* Journey Details Card */}
-                <motion.div
-                  className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-200 dark:border-gray-700"
-                  initial={{ opacity: 0, x: 30 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.6, delay: 1.0 }}
-                >
-                  <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-4">
-                    Journey Details
-                  </h3>
+            <div className="bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-950/30 dark:to-purple-950/30 p-6 rounded-xl mb-8 shadow-sm">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div className="md:col-span-2">
+                  <h1 className="text-3xl md:text-4xl font-serif font-medium mb-4 bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                    {journey.title}
+                  </h1>
                   
-                  <div className="space-y-3">
-                    <div className="flex justify-between">
-                      <span className="text-gray-600 dark:text-gray-400">Duration:</span>
-                      <span className="font-medium">{journey.duration}</span>
+                  <p className="text-lg text-gray-700 dark:text-gray-300 mb-6">
+                    {journey.description}
+                  </p>
+                  
+                  <div className="flex flex-wrap gap-6">
+                    <div className="flex items-center">
+                      <Calendar size={18} className="mr-2 text-indigo-600" />
+                      <span>Duration: {typeof journey.duration === 'number' ? `${journey.duration} days` : journey.duration}</span>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600 dark:text-gray-400">Destination:</span>
-                      <span className="font-medium">{journey.destination}</span>
+                    <div className="flex items-center">
+                      <Map size={18} className="mr-2 text-indigo-600" />
+                      <span>Location: {journey.location || journey.destination}</span>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600 dark:text-gray-400">Rating:</span>
-                      <div className="flex items-center">
-                        {[...Array(5)].map((_, i) => (
-                          <Star 
-                            key={i} 
-                            className={`w-4 h-4 ${i < journey.rating ? 'text-yellow-400 fill-current' : 'text-gray-300'}`}
-                          />
-                        ))}
-                        <span className="ml-2 text-sm">({journey.rating}/5)</span>
-                      </div>
+                    <div className="flex items-center">
+                      <Clock size={18} className="mr-2 text-indigo-600" />
+                      <span>Date: {journey.date || 'Flexible'}</span>
                     </div>
                   </div>
-                  
-                  <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-600">
-                    <Button 
-                      onClick={handleBookJourney}
-                      className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
-                    >
-                      <Calendar className="w-4 h-4 mr-2" />
-                      Start Planning
-                    </Button>
+                </div>
+                
+                <div className="hidden md:block">
+                  <div className="w-full h-60 rounded-lg overflow-hidden">
+                    <img 
+                      src={journey.imageSrc || stateInfo?.bannerImage || 'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?q=80&w=2071&auto=format&fit=crop'} 
+                      alt={journey.title} 
+                      className="w-full h-full object-cover"
+                    />
                   </div>
-                </motion.div>
+                </div>
               </div>
             </div>
+            
+            <JourneyViewer journey={journey} enhanced={true} />
           </div>
-        </div>
-      </section>
+        </main>
+        <Footer />
+      </>
+    );
+  }
 
+  // Otherwise use the original detailed view for predefined journeys
+  return (
+    <div className="min-h-screen">
+      <Navbar />
+      <main>
+        {/* Hero Banner */}
+        <section className="relative h-[60vh]">
+          <div 
+            className="absolute inset-0 bg-center bg-cover" 
+            style={{ backgroundImage: `url(${journey.imageSrc})` }}
+          >
+            <div className="absolute inset-0 bg-black/40"></div>
+          </div>
+          <div className="container mx-auto h-full relative z-10 flex flex-col justify-end pb-16 px-6">
+            <Link 
+              to="/" 
+              className="absolute top-8 left-6 text-white flex items-center hover:underline"
+            >
+              <ArrowLeft size={18} className="mr-2" /> Back to Home
+            </Link>
+            <ScrollReveal>
+              <h1 className="text-white text-5xl md:text-6xl font-serif mb-4">{journey.title}</h1>
+              <div className="flex flex-wrap gap-6 text-white">
+                <div className="flex items-center">
+                  <Map size={18} className="mr-2" />
+                  <span>Location: {journey.location}</span>
+                </div>
+                <div className="flex items-center">
+                  <Calendar size={18} className="mr-2" />
+                  <span>Duration: {journey.duration}</span>
+                </div>
+                <div className="flex items-center">
+                  <Star size={18} className="mr-2" fill="#FFD700" stroke="#FFD700" />
+                  <span>Rating: {journey.rating}/5</span>
+                </div>
+              </div>
+            </ScrollReveal>
+          </div>
+        </section>
+
+        {/* Overview Section */}
+        <section className="py-16 px-6">
+          <div className="container mx-auto">
+            <ScrollReveal>
+              <div className="max-w-3xl mx-auto border border-white/20 dark:border-white/10 backdrop-blur-md rounded-lg p-6 bg-white/30 dark:bg-white/10">
+                <h2 className="section-title after:left-0 mb-8">Journey Overview</h2>
+                <p className="text-lg leading-relaxed mb-8">
+                  {journey.description}
+                </p>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-12">
+                  <div className="bg-white/40 dark:bg-white/10 p-4 rounded-lg backdrop-blur-sm">
+                    <Clock className="text-spice-500 mb-2" size={24} />
+                    <h3 className="font-medium mb-2">Duration</h3>
+                    <p className="text-foreground/70">{journey.duration}</p>
+                  </div>
+                  <div className="bg-white/40 dark:bg-white/10 p-4 rounded-lg backdrop-blur-sm">
+                    <Route className="text-spice-500 mb-2" size={24} />
+                    <h3 className="font-medium mb-2">Destinations</h3>
+                    <p className="text-foreground/70">{journey.location}</p>
+                  </div>
+                  <div className="bg-white/40 dark:bg-white/10 p-4 rounded-lg backdrop-blur-sm">
+                    <Activity className="text-spice-500 mb-2" size={24} />
+                    <h3 className="font-medium mb-2">Activities</h3>
+                    <p className="text-foreground/70">{journey.activities?.length || 0} activities included</p>
+                  </div>
+                </div>
+              </div>
+            </ScrollReveal>
+          </div>
+        </section>
+
+        {/* Tabs Section */}
+        <section className="py-16 px-6 bg-white/40 dark:bg-white/10 backdrop-blur-sm rounded-lg">
+          <div className="container mx-auto">
+            <ScrollReveal>
+              <Tabs defaultValue="timeline" className="max-w-4xl mx-auto">
+                <TabsList className="w-full flex mb-8 bg-transparent p-0 space-x-2 overflow-x-auto">
+                  <TabsTrigger 
+                    value="timeline"
+                    className="px-6 py-3 data-[state=active]:bg-spice-50 dark:data-[state=active]:bg-gray-700 data-[state=active]:text-spice-600 dark:data-[state=active]:text-spice-400 data-[state=active]:border-b-2 data-[state=active]:border-spice-500 data-[state=active]:shadow-none rounded-full"
+                  >
+                    Timeline
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="activities"
+                    className="px-6 py-3 data-[state=active]:bg-spice-50 dark:data-[state=active]:bg-gray-700 data-[state=active]:text-spice-600 dark:data-[state=active]:text-spice-400 data-[state=active]:border-b-2 data-[state=active]:border-spice-500 data-[state=active]:shadow-none rounded-full"
+                  >
+                    Activities
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="booking"
+                    className="px-6 py-3 data-[state=active]:bg-spice-50 dark:data-[state=active]:bg-gray-700 data-[state=active]:text-spice-600 dark:data-[state=active]:text-spice-400 data-[state=active]:border-b-2 data-[state=active]:border-spice-500 data-[state=active]:shadow-none rounded-full"
+                  >
+                    Book a Cab
+                  </TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="timeline" className="mt-0">
+                  <div className="bg-background dark:bg-gray-800 p-6 rounded-lg shadow-sm">
+                    <h3 className="text-xl font-medium mb-4">Journey Timeline</h3>
+                    <JourneyTimeline journey={journey} />
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="activities" className="mt-0">
+                  <div className="bg-background dark:bg-gray-800 p-6 rounded-lg shadow-sm">
+                    <h3 className="text-xl font-medium mb-4">Activities & Experiences</h3>
+                    <JourneyActivities journey={journey} />
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="booking" className="mt-0">
+                  <div className="bg-background dark:bg-gray-800 p-6 rounded-lg shadow-sm">
+                    <h3 className="text-xl font-medium mb-4">Book a Cab for Your Journey</h3>
+                    <CabBooking journey={journey} />
+                  </div>
+                </TabsContent>
+              </Tabs>
+            </ScrollReveal>
+          </div>
+        </section>
+      </main>
       <Footer />
     </div>
   );

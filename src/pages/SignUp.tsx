@@ -3,22 +3,24 @@ import { useNavigate } from 'react-router-dom';
 import { Mail, Lock, ArrowRight, User, Github, Chrome } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useToast } from '@/hooks/use-toast';
-import { useSupabaseAuthContext } from '@/context/SupabaseAuthContext';
+import { useAuth } from '@/context/AuthContext';
 
 const SignUp = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [socialLoading, setSocialLoading] = useState<string | null>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { user, signUp, signInWithOAuth, loading } = useSupabaseAuthContext();
+  const { signUp, socialLogin, isAuthenticated } = useAuth();
   
   useEffect(() => {
-    if (user) {
+    if (isAuthenticated) {
       navigate('/');
     }
-  }, [user, navigate]);
+  }, [isAuthenticated, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,22 +42,24 @@ const SignUp = () => {
       });
       return;
     }
+    
+    setIsLoading(true);
 
     try {
-      const { error } = await signUp(email, password, name);
+      const result = await signUp(name, email, password);
       
-      if (error) {
-        toast({
-          title: "Registration Failed",
-          description: error.message,
-          variant: "destructive"
-        });
-      } else {
+      if (result.success) {
         toast({
           title: "Account Created Successfully",
-          description: "Welcome to Mystic India! Please check your email for verification.",
+          description: "Welcome to Mystic India! You are now registered.",
         });
-        navigate('/login');
+        navigate('/profile');
+      } else {
+        toast({
+          title: "Registration Failed",
+          description: result.message,
+          variant: "destructive"
+        });
       }
     } catch (error) {
       console.error("Registration error:", error);
@@ -64,26 +68,30 @@ const SignUp = () => {
         description: "An unexpected error occurred. Please try again.",
         variant: "destructive"
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleSocialLogin = async (provider: 'google' | 'github') => {
+    setSocialLoading(provider);
+    
     try {
-      const { error } = await signInWithOAuth(provider);
+      const result = await socialLogin(provider);
       
-      if (error) {
-        // Show more user-friendly error for unconfigured providers
-        const errorMessage = error.message?.includes('provider is not enabled') 
-          ? `${provider} signup is not configured yet. Please use email signup instead.`
-          : error.message;
-        
+      if (result.success) {
+        toast({
+          title: "Account Created Successfully",
+          description: `You have been registered with ${provider}.`,
+        });
+        navigate('/profile');
+      } else {
         toast({
           title: "Registration Failed",
-          description: errorMessage,
+          description: result.message,
           variant: "destructive"
         });
       }
-      // Success will be handled by auth state change
     } catch (error) {
       console.error(`${provider} registration error:`, error);
       toast({
@@ -91,6 +99,8 @@ const SignUp = () => {
         description: `An error occurred while registering with ${provider}.`,
         variant: "destructive"
       });
+    } finally {
+      setSocialLoading(null);
     }
   };
 
@@ -223,7 +233,7 @@ const SignUp = () => {
 
             <motion.button
               type="submit"
-              disabled={loading}
+              disabled={isLoading}
               className="w-full bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white py-3 rounded-lg font-semibold flex items-center justify-center gap-2 transition-all duration-300 relative overflow-hidden group shadow-lg shadow-violet-900/30"
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
@@ -231,7 +241,7 @@ const SignUp = () => {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
-              {loading ? (
+              {isLoading ? (
                 <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
               ) : (
                 <>
@@ -263,9 +273,9 @@ const SignUp = () => {
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
                 onClick={() => handleSocialLogin('google')}
-                disabled={loading}
+                disabled={!!socialLoading}
               >
-                {loading ? (
+                {socialLoading === 'google' ? (
                   <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                 ) : (
                   <>
@@ -279,9 +289,9 @@ const SignUp = () => {
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
                 onClick={() => handleSocialLogin('github')}
-                disabled={loading}
+                disabled={!!socialLoading}
               >
-                {loading ? (
+                {socialLoading === 'github' ? (
                   <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                 ) : (
                   <>
