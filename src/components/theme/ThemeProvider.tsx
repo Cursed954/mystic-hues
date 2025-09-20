@@ -41,10 +41,11 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function useTheme() {
+export function useTheme(): ThemeContextType {
   const context = useContext(ThemeContext);
+  // Return safe defaults if provider is not mounted yet
   if (context === undefined) {
-    throw new Error('useTheme must be used within a ThemeProvider');
+    return { theme: 'dark', setTheme: () => {} } as ThemeContextType;
   }
   return context;
 }
