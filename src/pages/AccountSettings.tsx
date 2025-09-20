@@ -1,227 +1,50 @@
-
-import React, { useState } from 'react';
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { motion } from 'framer-motion';
+import React, { useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { useAuth } from '@/auth';
 import { useToast } from '@/hooks/use-toast';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Textarea } from "@/components/ui/textarea";
-import { Switch } from "@/components/ui/switch";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { UserCircle, Save, ArrowLeft, MapPin, Bell, Shield } from 'lucide-react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
-import { Camera, Save, UserCircle, MapPin, Bell, Mail, Trash, ArrowLeft } from 'lucide-react';
-
-// Define schema for profile form
-const profileFormSchema = z.object({
-  name: z.string().min(2, { message: "Name must be at least 2 characters." }),
-  email: z.string().email({ message: "Please enter a valid email address." }),
-  bio: z.string().optional(),
-  phone: z.string().optional(),
-  profilePicture: z.string().optional(),
-});
-
-// Define schema for address form
-const addressFormSchema = z.object({
-  street: z.string().optional(),
-  city: z.string().optional(),
-  state: z.string().optional(),
-  zipCode: z.string().optional(),
-});
-
-// Define schema for preferences form
-const preferencesFormSchema = z.object({
-  notifications: z.boolean().default(true),
-  newsletter: z.boolean().default(true),
-  travelAlerts: z.boolean().default(false),
-});
-
-type ProfileFormValues = z.infer<typeof profileFormSchema>;
-type AddressFormValues = z.infer<typeof addressFormSchema>;
-type PreferencesFormValues = z.infer<typeof preferencesFormSchema>;
 
 const AccountSettings = () => {
-  const { user, updateProfile } = useAuth();
+  const { user, userProfile, updateProfile, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [profileImage, setProfileImage] = useState<string | null>(null);
-  const [imageFile, setImageFile] = useState<File | null>(null);
 
-  // Redirect if not logged in
-  React.useEffect(() => {
-    if (!user) {
+  useEffect(() => {
+    if (!isAuthenticated) {
       navigate('/login');
     }
-  }, [user, navigate]);
-
-  // Initialize profile form
-  const profileForm = useForm<ProfileFormValues>({
-    resolver: zodResolver(profileFormSchema),
-    defaultValues: {
-      name: user?.name || "",
-      email: user?.email || "",
-      bio: user?.bio || "",
-      phone: user?.phone || "",
-      profilePicture: user?.profilePicture || "",
-    },
-  });
-
-  // Initialize address form
-  const addressForm = useForm<AddressFormValues>({
-    resolver: zodResolver(addressFormSchema),
-    defaultValues: {
-      street: user?.address?.street || "",
-      city: user?.address?.city || "",
-      state: user?.address?.state || "",
-      zipCode: user?.address?.zipCode || "",
-    },
-  });
-
-  // Initialize preferences form
-  const preferencesForm = useForm<PreferencesFormValues>({
-    resolver: zodResolver(preferencesFormSchema),
-    defaultValues: {
-      notifications: user?.preferences?.notifications !== undefined ? user.preferences.notifications : true,
-      newsletter: user?.preferences?.newsletter !== undefined ? user.preferences.newsletter : true,
-      travelAlerts: user?.preferences?.travelAlerts !== undefined ? user.preferences.travelAlerts : false,
-    },
-  });
-
-  // Handle profile form submission
-  const onProfileSubmit = async (data: ProfileFormValues) => {
-    try {
-      // Create FormData for image upload if there's a new image
-      if (imageFile) {
-        // In a real app, this would upload the image to a server
-        // For now, we'll use a data URL for the demo
-        data.profilePicture = profileImage || user?.profilePicture;
-      }
-
-      const result = await updateProfile({
-        ...user,
-        name: data.name,
-        email: data.email,
-        bio: data.bio,
-        phone: data.phone,
-        profilePicture: data.profilePicture || user?.profilePicture,
-      });
-
-      if (result.success) {
-        toast({
-          title: "Profile Updated",
-          description: "Your profile has been updated successfully.",
-        });
-      } else {
-        toast({
-          title: "Update Failed",
-          description: result.message,
-          variant: "destructive",
-        });
-      }
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "An error occurred while updating your profile.",
-        variant: "destructive",
-      });
-    }
-  };
-
-  // Handle address form submission
-  const onAddressSubmit = async (data: AddressFormValues) => {
-    try {
-      const result = await updateProfile({
-        ...user,
-        address: {
-          ...user?.address,
-          street: data.street,
-          city: data.city,
-          state: data.state,
-          zipCode: data.zipCode,
-        },
-      });
-
-      if (result.success) {
-        toast({
-          title: "Address Updated",
-          description: "Your address has been updated successfully.",
-        });
-      } else {
-        toast({
-          title: "Update Failed",
-          description: result.message,
-          variant: "destructive",
-        });
-      }
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "An error occurred while updating your address.",
-        variant: "destructive",
-      });
-    }
-  };
-
-  // Handle preferences form submission
-  const onPreferencesSubmit = async (data: PreferencesFormValues) => {
-    try {
-      const result = await updateProfile({
-        ...user,
-        preferences: {
-          ...user?.preferences,
-          notifications: data.notifications,
-          newsletter: data.newsletter,
-          travelAlerts: data.travelAlerts,
-        },
-      });
-
-      if (result.success) {
-        toast({
-          title: "Preferences Updated",
-          description: "Your preferences have been updated successfully.",
-        });
-      } else {
-        toast({
-          title: "Update Failed",
-          description: result.message,
-          variant: "destructive",
-        });
-      }
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "An error occurred while updating your preferences.",
-        variant: "destructive",
-      });
-    }
-  };
-
-  // Handle image upload
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setImageFile(file);
-      
-      // Create a preview URL for the image
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setProfileImage(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+  }, [isAuthenticated, navigate]);
 
   if (!user) {
-    return null; // Don't render anything while redirecting
+    return null;
   }
+
+  const handleUpdateProfile = async (updates: any) => {
+    const result = await updateProfile(updates);
+    
+    if (result.success) {
+      toast({
+        title: "Profile Updated",
+        description: "Your profile has been updated successfully.",
+      });
+    } else {
+      toast({
+        title: "Update Failed",
+        description: result.error || "Failed to update profile",
+        variant: "destructive"
+      });
+    }
+  };
 
   return (
     <>
@@ -234,308 +57,215 @@ const AccountSettings = () => {
             transition={{ duration: 0.5 }}
             className="mb-8"
           >
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center">
-                <Button 
-                  variant="ghost" 
-                  className="mr-2"
-                  onClick={() => navigate('/profile')}
-                >
-                  <ArrowLeft className="mr-2 h-4 w-4" />
-                  Back to Profile
-                </Button>
-              </div>
+            <Button
+              variant="ghost"
+              onClick={() => navigate('/profile')}
+              className="mb-4 text-violet-400 hover:text-violet-300"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Profile
+            </Button>
+
+            <div className="text-center">
+              <h1 className="text-4xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-indigo-600">
+                Account Settings
+              </h1>
+              <p className="text-gray-400">Manage your account preferences and profile information</p>
             </div>
-            
-            <h1 className="text-3xl font-bold">Account Settings</h1>
-            <p className="text-muted-foreground mt-1">Manage your account information and preferences</p>
           </motion.div>
 
-          <Tabs defaultValue="profile" className="w-full">
-            <TabsList className="grid grid-cols-3 mb-8">
-              <TabsTrigger value="profile">Profile</TabsTrigger>
-              <TabsTrigger value="address">Address</TabsTrigger>
-              <TabsTrigger value="preferences">Preferences</TabsTrigger>
-            </TabsList>
-            
-            {/* Profile Tab */}
-            <TabsContent value="profile">
-              <Card className="p-6">
-                <Form {...profileForm}>
-                  <form onSubmit={profileForm.handleSubmit(onProfileSubmit)} className="space-y-6">
-                    <div className="flex flex-col items-center space-y-4 mb-6 sm:items-start">
-                      <FormLabel>Profile Picture</FormLabel>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            <Tabs defaultValue="profile" className="w-full">
+              <TabsList className="grid w-full grid-cols-3 bg-white/5 backdrop-blur-md border border-white/10">
+                <TabsTrigger value="profile" className="text-white data-[state=active]:bg-violet-600/50">
+                  Profile
+                </TabsTrigger>
+                <TabsTrigger value="address" className="text-white data-[state=active]:bg-violet-600/50">
+                  Address
+                </TabsTrigger>
+                <TabsTrigger value="preferences" className="text-white data-[state=active]:bg-violet-600/50">
+                  Preferences
+                </TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="profile">
+                <Card className="bg-white/5 backdrop-blur-md border border-white/10">
+                  <CardHeader>
+                    <CardTitle className="text-white">Profile Information</CardTitle>
+                    <CardDescription className="text-gray-400">
+                      Update your personal information and profile picture.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    <div className="flex items-center space-x-6">
                       <div className="relative">
-                        <Avatar className="w-32 h-32 border-4 border-background">
-                          <AvatarImage src={profileImage || user.profilePicture} />
-                          <AvatarFallback className="bg-gradient-to-br from-violet-500 to-indigo-600 text-white">
-                            <UserCircle className="w-16 h-16" />
-                          </AvatarFallback>
-                        </Avatar>
-                        <label
-                          htmlFor="profile-image"
-                          className="absolute -bottom-2 -right-2 p-2 bg-primary text-primary-foreground rounded-full cursor-pointer hover:bg-primary/90 transition-colors"
-                        >
-                          <Camera className="h-5 w-5" />
-                          <span className="sr-only">Upload picture</span>
+                        {userProfile?.avatar_url ? (
+                          <img
+                            src={userProfile.avatar_url}
+                            alt="Profile"
+                            className="w-20 h-20 rounded-full border-4 border-violet-500/50 object-cover"
+                          />
+                        ) : (
+                          <div className="w-20 h-20 rounded-full bg-gradient-to-br from-violet-500 to-indigo-600 flex items-center justify-center">
+                            <UserCircle className="w-12 h-12 text-white" />
+                          </div>
+                        )}
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-semibold text-white">{userProfile?.full_name || user.email}</h3>
+                        <p className="text-gray-400">{user.email}</p>
+                        <Badge variant="secondary" className="mt-2">
+                          Email Verified
+                        </Badge>
+                      </div>
+                    </div>
+
+                    <Separator className="bg-white/10" />
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-400 mb-2">
+                          Full Name
                         </label>
-                        <input
-                          id="profile-image"
-                          type="file"
-                          accept="image/*"
-                          className="hidden"
-                          onChange={handleImageUpload}
+                        <Input
+                          defaultValue={userProfile?.full_name || ""}
+                          placeholder="Enter your full name"
+                          className="bg-gray-800/50 border-violet-500/30 text-white"
+                        />
+                      </div>
+                      
+                      <div>
+                        <label className="block text-sm font-medium text-gray-400 mb-2">
+                          Phone Number
+                        </label>
+                        <Input
+                          defaultValue={userProfile?.phone || ""}
+                          placeholder="Enter your phone number"
+                          className="bg-gray-800/50 border-violet-500/30 text-white"
                         />
                       </div>
                     </div>
-                    
-                    <div className="grid gap-6 sm:grid-cols-2">
-                      <FormField
-                        control={profileForm.control}
-                        name="name"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Name</FormLabel>
-                            <FormControl>
-                              <Input placeholder="Your name" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-400 mb-2">
+                        Bio
+                      </label>
+                      <Textarea
+                        defaultValue={userProfile?.bio || ""}
+                        placeholder="Tell us about yourself..."
+                        className="bg-gray-800/50 border-violet-500/30 text-white resize-none"
+                        rows={4}
                       />
+                    </div>
+
+                    <Button
+                      onClick={() => toast({ title: "Feature Coming Soon", description: "Profile editing will be available soon" })}
+                      className="w-full bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700"
+                    >
+                      <Save className="w-4 h-4 mr-2" />
+                      Save Profile Changes
+                    </Button>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              <TabsContent value="address">
+                <Card className="bg-white/5 backdrop-blur-md border border-white/10">
+                  <CardHeader>
+                    <CardTitle className="text-white flex items-center">
+                      <MapPin className="w-5 h-5 mr-2 text-violet-400" />
+                      Address Information
+                    </CardTitle>
+                    <CardDescription className="text-gray-400">
+                      Update your address for personalized travel recommendations.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-400 mb-2">
+                        Street Address
+                      </label>
+                      <Input
+                        defaultValue={userProfile?.address?.street || ""}
+                        placeholder="Enter your street address"
+                        className="bg-gray-800/50 border-violet-500/30 text-white"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-400 mb-2">
+                          City
+                        </label>
+                        <Input
+                          defaultValue={userProfile?.address?.city || ""}
+                          placeholder="City"
+                          className="bg-gray-800/50 border-violet-500/30 text-white"
+                        />
+                      </div>
                       
-                      <FormField
-                        control={profileForm.control}
-                        name="email"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Email</FormLabel>
-                            <FormControl>
-                              <Input placeholder="Your email" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-                    
-                    <FormField
-                      control={profileForm.control}
-                      name="phone"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Phone</FormLabel>
-                          <FormControl>
-                            <Input placeholder="Your phone number" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    
-                    <FormField
-                      control={profileForm.control}
-                      name="bio"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Bio</FormLabel>
-                          <FormControl>
-                            <Textarea 
-                              placeholder="A short bio about yourself" 
-                              className="resize-none min-h-[100px]"
-                              {...field} 
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    
-                    <div className="flex justify-end">
-                      <Button type="submit" className="w-full sm:w-auto">
-                        <Save className="mr-2 h-4 w-4" />
-                        Save Profile
-                      </Button>
-                    </div>
-                  </form>
-                </Form>
-              </Card>
-            </TabsContent>
-            
-            {/* Address Tab */}
-            <TabsContent value="address">
-              <Card className="p-6">
-                <Form {...addressForm}>
-                  <form onSubmit={addressForm.handleSubmit(onAddressSubmit)} className="space-y-6">
-                    <FormField
-                      control={addressForm.control}
-                      name="street"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Street Address</FormLabel>
-                          <FormControl>
-                            <Input placeholder="123 Example Street" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    
-                    <div className="grid gap-6 sm:grid-cols-2">
-                      <FormField
-                        control={addressForm.control}
-                        name="city"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>City</FormLabel>
-                            <FormControl>
-                              <Input placeholder="City" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
+                      <div>
+                        <label className="block text-sm font-medium text-gray-400 mb-2">
+                          State
+                        </label>
+                        <Input
+                          defaultValue={userProfile?.address?.state || ""}
+                          placeholder="State"
+                          className="bg-gray-800/50 border-violet-500/30 text-white"
+                        />
+                      </div>
                       
-                      <FormField
-                        control={addressForm.control}
-                        name="state"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>State</FormLabel>
-                            <FormControl>
-                              <Input placeholder="State" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
+                      <div>
+                        <label className="block text-sm font-medium text-gray-400 mb-2">
+                          ZIP Code
+                        </label>
+                        <Input
+                          defaultValue={userProfile?.address?.zipCode || ""}
+                          placeholder="ZIP Code"
+                          className="bg-gray-800/50 border-violet-500/30 text-white"
+                        />
+                      </div>
                     </div>
-                    
-                    <FormField
-                      control={addressForm.control}
-                      name="zipCode"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Zip Code</FormLabel>
-                          <FormControl>
-                            <Input placeholder="12345" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    
-                    <div className="flex justify-end">
-                      <Button type="submit" className="w-full sm:w-auto">
-                        <Save className="mr-2 h-4 w-4" />
-                        Save Address
-                      </Button>
+
+                    <Button
+                      onClick={() => toast({ title: "Feature Coming Soon", description: "Address editing will be available soon" })}
+                      className="w-full bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700"
+                    >
+                      <Save className="w-4 h-4 mr-2" />
+                      Save Address Changes
+                    </Button>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              <TabsContent value="preferences">
+                <Card className="bg-white/5 backdrop-blur-md border border-white/10">
+                  <CardHeader>
+                    <CardTitle className="text-white flex items-center">
+                      <Bell className="w-5 h-5 mr-2 text-violet-400" />
+                      Notification Preferences
+                    </CardTitle>
+                    <CardDescription className="text-gray-400">
+                      Manage how you receive notifications and updates.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    <div className="text-center py-8">
+                      <Shield className="w-16 h-16 mx-auto mb-4 text-violet-400" />
+                      <h3 className="text-xl font-semibold text-white mb-2">Preferences Coming Soon</h3>
+                      <p className="text-gray-400">
+                        Notification and preference settings will be available in a future update.
+                      </p>
                     </div>
-                  </form>
-                </Form>
-              </Card>
-            </TabsContent>
-            
-            {/* Preferences Tab */}
-            <TabsContent value="preferences">
-              <Card className="p-6">
-                <Form {...preferencesForm}>
-                  <form onSubmit={preferencesForm.handleSubmit(onPreferencesSubmit)} className="space-y-6">
-                    <div className="space-y-4">
-                      <FormField
-                        control={preferencesForm.control}
-                        name="notifications"
-                        render={({ field }) => (
-                          <FormItem className="flex items-center justify-between rounded-lg border p-4">
-                            <div className="space-y-0.5">
-                              <FormLabel className="text-base">
-                                <Bell className="h-4 w-4 mr-2 inline-block" />
-                                Notifications
-                              </FormLabel>
-                              <div className="text-sm text-muted-foreground">
-                                Receive notifications about your trips and bookings.
-                              </div>
-                            </div>
-                            <FormControl>
-                              <Switch
-                                checked={field.value}
-                                onCheckedChange={field.onChange}
-                              />
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-                      
-                      <FormField
-                        control={preferencesForm.control}
-                        name="newsletter"
-                        render={({ field }) => (
-                          <FormItem className="flex items-center justify-between rounded-lg border p-4">
-                            <div className="space-y-0.5">
-                              <FormLabel className="text-base">
-                                <Mail className="h-4 w-4 mr-2 inline-block" />
-                                Newsletter
-                              </FormLabel>
-                              <div className="text-sm text-muted-foreground">
-                                Receive our newsletter with travel tips and offers.
-                              </div>
-                            </div>
-                            <FormControl>
-                              <Switch
-                                checked={field.value}
-                                onCheckedChange={field.onChange}
-                              />
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-                      
-                      <FormField
-                        control={preferencesForm.control}
-                        name="travelAlerts"
-                        render={({ field }) => (
-                          <FormItem className="flex items-center justify-between rounded-lg border p-4">
-                            <div className="space-y-0.5">
-                              <FormLabel className="text-base">
-                                <MapPin className="h-4 w-4 mr-2 inline-block" />
-                                Travel Alerts
-                              </FormLabel>
-                              <div className="text-sm text-muted-foreground">
-                                Receive alerts about travel conditions for your destinations.
-                              </div>
-                            </div>
-                            <FormControl>
-                              <Switch
-                                checked={field.value}
-                                onCheckedChange={field.onChange}
-                              />
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-                    
-                    <Separator className="my-4" />
-                    
-                    <div className="space-y-4">
-                      <h3 className="text-lg font-medium">Data & Privacy</h3>
-                      <Button variant="outline" type="button" className="text-destructive border-destructive/30 hover:bg-destructive/10">
-                        <Trash className="mr-2 h-4 w-4" />
-                        Delete Account
-                      </Button>
-                    </div>
-                    
-                    <div className="flex justify-end">
-                      <Button type="submit" className="w-full sm:w-auto">
-                        <Save className="mr-2 h-4 w-4" />
-                        Save Preferences
-                      </Button>
-                    </div>
-                  </form>
-                </Form>
-              </Card>
-            </TabsContent>
-          </Tabs>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+            </Tabs>
+          </motion.div>
         </div>
       </div>
       <Footer />

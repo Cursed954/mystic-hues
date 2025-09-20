@@ -92,8 +92,8 @@ const Experience: React.FC = () => {
   useEffect(() => {
     const combinedJourneys = [...journeys];
     
-    if (user && user.trips && user.trips.length > 0) {
-      const userJourneys = user.trips.map((trip: any) => ({
+    if (userProfile && userProfile.trips && userProfile.trips.length > 0) {
+      const userJourneys = userProfile.trips.map((trip: any) => ({
         ...trip,
         title: trip.destination,
         location: trip.destination,

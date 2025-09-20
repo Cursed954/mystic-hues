@@ -84,8 +84,8 @@ const AllStates = () => {
   };
 
   const isStateFavorited = (stateId: string) => {
-    if (!user || !user.savedStates) return false;
-    return user.savedStates.includes(stateId);
+    if (!userProfile || !userProfile.saved_states) return false;
+    return userProfile.saved_states.includes(stateId);
   };
 
   const renderGridSkeleton = () => (
